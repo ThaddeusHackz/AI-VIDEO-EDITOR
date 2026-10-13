@@ -22,6 +22,8 @@ export const FONT_FACES: Face[] = [
   { family: "Inter", file: "inter-500.woff2", weight: "500" },
   { family: "Inter", file: "inter-600.woff2", weight: "600" },
   { family: "Inter", file: "inter-700.woff2", weight: "700" },
+  { family: "Inter", file: "inter-800.woff2", weight: "800" },
+  { family: "Inter", file: "inter-900.woff2", weight: "900" },
   { family: "Space Grotesk", file: "sg-400.woff2", weight: "400" },
   { family: "Space Grotesk", file: "sg-700.woff2", weight: "700" },
   { family: "JetBrains Mono", file: "mono-400.woff2", weight: "400" },

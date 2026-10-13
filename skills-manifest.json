@@ -1,6 +1,6 @@
 {
   "source": "ThaddeusHackz/AI-VIDEO-EDITOR (heygen-com/hyperframes + remotion-dev/remotion + morluto/rea + opus-js-animations + gpt-js-animations + higgsfield-ultrahigh)",
-  "totalSkills": 53,
+  "totalSkills": 54,
   "skills": {
     "captions-overlay": {
       "hash": "dde58d4fcad6b244",
@@ -212,6 +212,10 @@
     },
     "youtube-opus-gpt-benchmarks": {
       "hash": "67f1b7b4fde0b010",
+      "files": 1
+    },
+    "zack-style-explainer": {
+      "hash": "925c0aaa1368d5b6",
       "files": 1
     }
   }

@@ -1,0 +1,1071 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationInFrames": 1733,
+  "scenes": [
+    {
+      "id": "scene-1",
+      "image": "zack-window/img/s1.jpg",
+      "audio": "zack-window/vo/c1.wav",
+      "camera": "push-to-glass",
+      "grade": "clean-studio",
+      "startSec": 0.35,
+      "audioStartSec": 0.35,
+      "endSec": 7.13,
+      "startFrame": 10,
+      "endFrame": 214,
+      "title": "THE TINY HOLE IN PLANE WINDOWS 🤔",
+      "callout": null,
+      "shake": false,
+      "tokens": [
+        {
+          "text": "Next",
+          "startSec": 0.47,
+          "endSec": 0.709,
+          "emphasis": false
+        },
+        {
+          "text": "time",
+          "startSec": 0.709,
+          "endSec": 1.049,
+          "emphasis": false
+        },
+        {
+          "text": "you",
+          "startSec": 1.049,
+          "endSec": 1.284,
+          "emphasis": false
+        },
+        {
+          "text": "fly,",
+          "startSec": 1.284,
+          "endSec": 1.618,
+          "emphasis": false
+        },
+        {
+          "text": "look",
+          "startSec": 1.618,
+          "endSec": 1.858,
+          "emphasis": false
+        },
+        {
+          "text": "closely",
+          "startSec": 1.858,
+          "endSec": 2.31,
+          "emphasis": false
+        },
+        {
+          "text": "at",
+          "startSec": 2.31,
+          "endSec": 2.54,
+          "emphasis": false
+        },
+        {
+          "text": "your",
+          "startSec": 2.54,
+          "endSec": 2.78,
+          "emphasis": false
+        },
+        {
+          "text": "window.",
+          "startSec": 2.78,
+          "endSec": 3.228,
+          "emphasis": false
+        },
+        {
+          "text": "There's",
+          "startSec": 3.228,
+          "endSec": 3.58,
+          "emphasis": false
+        },
+        {
+          "text": "a",
+          "startSec": 3.58,
+          "endSec": 3.806,
+          "emphasis": false
+        },
+        {
+          "text": "tiny",
+          "startSec": 3.806,
+          "endSec": 4.145,
+          "emphasis": true
+        },
+        {
+          "text": "hole",
+          "startSec": 4.145,
+          "endSec": 4.484,
+          "emphasis": true
+        },
+        {
+          "text": "in",
+          "startSec": 4.484,
+          "endSec": 4.715,
+          "emphasis": false
+        },
+        {
+          "text": "it.",
+          "startSec": 4.715,
+          "endSec": 5.045,
+          "emphasis": false
+        },
+        {
+          "text": "And",
+          "startSec": 5.045,
+          "endSec": 5.28,
+          "emphasis": false
+        },
+        {
+          "text": "it's",
+          "startSec": 5.28,
+          "endSec": 5.52,
+          "emphasis": false
+        },
+        {
+          "text": "keeping",
+          "startSec": 5.52,
+          "endSec": 5.872,
+          "emphasis": false
+        },
+        {
+          "text": "you",
+          "startSec": 5.872,
+          "endSec": 6.107,
+          "emphasis": false
+        },
+        {
+          "text": "alive.",
+          "startSec": 6.107,
+          "endSec": 6.65,
+          "emphasis": true
+        }
+      ]
+    },
+    {
+      "id": "scene-2",
+      "image": "zack-window/img/s2.jpg",
+      "audio": "zack-window/vo/c2.wav",
+      "camera": "crane-up",
+      "grade": "teal-orange-cinema",
+      "startSec": 7.13,
+      "audioStartSec": 7.13,
+      "endSec": 13.317,
+      "startFrame": 214,
+      "endFrame": 400,
+      "title": null,
+      "callout": null,
+      "shake": false,
+      "tokens": [
+        {
+          "text": "At",
+          "startSec": 7.23,
+          "endSec": 7.509,
+          "emphasis": false
+        },
+        {
+          "text": "thirty-five",
+          "startSec": 7.509,
+          "endSec": 8.2,
+          "emphasis": true
+        },
+        {
+          "text": "thousand",
+          "startSec": 8.2,
+          "endSec": 8.633,
+          "emphasis": true
+        },
+        {
+          "text": "feet,",
+          "startSec": 8.633,
+          "endSec": 9.044,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 9.044,
+          "endSec": 9.329,
+          "emphasis": false
+        },
+        {
+          "text": "air",
+          "startSec": 9.329,
+          "endSec": 9.614,
+          "emphasis": false
+        },
+        {
+          "text": "is",
+          "startSec": 9.614,
+          "endSec": 9.894,
+          "emphasis": false
+        },
+        {
+          "text": "so",
+          "startSec": 9.894,
+          "endSec": 10.174,
+          "emphasis": false
+        },
+        {
+          "text": "thin",
+          "startSec": 10.174,
+          "endSec": 10.464,
+          "emphasis": false
+        },
+        {
+          "text": "you'd",
+          "startSec": 10.464,
+          "endSec": 10.76,
+          "emphasis": false
+        },
+        {
+          "text": "pass",
+          "startSec": 10.76,
+          "endSec": 11.05,
+          "emphasis": true
+        },
+        {
+          "text": "out",
+          "startSec": 11.05,
+          "endSec": 11.335,
+          "emphasis": true
+        },
+        {
+          "text": "in",
+          "startSec": 11.335,
+          "endSec": 11.615,
+          "emphasis": false
+        },
+        {
+          "text": "under",
+          "startSec": 11.615,
+          "endSec": 12.031,
+          "emphasis": false
+        },
+        {
+          "text": "a",
+          "startSec": 12.031,
+          "endSec": 12.306,
+          "emphasis": false
+        },
+        {
+          "text": "minute.",
+          "startSec": 12.306,
+          "endSec": 12.97,
+          "emphasis": false
+        }
+      ]
+    },
+    {
+      "id": "scene-3",
+      "image": "zack-window/img/s3.jpg",
+      "audio": "zack-window/vo/c3.wav",
+      "camera": "crash-zoom",
+      "grade": "teal-orange-cinema",
+      "startSec": 13.317,
+      "audioStartSec": 13.317,
+      "endSec": 21.237,
+      "startFrame": 400,
+      "endFrame": 637,
+      "title": null,
+      "callout": {
+        "text": "1,000+ lbs",
+        "startSec": 19.272
+      },
+      "shake": false,
+      "tokens": [
+        {
+          "text": "So",
+          "startSec": 13.457,
+          "endSec": 13.728,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 13.728,
+          "endSec": 14.005,
+          "emphasis": false
+        },
+        {
+          "text": "cabin",
+          "startSec": 14.005,
+          "endSec": 14.409,
+          "emphasis": false
+        },
+        {
+          "text": "is",
+          "startSec": 14.409,
+          "endSec": 14.681,
+          "emphasis": false
+        },
+        {
+          "text": "pumped",
+          "startSec": 14.681,
+          "endSec": 15.09,
+          "emphasis": false
+        },
+        {
+          "text": "full",
+          "startSec": 15.09,
+          "endSec": 15.372,
+          "emphasis": false
+        },
+        {
+          "text": "of",
+          "startSec": 15.372,
+          "endSec": 15.643,
+          "emphasis": false
+        },
+        {
+          "text": "pressurized",
+          "startSec": 15.643,
+          "endSec": 16.314,
+          "emphasis": true
+        },
+        {
+          "text": "air,",
+          "startSec": 16.314,
+          "endSec": 16.708,
+          "emphasis": false
+        },
+        {
+          "text": "pushing",
+          "startSec": 16.708,
+          "endSec": 17.122,
+          "emphasis": false
+        },
+        {
+          "text": "on",
+          "startSec": 17.122,
+          "endSec": 17.394,
+          "emphasis": false
+        },
+        {
+          "text": "every",
+          "startSec": 17.394,
+          "endSec": 17.915,
+          "emphasis": false
+        },
+        {
+          "text": "window",
+          "startSec": 17.915,
+          "endSec": 18.325,
+          "emphasis": false
+        },
+        {
+          "text": "with",
+          "startSec": 18.325,
+          "endSec": 18.607,
+          "emphasis": false
+        },
+        {
+          "text": "over",
+          "startSec": 18.607,
+          "endSec": 19.006,
+          "emphasis": false
+        },
+        {
+          "text": "a",
+          "startSec": 19.006,
+          "endSec": 19.272,
+          "emphasis": false
+        },
+        {
+          "text": "thousand",
+          "startSec": 19.272,
+          "endSec": 19.692,
+          "emphasis": true
+        },
+        {
+          "text": "pounds",
+          "startSec": 19.692,
+          "endSec": 19.984,
+          "emphasis": true
+        },
+        {
+          "text": "of",
+          "startSec": 19.984,
+          "endSec": 20.255,
+          "emphasis": false
+        },
+        {
+          "text": "force.",
+          "startSec": 20.255,
+          "endSec": 20.777,
+          "emphasis": false
+        }
+      ]
+    },
+    {
+      "id": "scene-4",
+      "image": "zack-window/img/s4.jpg",
+      "audio": "zack-window/vo/c4.wav",
+      "camera": "orbit-360",
+      "grade": "clean-studio",
+      "startSec": 21.237,
+      "audioStartSec": 21.237,
+      "endSec": 25.892,
+      "startFrame": 637,
+      "endFrame": 777,
+      "title": null,
+      "callout": {
+        "text": "3 LAYERS",
+        "startSec": 23.786
+      },
+      "shake": false,
+      "tokens": [
+        {
+          "text": "That's",
+          "startSec": 21.357,
+          "endSec": 21.675,
+          "emphasis": false
+        },
+        {
+          "text": "why",
+          "startSec": 21.675,
+          "endSec": 21.976,
+          "emphasis": false
+        },
+        {
+          "text": "your",
+          "startSec": 21.976,
+          "endSec": 22.282,
+          "emphasis": false
+        },
+        {
+          "text": "window",
+          "startSec": 22.282,
+          "endSec": 22.728,
+          "emphasis": false
+        },
+        {
+          "text": "isn't",
+          "startSec": 22.728,
+          "endSec": 23.04,
+          "emphasis": true
+        },
+        {
+          "text": "glass.",
+          "startSec": 23.04,
+          "endSec": 23.479,
+          "emphasis": true
+        },
+        {
+          "text": "It's",
+          "startSec": 23.479,
+          "endSec": 23.786,
+          "emphasis": false
+        },
+        {
+          "text": "three",
+          "startSec": 23.786,
+          "endSec": 24.098,
+          "emphasis": true
+        },
+        {
+          "text": "layers",
+          "startSec": 24.098,
+          "endSec": 24.416,
+          "emphasis": true
+        },
+        {
+          "text": "of",
+          "startSec": 24.416,
+          "endSec": 24.711,
+          "emphasis": false
+        },
+        {
+          "text": "acrylic.",
+          "startSec": 24.711,
+          "endSec": 25.417,
+          "emphasis": false
+        }
+      ]
+    },
+    {
+      "id": "scene-5",
+      "image": "zack-window/img/s5.jpg",
+      "audio": "zack-window/vo/c5.wav",
+      "camera": "dolly-zoom",
+      "grade": "teal-orange-cinema",
+      "startSec": 25.892,
+      "audioStartSec": 25.892,
+      "endSec": 31.395,
+      "startFrame": 777,
+      "endFrame": 942,
+      "title": null,
+      "callout": null,
+      "shake": false,
+      "tokens": [
+        {
+          "text": "The",
+          "startSec": 25.992,
+          "endSec": 26.239,
+          "emphasis": false
+        },
+        {
+          "text": "outer",
+          "startSec": 26.239,
+          "endSec": 26.599,
+          "emphasis": true
+        },
+        {
+          "text": "pane",
+          "startSec": 26.599,
+          "endSec": 26.956,
+          "emphasis": false
+        },
+        {
+          "text": "takes",
+          "startSec": 26.956,
+          "endSec": 27.316,
+          "emphasis": false
+        },
+        {
+          "text": "almost",
+          "startSec": 27.316,
+          "endSec": 27.682,
+          "emphasis": false
+        },
+        {
+          "text": "all",
+          "startSec": 27.682,
+          "endSec": 27.928,
+          "emphasis": false
+        },
+        {
+          "text": "of",
+          "startSec": 27.928,
+          "endSec": 28.17,
+          "emphasis": false
+        },
+        {
+          "text": "that",
+          "startSec": 28.17,
+          "endSec": 28.421,
+          "emphasis": false
+        },
+        {
+          "text": "pressure.",
+          "startSec": 28.421,
+          "endSec": 29.006,
+          "emphasis": true
+        },
+        {
+          "text": "The",
+          "startSec": 29.006,
+          "endSec": 29.252,
+          "emphasis": false
+        },
+        {
+          "text": "middle",
+          "startSec": 29.252,
+          "endSec": 29.617,
+          "emphasis": false
+        },
+        {
+          "text": "pane",
+          "startSec": 29.617,
+          "endSec": 29.973,
+          "emphasis": false
+        },
+        {
+          "text": "is",
+          "startSec": 29.973,
+          "endSec": 30.215,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 30.215,
+          "endSec": 30.462,
+          "emphasis": false
+        },
+        {
+          "text": "backup.",
+          "startSec": 30.462,
+          "endSec": 30.932,
+          "emphasis": true
+        }
+      ]
+    },
+    {
+      "id": "scene-6",
+      "image": "zack-window/img/s6.jpg",
+      "audio": "zack-window/vo/c6.wav",
+      "camera": "push-to-glass",
+      "grade": "cyber-neon",
+      "startSec": 31.395,
+      "audioStartSec": 31.395,
+      "endSec": 41.123,
+      "startFrame": 942,
+      "endFrame": 1234,
+      "title": null,
+      "callout": {
+        "text": "“BLEED HOLE”",
+        "startSec": 33.733
+      },
+      "shake": false,
+      "tokens": [
+        {
+          "text": "And",
+          "startSec": 31.615,
+          "endSec": 31.887,
+          "emphasis": false
+        },
+        {
+          "text": "that",
+          "startSec": 31.887,
+          "endSec": 32.165,
+          "emphasis": false
+        },
+        {
+          "text": "tiny",
+          "startSec": 32.165,
+          "endSec": 32.558,
+          "emphasis": false
+        },
+        {
+          "text": "hole,",
+          "startSec": 32.558,
+          "endSec": 33.067,
+          "emphasis": true
+        },
+        {
+          "text": "called",
+          "startSec": 33.067,
+          "endSec": 33.471,
+          "emphasis": false
+        },
+        {
+          "text": "a",
+          "startSec": 33.471,
+          "endSec": 33.733,
+          "emphasis": false
+        },
+        {
+          "text": "bleed",
+          "startSec": 33.733,
+          "endSec": 34.016,
+          "emphasis": true
+        },
+        {
+          "text": "hole,",
+          "startSec": 34.016,
+          "endSec": 34.525,
+          "emphasis": true
+        },
+        {
+          "text": "lets",
+          "startSec": 34.525,
+          "endSec": 34.803,
+          "emphasis": false
+        },
+        {
+          "text": "a",
+          "startSec": 34.803,
+          "endSec": 35.065,
+          "emphasis": false
+        },
+        {
+          "text": "little",
+          "startSec": 35.065,
+          "endSec": 35.469,
+          "emphasis": false
+        },
+        {
+          "text": "air",
+          "startSec": 35.469,
+          "endSec": 35.741,
+          "emphasis": false
+        },
+        {
+          "text": "into",
+          "startSec": 35.741,
+          "endSec": 36.135,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 36.135,
+          "endSec": 36.407,
+          "emphasis": false
+        },
+        {
+          "text": "gap,",
+          "startSec": 36.407,
+          "endSec": 36.795,
+          "emphasis": false
+        },
+        {
+          "text": "so",
+          "startSec": 36.795,
+          "endSec": 37.063,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 37.063,
+          "endSec": 37.335,
+          "emphasis": false
+        },
+        {
+          "text": "outer",
+          "startSec": 37.335,
+          "endSec": 37.734,
+          "emphasis": false
+        },
+        {
+          "text": "pane",
+          "startSec": 37.734,
+          "endSec": 38.127,
+          "emphasis": false
+        },
+        {
+          "text": "carries",
+          "startSec": 38.127,
+          "endSec": 38.536,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 38.536,
+          "endSec": 38.809,
+          "emphasis": false
+        },
+        {
+          "text": "load,",
+          "startSec": 38.809,
+          "endSec": 39.202,
+          "emphasis": true
+        },
+        {
+          "text": "not",
+          "startSec": 39.202,
+          "endSec": 39.475,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 39.475,
+          "endSec": 39.747,
+          "emphasis": false
+        },
+        {
+          "text": "middle",
+          "startSec": 39.747,
+          "endSec": 40.151,
+          "emphasis": false
+        },
+        {
+          "text": "one.",
+          "startSec": 40.151,
+          "endSec": 40.655,
+          "emphasis": false
+        }
+      ]
+    },
+    {
+      "id": "scene-7",
+      "image": "zack-window/img/s7.jpg",
+      "audio": "zack-window/vo/c7.wav",
+      "camera": "handheld-cinema",
+      "grade": "editorial-film",
+      "startSec": 41.123,
+      "audioStartSec": 41.123,
+      "endSec": 49.354,
+      "startFrame": 1234,
+      "endFrame": 1481,
+      "title": null,
+      "callout": null,
+      "shake": true,
+      "tokens": [
+        {
+          "text": "If",
+          "startSec": 41.203,
+          "endSec": 41.455,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 41.455,
+          "endSec": 41.712,
+          "emphasis": false
+        },
+        {
+          "text": "outer",
+          "startSec": 41.712,
+          "endSec": 42.087,
+          "emphasis": false
+        },
+        {
+          "text": "pane",
+          "startSec": 42.087,
+          "endSec": 42.458,
+          "emphasis": false
+        },
+        {
+          "text": "ever",
+          "startSec": 42.458,
+          "endSec": 42.829,
+          "emphasis": false
+        },
+        {
+          "text": "cracks,",
+          "startSec": 42.829,
+          "endSec": 43.209,
+          "emphasis": true
+        },
+        {
+          "text": "the",
+          "startSec": 43.209,
+          "endSec": 43.466,
+          "emphasis": false
+        },
+        {
+          "text": "middle",
+          "startSec": 43.466,
+          "endSec": 43.846,
+          "emphasis": false
+        },
+        {
+          "text": "one",
+          "startSec": 43.846,
+          "endSec": 44.212,
+          "emphasis": false
+        },
+        {
+          "text": "holds,",
+          "startSec": 44.212,
+          "endSec": 44.587,
+          "emphasis": true
+        },
+        {
+          "text": "and",
+          "startSec": 44.587,
+          "endSec": 44.844,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 44.844,
+          "endSec": 45.101,
+          "emphasis": false
+        },
+        {
+          "text": "hole",
+          "startSec": 45.101,
+          "endSec": 45.471,
+          "emphasis": false
+        },
+        {
+          "text": "lets",
+          "startSec": 45.471,
+          "endSec": 45.733,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 45.733,
+          "endSec": 45.989,
+          "emphasis": false
+        },
+        {
+          "text": "pressure",
+          "startSec": 45.989,
+          "endSec": 46.488,
+          "emphasis": false
+        },
+        {
+          "text": "change",
+          "startSec": 46.488,
+          "endSec": 46.869,
+          "emphasis": false
+        },
+        {
+          "text": "slowly,",
+          "startSec": 46.869,
+          "endSec": 47.358,
+          "emphasis": true
+        },
+        {
+          "text": "instead",
+          "startSec": 47.358,
+          "endSec": 47.743,
+          "emphasis": false
+        },
+        {
+          "text": "of",
+          "startSec": 47.743,
+          "endSec": 47.995,
+          "emphasis": false
+        },
+        {
+          "text": "all",
+          "startSec": 47.995,
+          "endSec": 48.252,
+          "emphasis": false
+        },
+        {
+          "text": "at",
+          "startSec": 48.252,
+          "endSec": 48.504,
+          "emphasis": false
+        },
+        {
+          "text": "once.",
+          "startSec": 48.504,
+          "endSec": 48.983,
+          "emphasis": false
+        }
+      ]
+    },
+    {
+      "id": "scene-8",
+      "image": "zack-window/img/s8.jpg",
+      "audio": "zack-window/vo/c8.wav",
+      "camera": "dolly-zoom",
+      "grade": "teal-orange-cinema",
+      "startSec": 49.354,
+      "audioStartSec": 49.354,
+      "endSec": 56.18,
+      "startFrame": 1481,
+      "endFrame": 1685,
+      "title": null,
+      "callout": null,
+      "shake": false,
+      "tokens": [
+        {
+          "text": "It",
+          "startSec": 49.494,
+          "endSec": 49.736,
+          "emphasis": false
+        },
+        {
+          "text": "also",
+          "startSec": 49.736,
+          "endSec": 50.091,
+          "emphasis": false
+        },
+        {
+          "text": "stops",
+          "startSec": 50.091,
+          "endSec": 50.346,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 50.346,
+          "endSec": 50.592,
+          "emphasis": false
+        },
+        {
+          "text": "window",
+          "startSec": 50.592,
+          "endSec": 50.957,
+          "emphasis": false
+        },
+        {
+          "text": "from",
+          "startSec": 50.957,
+          "endSec": 51.208,
+          "emphasis": false
+        },
+        {
+          "text": "fogging",
+          "startSec": 51.208,
+          "endSec": 51.577,
+          "emphasis": true
+        },
+        {
+          "text": "up.",
+          "startSec": 51.577,
+          "endSec": 51.923,
+          "emphasis": false
+        },
+        {
+          "text": "So",
+          "startSec": 51.923,
+          "endSec": 52.164,
+          "emphasis": false
+        },
+        {
+          "text": "that",
+          "startSec": 52.164,
+          "endSec": 52.415,
+          "emphasis": false
+        },
+        {
+          "text": "tiny",
+          "startSec": 52.415,
+          "endSec": 52.77,
+          "emphasis": true
+        },
+        {
+          "text": "hole",
+          "startSec": 52.77,
+          "endSec": 53.126,
+          "emphasis": true
+        },
+        {
+          "text": "is",
+          "startSec": 53.126,
+          "endSec": 53.367,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 53.367,
+          "endSec": 53.613,
+          "emphasis": false
+        },
+        {
+          "text": "reason",
+          "startSec": 53.613,
+          "endSec": 53.978,
+          "emphasis": false
+        },
+        {
+          "text": "you",
+          "startSec": 53.978,
+          "endSec": 54.224,
+          "emphasis": false
+        },
+        {
+          "text": "can",
+          "startSec": 54.224,
+          "endSec": 54.47,
+          "emphasis": false
+        },
+        {
+          "text": "see",
+          "startSec": 54.47,
+          "endSec": 54.716,
+          "emphasis": false
+        },
+        {
+          "text": "the",
+          "startSec": 54.716,
+          "endSec": 54.962,
+          "emphasis": false
+        },
+        {
+          "text": "clouds",
+          "startSec": 54.962,
+          "endSec": 55.222,
+          "emphasis": true
+        },
+        {
+          "text": "at",
+          "startSec": 55.222,
+          "endSec": 55.464,
+          "emphasis": false
+        },
+        {
+          "text": "all.",
+          "startSec": 55.464,
+          "endSec": 55.814,
+          "emphasis": false
+        }
+      ]
+    }
+  ]
+}
