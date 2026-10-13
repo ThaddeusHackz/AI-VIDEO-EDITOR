@@ -1,0 +1,10 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/hyperframes.json",
+  "name": "ultrahigh-3d-vfx-showreel",
+  "version": "1.0.0",
+  "entry": "index.html",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "duration": 9
+}

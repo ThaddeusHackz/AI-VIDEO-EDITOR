@@ -1,0 +1,19 @@
+{
+  "fps": 30,
+  "seams": [
+    {
+      "id": "scene-1->scene-2",
+      "cut": 3.0,
+      "technique": "cut-the-curve LEFT",
+      "exit": { "selector": "#scene-1", "axis": "x", "dir": -1 },
+      "entry": { "selector": "#scene-2", "axis": "x", "dir": -1 }
+    },
+    {
+      "id": "scene-2->scene-3",
+      "cut": 6.0,
+      "technique": "zoom-through",
+      "exit": { "selector": "#scene-2", "axis": "z", "dir": 1 },
+      "entry": { "selector": "#scene-3", "axis": "z", "dir": 1, "scanRoot": "#scene-3" }
+    }
+  ]
+}

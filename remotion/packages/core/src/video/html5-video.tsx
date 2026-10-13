@@ -1,0 +1,230 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+import React, {forwardRef, useCallback, useContext} from 'react';
+import {getAbsoluteSrc} from '../absolute-src.js';
+import {Html5MediaTrimContext} from '../audio/use-audio-frame.js';
+import {
+	calculateMediaDuration,
+	getMediaTrimAfter,
+} from '../calculate-media-duration.js';
+import {addSequenceStackTraces} from '../enable-sequence-stack-traces.js';
+import {Loop} from '../loop/index.js';
+import {usePreload} from '../prefetch.js';
+import {Sequence} from '../Sequence.js';
+import {useRemotionEnvironment} from '../use-remotion-environment.js';
+import {useVideoConfig} from '../use-video-config.js';
+import {resolveV5Default} from '../v5-flag.js';
+import {validateMediaProps} from '../validate-media-props.js';
+import {
+	resolveTrimProps,
+	validateMediaTrimProps,
+} from '../validate-start-from-props.js';
+import {validateDurationInFrames} from '../validation/validate-duration-in-frames.js';
+import {DurationsContext} from './duration-state.js';
+import type {RemotionMainVideoProps, RemotionVideoProps} from './props';
+import {VideoForPreview} from './VideoForPreview.js';
+import {VideoForRendering} from './VideoForRendering.js';
+
+const VideoForwardingFunction: React.ForwardRefRenderFunction<
+	HTMLVideoElement,
+	RemotionVideoProps &
+		RemotionMainVideoProps & {
+			/**
+			 * @deprecated For internal use only
+			 */
+			readonly _remotionInternalStack?: string;
+		}
+> = (props, ref) => {
+	const {
+		startFrom,
+		endAt,
+		trimBefore,
+		trimAfter,
+		durationInFrames,
+		name,
+		pauseWhenBuffering,
+		_remotionInternalStack,
+		_remotionInternalNativeLoopPassed,
+		showInTimeline,
+		onAutoPlayError,
+		onVideoFrame,
+		...otherProps
+	} = props;
+	const {loop, ...propsOtherThanLoop} = props;
+	const {fps} = useVideoConfig();
+	const environment = useRemotionEnvironment();
+	const shouldPauseWhenBuffering = resolveV5Default(pauseWhenBuffering);
+
+	if (environment.isClientSideRendering) {
+		throw new Error(
+			'<Html5Video> is not supported in @remotion/web-renderer. Use <Video> from @remotion/media instead. See https://remotion.dev/docs/client-side-rendering/limitations',
+		);
+	}
+
+	const {durations, setDurations} = useContext(DurationsContext);
+
+	if (typeof ref === 'string') {
+		throw new Error('string refs are not supported');
+	}
+
+	if (typeof props.src !== 'string') {
+		throw new TypeError(
+			`The \`<Html5Video>\` tag requires a string for \`src\`, but got ${JSON.stringify(
+				props.src,
+			)} instead.`,
+		);
+	}
+
+	const preloadedSrc = usePreload(props.src);
+
+	const onDuration = useCallback(
+		(src: string, durationInSeconds: number) => {
+			setDurations({type: 'got-duration', durationInSeconds, src});
+		},
+		[setDurations],
+	);
+
+	const durationFetched =
+		durations[getAbsoluteSrc(preloadedSrc)] ??
+		durations[getAbsoluteSrc(props.src)];
+
+	validateMediaTrimProps({startFrom, endAt, trimBefore, trimAfter});
+	if (durationInFrames !== undefined) {
+		validateDurationInFrames(durationInFrames, {
+			component: 'of the <Html5Video /> component',
+			allowFloats: true,
+		});
+	}
+
+	const {trimBeforeValue, trimAfterValue} = resolveTrimProps({
+		startFrom,
+		endAt,
+		trimBefore,
+		trimAfter,
+	});
+	const effectiveTrimAfter = getMediaTrimAfter({
+		durationInFrames,
+		trimAfter: trimAfterValue,
+		trimBefore: trimBeforeValue,
+	});
+
+	// An explicit trim end defines the loop before metadata has loaded. Waiting
+	// for metadata would leave the media unmounted when seeking into later loops.
+	const loopDuration =
+		effectiveTrimAfter ??
+		(durationFetched === undefined ? undefined : durationFetched * fps);
+	if (loop && loopDuration !== undefined) {
+		if (!Number.isFinite(loopDuration)) {
+			return (
+				<Html5Video
+					{...propsOtherThanLoop}
+					ref={ref}
+					_remotionInternalStack={_remotionInternalStack}
+					_remotionInternalNativeLoopPassed
+				/>
+			);
+		}
+
+		return (
+			<Loop
+				durationInFrames={calculateMediaDuration({
+					trimAfter: effectiveTrimAfter,
+					mediaDurationInFrames: loopDuration,
+					playbackRate: props.playbackRate ?? 1,
+					trimBefore: trimBeforeValue,
+				})}
+				layout="none"
+				name={name}
+				showInTimeline={false}
+			>
+				<Html5Video
+					{...propsOtherThanLoop}
+					ref={ref}
+					_remotionInternalStack={_remotionInternalStack}
+					_remotionInternalNativeLoopPassed
+				/>
+			</Loop>
+		);
+	}
+
+	if (
+		typeof trimBeforeValue !== 'undefined' ||
+		typeof effectiveTrimAfter !== 'undefined'
+	) {
+		return (
+			<Html5MediaTrimContext.Provider value={trimBeforeValue ?? 0}>
+				<Sequence
+					layout="none"
+					from={0 - (trimBeforeValue ?? 0)}
+					showInTimeline={false}
+					durationInFrames={
+						effectiveTrimAfter === undefined
+							? undefined
+							: (trimBeforeValue ?? 0) +
+								(effectiveTrimAfter - (trimBeforeValue ?? 0)) /
+									(props.playbackRate ?? 1)
+					}
+					name={name}
+				>
+					<Html5Video
+						pauseWhenBuffering={shouldPauseWhenBuffering}
+						onVideoFrame={onVideoFrame}
+						{...otherProps}
+						ref={ref}
+						showInTimeline={showInTimeline}
+						_remotionInternalStack={_remotionInternalStack}
+					/>
+				</Sequence>
+			</Html5MediaTrimContext.Provider>
+		);
+	}
+
+	validateMediaProps(
+		{
+			playbackRate: props.playbackRate,
+			preservePitch: props.preservePitch,
+			volume: props.volume,
+		},
+		'Html5Video',
+	);
+
+	if (environment.isRendering) {
+		return (
+			<VideoForRendering
+				onDuration={onDuration}
+				onVideoFrame={onVideoFrame ?? null}
+				{...otherProps}
+				ref={ref}
+			/>
+		);
+	}
+
+	return (
+		<VideoForPreview
+			onlyWarnForMediaSeekingError={false}
+			{...otherProps}
+			ref={ref}
+			onVideoFrame={onVideoFrame ?? null}
+			pauseWhenBuffering={shouldPauseWhenBuffering}
+			onDuration={onDuration}
+			_remotionInternalStack={_remotionInternalStack ?? null}
+			_remotionInternalNativeLoopPassed={
+				_remotionInternalNativeLoopPassed ?? false
+			}
+			showInTimeline={showInTimeline ?? true}
+			onAutoPlayError={onAutoPlayError ?? undefined}
+		/>
+	);
+};
+
+/**
+ * @description Wraps the native `<video>` element to include video in your component that is synchronized with Remotion's time.
+ * @see [Documentation](https://www.remotion.dev/docs/html5-video)
+ */
+export const Html5Video = forwardRef(VideoForwardingFunction);
+addSequenceStackTraces(Html5Video);
+
+/**
+ * @deprecated This component has been renamed to `Html5Video`.
+ * @see [Documentation](https://www.remotion.dev/docs/html5-video)
+ */
+export const Video = Html5Video;

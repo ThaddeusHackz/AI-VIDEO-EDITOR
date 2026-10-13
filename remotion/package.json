@@ -1,0 +1,26 @@
+{
+  "name": "remotion-starter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Remotion starter project — React-based programmatic video. Part of the AI VIDEO EDITS toolchain.",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render",
+    "still": "remotion still",
+    "compositions": "remotion compositions",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.534",
+    "@remotion/transitions": "^4.0.534",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.534",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.1",
+    "typescript": "5.9.3"
+  }
+}

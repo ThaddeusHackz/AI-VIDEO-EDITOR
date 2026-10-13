@@ -1,0 +1,97 @@
+# Remotion — React-based programmatic video
+
+Second video engine alongside HyperFrames. Same output (MP4), different authoring model.
+
+| | HyperFrames | **Remotion** |
+|---|---|---|
+| Author in | HTML + CSS + GSAP | **React / TypeScript (TSX)** |
+| Animation is | a paused GSAP timeline | **a pure function of `frame`** |
+| Best for | HTML/CSS layouts, cinematic compositions, agent-written scenes | **data-driven video, batch renders, complex component logic** |
+| Browser | chrome-headless-shell (shared) | same binary, **shared** |
+| Time to render | 15s clip ≈ 2m on this box | 6s clip ≈ **22s** |
+
+Both are installed and both render. Use whichever fits the job — or mix them, since they
+share the same font set, the same ffmpeg, and the same Chrome binary.
+
+## Production playbook
+
+For future motion-graphics work, start with [`/home/user/toolkit/AI_VIDEO_EDITOR_PLAYBOOK.md`](../toolkit/AI_VIDEO_EDITOR_PLAYBOOK.md). It documents the creative brief, renderer choice, deterministic animation rules, preview/QA gates, and a reusable director prompt. Use [`VIDEO_BRIEF_TEMPLATE.md`](../toolkit/VIDEO_BRIEF_TEMPLATE.md) to scope a new edit.
+
+---
+
+## Project layout
+
+```
+remotion/
+├── package.json          pins remotion 4.0.534 + react 19.2
+├── remotion.config.ts    codec, concurrency, and the shared-browser wiring
+├── tsconfig.json
+├── public/fonts/         14 woff2 files (copied from /home/user/toolkit/fonts)
+├── src/
+│   ├── index.ts          entry — loads fonts, then registers compositions
+│   ├── fonts.ts          FontFace loader (see note below)
+│   ├── Root.tsx          registers every renderable composition
+│   ├── TitleCard.tsx     prop-driven animated title
+│   └── ScriptureCard.tsx line-by-line verse reveal
+└── out/                  rendered output
+```
+
+## Compositions available
+
+| id | size | length | purpose |
+|---|---|---|---|
+| `TitleCard` | 1920×1080 | 6.0 s | prop-driven title card |
+| `TitleCard-Square` | 1080×1080 | 6.0 s | same component, different aspect |
+| `ScriptureCard` | 1920×1080 | 8.0 s | verse reveal, matches the Servant of Jesus look |
+
+Because `TitleCard` takes props, one component renders unlimited variants — change
+`defaultProps` in `Root.tsx`, or override per render:
+
+```bash
+npx remotion render src/index.ts TitleCard out/outro.mp4 --props='{"title":"New title\nhere"}'
+```
+
+---
+
+## Commands
+
+```bash
+source /home/user/hf-env.sh
+cd /home/user/remotion
+
+npx remotion studio                          # live preview in the browser
+npx remotion compositions src/index.ts       # list every target
+npx remotion render src/index.ts TitleCard out/titlecard.mp4
+npx remotion still  src/index.ts TitleCard out/thumb.png --frame=120
+```
+
+Rendered already (proof it works): `out/titlecard.mp4` (6 s, 1920×1080, 30 fps, 984 KB).
+
+---
+
+## Two things worth knowing
+
+**1. Fonts must load through the FontFace API, not CSS `@font-face`.**
+Remotion bundles with webpack, which tries to resolve `url("/fonts/x.woff2")` as a *module
+import* and fails the build with `Module not found`. `src/fonts.ts` uses
+`staticFile()` + `new FontFace()` instead, wrapped in `delayRender`/`continueRender` so the
+renderer never captures a frame before the fonts are ready. Without that guard the first
+second of the video silently renders in a fallback serif — which is exactly what happened on
+my first attempt here, and why the check frame looked wrong.
+
+**2. Remotion and HyperFrames share one browser.**
+`remotion.config.ts` points Remotion at the chrome-headless-shell that HyperFrames already
+downloaded in `~/.cache`, so there's no second ~260 MB download. `~/.cache` is excluded from
+workspace snapshots, so the browser costs nothing against the save budget.
+Verify with: `ls node_modules/.remotion/chrome-headless-shell` → should *not* exist.
+
+---
+
+## Reinstalling
+
+`node_modules/` is excluded from snapshots, so dependencies rebuild from `package.json`:
+
+```bash
+bash /home/user/setup-toolchain.sh          # both engines
+bash /home/user/setup-toolchain.sh --remotion-only
+```

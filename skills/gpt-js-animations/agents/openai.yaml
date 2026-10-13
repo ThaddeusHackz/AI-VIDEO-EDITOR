@@ -1,0 +1,4 @@
+interface:
+  display_name: "GPT JS Animations"
+  short_description: "Direct and render deterministic JavaScript films"
+  default_prompt: "Use $gpt-js-animations to direct, build, visually inspect, and render a JavaScript motion graphics film from my brief."

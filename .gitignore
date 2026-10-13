@@ -1,0 +1,16 @@
+# Dependencies & build outputs
+node_modules/
+remotion/node_modules/
+remotion/out/
+renders/
+dist/
+build/
+out/
+coverage/
+.turbo/
+.cache/
+.npm/
+.local/
+*.tsbuildinfo
+*.log
+.DS_Store
