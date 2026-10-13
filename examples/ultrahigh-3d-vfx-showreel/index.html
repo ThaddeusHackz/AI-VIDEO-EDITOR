@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>AI Video Editor — UltraHigh 3D Motion &amp; VFX Showreel</title>
+    <script src="vendor/gsap.min.js"></script>
+    <script src="vendor/camera-dop.js"></script>
+    <style>
+      @font-face {
+        font-family: "Space Grotesk";
+        src: url("fonts/sg-700.woff2") format("woff2");
+        font-weight: 700;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("fonts/inter-500.woff2") format("woff2");
+        font-weight: 500;
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("fonts/mono-700.woff2") format("woff2");
+        font-weight: 700;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* SEAM-CRAFT WHITE-FLASH GUARD: opaque #root stage ground */
+      html,
+      body,
+      #root {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #060a12;
+        color: #f3f7f7;
+        font-family: "Inter", sans-serif;
+        position: relative;
+      }
+
+      .scene-layer {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+        will-change: transform, opacity, filter;
+      }
+
+      .eyebrow {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #c5f75a;
+      }
+
+      .hero-title {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 94px;
+        font-weight: 700;
+        line-height: 0.94;
+        letter-spacing: -0.045em;
+        color: #f3f7f7;
+      }
+
+      .accent-cyan {
+        color: #35d9f2;
+      }
+      .accent-lime {
+        color: #c5f75a;
+      }
+
+      /* House 7cqw Oversized Cursor (animated purely via sub-pixel x/y/scale transforms) */
+      #protagonist-cursor {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 134px;
+        height: 134px;
+        z-index: 30;
+        pointer-events: none;
+        filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+        will-change: transform;
+      }
+
+      .glass-card {
+        background: rgba(11, 20, 34, 0.86);
+        border: 1px solid rgba(53, 217, 242, 0.42);
+        border-radius: 22px;
+        box-shadow: 0 32px 90px rgba(0, 0, 0, 0.65);
+        padding: 44px 52px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-width="1920"
+      data-height="1080"
+      data-fps="30"
+      data-duration="9"
+    >
+      <!-- SCENE 1 (0.0s - 3.0s): 3D Wireframe + Waterfall Entry + Oversized Cursor Ignition -->
+      <div id="scene-1" class="scene-layer">
+        <canvas
+          id="canvas-3d"
+          width="1920"
+          height="1080"
+          style="position:absolute;inset:0;"
+        ></canvas>
+        <div style="position:absolute;left:120px;top:190px;width:860px;">
+          <div id="s1-kicker" class="eyebrow" style="margin-bottom:20px;">
+            HYPERFRAMES + REMOTION + REA // ULTRAHIGH
+          </div>
+          <div id="s1-title-1" class="hero-title">3D MOTION</div>
+          <div id="s1-title-2" class="hero-title accent-cyan">&amp; VFX ENGINE.</div>
+          <div
+            id="s1-badge"
+            style="margin-top:36px;display:inline-block;padding:20px 34px;border-radius:14px;background:rgba(15,26,44,0.92);border:2px solid #35d9f2;font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;letter-spacing:0.12em;"
+          >
+            IGNITE DOP CAMERA RIG
+          </div>
+        </div>
+
+        <div id="protagonist-cursor">
+          <svg viewBox="0 0 24 24" width="100%" height="100%">
+            <path
+              d="M5 3L19 12L12 13.5L9 20L5 3Z"
+              fill="#FFFFFF"
+              stroke="#060A12"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <!-- SCENE 2 (3.0s - 6.0s): Cut-the-Curve Arrival + Higgsfield DoP Telemetry -->
+      <div id="scene-2" class="scene-layer" style="opacity:0;">
+        <div
+          id="s2-cam"
+          style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:36px;"
+        >
+          <div id="s2-card-a" class="glass-card" style="width:740px;">
+            <div class="eyebrow" style="color:#35d9f2;">SEAM 01 // CUT-THE-CURVE</div>
+            <div class="hero-title" style="font-size:68px;margin-top:16px;">
+              Velocity-Matched Seams.
+            </div>
+            <p style="font-size:22px;color:#9cb0c1;margin-top:18px;line-height:1.45;">
+              47 Agent Skills · 448 Registry Blocks &amp; Components · 10 Higgsfield DoP Camera Rigs ·
+              REA Reverse Engineering.
+            </p>
+          </div>
+          <div id="s2-card-b" class="glass-card" style="width:420px;border-color:#c5f75a;">
+            <div class="eyebrow">SEAM GATE VERIFIER</div>
+            <div class="hero-title accent-lime" style="font-size:60px;margin-top:14px;">
+              0 ERRORS
+            </div>
+            <div
+              style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#9cb0c1;margin-top:10px;"
+            >
+              VECTOR LEDGER VERIFIED ✓
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 3 (6.0s - 9.0s): Zoom-Through Arrival + Stillness Comma + Climax Payoff -->
+      <div id="scene-3" class="scene-layer" style="opacity:0;">
+        <div
+          id="s3-stage"
+          style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;"
+        >
+          <div id="s3-kicker" class="eyebrow" style="margin-bottom:22px;">
+            CLAUDE OPUS 5.5 · GPT-6.1 SOL · READY
+          </div>
+          <div id="s3-hero" class="hero-title" style="font-size:108px;">
+            THE #1 AI VIDEO
+            <br />
+            <span class="accent-lime">EDITOR REPOSITORY.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var canvas = document.getElementById("canvas-3d");
+        var ctx = canvas.getContext("2d");
+        var state = { t: 0, burst: 0 };
+
+        function draw3D(s) {
+          ctx.clearRect(0, 0, 1920, 1080);
+          var cx = 1320;
+          var cy = 520;
+          var rotY = s.t * 0.9;
+          var rotX = 0.35 + Math.sin(s.t * 0.7) * 0.2;
+          var radius = 210 * (1 + s.burst * 0.28);
+
+          var grad = ctx.createRadialGradient(cx, cy, 20, cx, cy, 420);
+          grad.addColorStop(0, "rgba(53, 217, 242, 0.28)");
+          grad.addColorStop(0.6, "rgba(197, 247, 90, 0.08)");
+          grad.addColorStop(1, "rgba(6, 10, 18, 0)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, 1920, 1080);
+
+          var pts = [];
+          for (var i = 0; i < 16; i++) {
+            var lat = ((i % 4) - 1.5) * 0.75;
+            var lon = (i / 16) * Math.PI * 2 + rotY;
+            var x = Math.cos(lat) * Math.cos(lon) * radius;
+            var y = Math.sin(lat) * radius * Math.cos(rotX);
+            var z = Math.cos(lat) * Math.sin(lon) * radius;
+            var scale = 780 / (780 - z);
+            pts.push({ x: cx + x * scale, y: cy + y * scale, scale: scale });
+          }
+
+          ctx.strokeStyle = s.burst > 0.1 ? "#c5f75a" : "#35d9f2";
+          ctx.lineWidth = 2;
+          for (var a = 0; a < pts.length; a++) {
+            for (var b = a + 1; b < pts.length; b++) {
+              var d = Math.hypot(pts[a].x - pts[b].x, pts[a].y - pts[b].y);
+              if (d < 240) {
+                ctx.globalAlpha = 0.45;
+                ctx.beginPath();
+                ctx.moveTo(pts[a].x, pts[a].y);
+                ctx.lineTo(pts[b].x, pts[b].y);
+                ctx.stroke();
+              }
+            }
+          }
+          ctx.globalAlpha = 1;
+        }
+
+        var tl = gsap.timeline({
+          paused: true,
+          onUpdate: function () {
+            draw3D(state);
+          }
+        });
+
+        tl.to(state, { t: 9, duration: 9, ease: "none" }, 0);
+
+        // Scene 1 Waterfall Entry
+        tl.fromTo(
+          "#s1-kicker",
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.45, ease: "power4.out", immediateRender: false },
+          0.1
+        );
+        tl.fromTo(
+          "#s1-title-1",
+          { opacity: 0, y: 54 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power4.out", immediateRender: false },
+          0.2
+        );
+        tl.fromTo(
+          "#s1-title-2",
+          { opacity: 0, y: 54 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power4.out", immediateRender: false },
+          0.3
+        );
+        tl.fromTo(
+          "#s1-badge",
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.45, ease: "power4.out", immediateRender: false },
+          0.42
+        );
+
+        // Oversized Cursor physical entry from off-screen via sub-pixel x/y transforms
+        tl.fromTo(
+          "#protagonist-cursor",
+          { x: 840, y: 1220 },
+          { x: 420, y: 690, duration: 0.75, ease: "power3.out", immediateRender: false },
+          0.55
+        );
+        tl.to(
+          "#protagonist-cursor",
+          { scale: 0.84, duration: 0.1, ease: "power2.in", transformOrigin: "21% 14%" },
+          1.4
+        );
+        tl.to(
+          "#protagonist-cursor",
+          { scale: 1, duration: 0.22, ease: "power2.out", transformOrigin: "21% 14%" },
+          1.5
+        );
+        // Click ignites 3D burst and badge highlight same-frame at t=1.4s
+        tl.to(state, { burst: 1, duration: 0.55, ease: "expo.out" }, 1.4);
+        tl.to(
+          "#s1-badge",
+          {
+            backgroundColor: "#c5f75a",
+            color: "#060a12",
+            borderColor: "#c5f75a",
+            scale: 1.05,
+            duration: 0.25,
+            ease: "back.out(1.6)"
+          },
+          1.4
+        );
+        tl.to(
+          "#protagonist-cursor",
+          { x: -220, y: 630, duration: 0.55, ease: "power2.in" },
+          2.1
+        );
+
+        // Scene 2 Higgsfield DoP Orbit Camera Rig
+        if (window.HFCameraDoP) {
+          window.HFCameraDoP.apply(tl, "#s2-cam", {
+            preset: "orbit-360",
+            start: 3.3,
+            duration: 2.3,
+            intensity: 0.8
+          });
+        }
+
+        // Scene 3 Stillness Comma (6.5s -> 7.0s), then Climax Dolly-Zoom
+        if (window.HFCameraDoP) {
+          window.HFCameraDoP.apply(tl, "#s3-stage", {
+            preset: "dolly-zoom",
+            start: 7.0,
+            duration: 1.8,
+            intensity: 0.65
+          });
+        }
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+
+      // <seams:auto> — generated by seam-stamp.mjs from ledger.json; do not hand-edit.
+      // Regenerate: node <motion-doctrine>/scripts/seam-stamp.mjs --ledger ledger.json --write index.html
+      gsap.set("#scene-1", { autoAlpha: 1, xPercent: 0, yPercent: 0, scale: 1, filter: "blur(0px)", transformOrigin: "50% 50%" });
+      gsap.set(["#scene-2"], { autoAlpha: 0, xPercent: 0, yPercent: 0, scale: 1, filter: "blur(0px)", transformOrigin: "50% 50%" });
+      gsap.set("#scene-3", { autoAlpha: 0, scale: 0.78, filter: "blur(18px)", xPercent: 0, yPercent: 0, transformOrigin: "50% 50%" });
+      
+      // SEAM — scene-1->scene-2 : cut-the-curve LEFT (cut @3)
+      tl.to("#scene-1", { xPercent: -12, autoAlpha: 0, duration: 0.34, ease: "power3.in" }, 2.66);
+      tl.set("#scene-1", { autoAlpha: 0 }, 3);
+      tl.fromTo("#scene-2", { xPercent: 10, autoAlpha: 0.35 }, { xPercent: 0, autoAlpha: 1, duration: 0.42, ease: "power4.out", immediateRender: false }, 3);
+      
+      // SEAM — scene-2->scene-3 : zoom-through (cut @6)
+      tl.to("#scene-2", { scale: 1.18, filter: "blur(18px)", duration: 0.21, ease: "power3.in" }, 5.79);
+      tl.to("#scene-2", { autoAlpha: 0, duration: 0.21, ease: "none" }, 5.79);
+      tl.set("#scene-2", { autoAlpha: 0 }, 6);
+      tl.fromTo("#scene-3", { autoAlpha: 0.15, scale: 0.78, filter: "blur(18px)" }, { autoAlpha: 1, scale: 1.0, filter: "blur(0px)", duration: 0.5, ease: "expo.out", immediateRender: false }, 6);
+      
+      // </seams:auto>
+        tl.seek(0);
+        draw3D(state);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "lastUpdateCheck": "2026-10-09T20:57:56.821Z",
+  "latestVersion": "0.8.143",
+  "lastUpdateAttemptAt": "2026-10-09T20:57:56.626Z",
+  "telemetryEnabled": true,
+  "anonymousId": "6f2afa00-c525-4965-aec0-0970a1525569",
+  "telemetryNoticeShown": true,
+  "commandCount": 154,
+  "renderSuccessCount": 25,
+  "lastFeedbackPromptAt": 0,
+  "predecessorFound": false,
+  "bucketSeed": "62a3d33e-b3dc-4adb-9c71-bf90aeea1012",
+  "recentRenders": [
+    {
+      "id": "26bcea25-aaf7-4439-af5a-ed9a652098bb",
+      "at": "2026-10-08T23:03:26.572Z",
+      "ok": true
+    },
+    {
+      "id": "42bcd2ec-a675-49f9-82f5-59ec08f725ba",
+      "at": "2026-10-08T23:10:12.520Z",
+      "ok": true
+    },
+    {
+      "id": "45eafc3e-d594-4293-93fb-008fb50de859",
+      "at": "2026-10-09T11:20:09.938Z",
+      "ok": true
+    },
+    {
+      "id": "618184cf-e7cf-4ce3-930d-d0ec160d65b1",
+      "at": "2026-10-09T11:22:30.477Z",
+      "ok": true
+    },
+    {
+      "id": "5f66efca-6a29-4789-b0a6-c220823e97ae",
+      "at": "2026-10-09T11:23:59.994Z",
+      "ok": true
+    }
+  ]
+}
