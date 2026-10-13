@@ -7,6 +7,7 @@ import { Cinematic3DShowcase } from "./Cinematic3DShowcase";
 import { VFXCompositorSuite } from "./VFXCompositorSuite";
 import { MotionDoctrineReel } from "./MotionDoctrineReel";
 import { NLEMasterTimeline } from "./NLEMasterTimeline";
+import { HiggsfieldCinemaStudioShowreel } from "./HiggsfieldCinemaStudioShowreel";
 
 /**
  * Every <Composition> here becomes a renderable target:
@@ -54,6 +55,16 @@ export const RemotionRoot: React.FC = () => {
         id="NLE-Master-Editor"
         component={NLEMasterTimeline}
         durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+
+      {/* 5. Higgsfield Cinema Studio 4.0 + 3D Carousel + Sliding Stack + Physics + 2-Bone IK Character */}
+      <Composition
+        id="Higgsfield-CinemaStudio-4"
+        component={HiggsfieldCinemaStudioShowreel}
+        durationInFrames={300}
         fps={30}
         width={1920}
         height={1080}

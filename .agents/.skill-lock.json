@@ -1,6 +1,6 @@
 {
-  "source": "ThaddeusHackz/AI-VIDEO-EDITOR (heygen-com/hyperframes + remotion-dev/skills + morluto/rea + opus-gpt-higgsfield-ultrahigh)",
-  "totalSkills": 47,
+  "source": "ThaddeusHackz/AI-VIDEO-EDITOR (heygen-com/hyperframes + remotion-dev/remotion + morluto/rea + opus-gpt-higgsfield-ultrahigh)",
+  "totalSkills": 50,
   "skills": {
     "captions-overlay": {
       "hash": "dde58d4fcad6b244",
@@ -9,6 +9,14 @@
     "changelog-video": {
       "hash": "d56344538fce993e",
       "files": 15
+    },
+    "character-ik-lip-sync": {
+      "hash": "86cd1cf0c0e8c24f",
+      "files": 1
+    },
+    "cinema-studio-4-presets": {
+      "hash": "78e63e37f6e43d01",
+      "files": 1
     },
     "cinematic-3d-vfx-cgi": {
       "hash": "6369e75f7d432223",
@@ -19,8 +27,8 @@
       "files": 2
     },
     "embedded-captions": {
-      "hash": "2c3048e22a0abd3b",
-      "files": 145
+      "hash": "e016110dabe17f74",
+      "files": 144
     },
     "faceless-explainer": {
       "hash": "c156e75b896df98e",
@@ -189,6 +197,10 @@
     "talking-head-recut": {
       "hash": "c166cd75cec67863",
       "files": 28
+    },
+    "youtube-opus-gpt-benchmarks": {
+      "hash": "67f1b7b4fde0b010",
+      "files": 1
     }
   }
 }

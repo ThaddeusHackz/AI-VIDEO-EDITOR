@@ -70,10 +70,12 @@ case "$CMD" in
     BLOCK_COUNT="$(find "${REPO_ROOT}/registry/blocks" -mindepth 1 -maxdepth 1 -type d | wc -l)"
     COMP_COUNT="$(find "${REPO_ROOT}/registry/components" -mindepth 1 -maxdepth 1 -type d | wc -l)"
     CACHE_COUNT="$(find "${REPO_ROOT}/.hyperframes/cache" -type f | wc -l)"
+    REM_PKG_COUNT="$(find "${REPO_ROOT}/remotion/packages" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l)"
     ok "Agent Skills   : ${SKILL_COUNT} skills in skills/, .agents/skills/, .claude/skills/"
-    ok "Registry       : ${BLOCK_COUNT} blocks + ${COMP_COUNT} components (${CACHE_COUNT} offline cached manifests)"
+    ok "HyperFrames    : 15 packages + ${BLOCK_COUNT} blocks + ${COMP_COUNT} components (${CACHE_COUNT} cached manifests)"
+    ok "Remotion Core  : ${REM_PKG_COUNT} upstream packages & templates in remotion/packages/ + 7 engine modules"
     ok "REA Engine     : ${REPO_ROOT}/rea (reverse-engineering & visual replication)"
-    ok "Local Toolkit  : ${REPO_ROOT}/toolkit (fonts + GSAP + Three.js + Shaders + Higgsfield DoP)"
+    ok "Local Toolkit  : ${REPO_ROOT}/toolkit (fonts + GSAP + Three.js + Shaders + DoP + VFX Suite)"
     ;;
 
   verify)

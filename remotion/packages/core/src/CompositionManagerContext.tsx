@@ -1,0 +1,80 @@
+import type React from 'react';
+import {createContext} from 'react';
+import type {AnyComposition} from './CompositionManager.js';
+import type {TFolder} from './Folder.js';
+import type {VideoConfig} from './video-config.js';
+
+export type BaseMetadata = Pick<
+	VideoConfig,
+	| 'durationInFrames'
+	| 'fps'
+	| 'props'
+	| 'height'
+	| 'width'
+	| 'defaultCodec'
+	| 'defaultOutName'
+	| 'defaultVideoImageFormat'
+	| 'defaultPixelFormat'
+	| 'defaultProResProfile'
+	| 'defaultSampleRate'
+>;
+
+export type AssetPreviewMetadata = BaseMetadata & {
+	asset: string;
+	src: string;
+};
+
+export const getAssetPreviewCompositionId = (asset: string) => `asset:${asset}`;
+
+export type CanvasContent =
+	| {
+			type: 'composition';
+			compositionId: string;
+	  }
+	| {
+			type: 'asset';
+			asset: string;
+	  }
+	| {
+			type: 'output';
+			path: string;
+	  }
+	| {
+			type: 'output-blob';
+			displayName: string;
+			getBlob: () => Promise<Blob>;
+			width: number;
+			height: number;
+			sizeInBytes: number;
+	  };
+
+export type CompositionManagerSetters = {
+	setCanvasContent: React.Dispatch<React.SetStateAction<CanvasContent | null>>;
+	setCurrentAssetMetadata: React.Dispatch<
+		React.SetStateAction<AssetPreviewMetadata | null>
+	>;
+	// This is not a setter but also a value that does not change
+	onlyRenderComposition: string | null;
+};
+
+export type CompositionManagerContext = {
+	compositions: AnyComposition[];
+	currentCompositionMetadata: BaseMetadata | null;
+	currentAssetMetadata: AssetPreviewMetadata | null;
+	folders: TFolder[];
+	canvasContent: CanvasContent | null;
+};
+
+export const CompositionManager = createContext<CompositionManagerContext>({
+	compositions: [],
+	folders: [],
+	currentCompositionMetadata: null,
+	currentAssetMetadata: null,
+	canvasContent: null,
+});
+
+export const CompositionSetters = createContext<CompositionManagerSetters>({
+	setCanvasContent: () => undefined,
+	setCurrentAssetMetadata: () => undefined,
+	onlyRenderComposition: null,
+});

@@ -17,23 +17,28 @@ AI-VIDEO-EDITOR/
 ├── .hyperframes/cache/               # 448 offline-cached HyperFrames registry manifests
 ├── toolkit/                          # Offline-first shared assets (zero CDN dependency at render time)
 │   ├── fonts/                        # Inter, Space Grotesk, JetBrains Mono, Cinzel, Cormorant Garamond (.woff2)
-│   ├── vendor/                       # gsap.min.js, three.core.min.js, shaders.iife.js, camera-dop.js
+│   ├── vendor/                       # gsap.min.js, three.core.min.js, shaders.iife.js, camera-dop.js, vfx-cgi-suite.js
 │   └── templates/                    # hyperframes-base.html & remotion-base.tsx starter templates
-├── remotion/                         # Engine 2: React/TypeScript Frame-Exact Video Studio
+├── remotion/                         # Engine 2: Complete Remotion Studio + 59 Upstream Packages & Templates
+│   ├── packages/                     # 59 official remotion-dev/remotion packages (three, effects, svg-3d-engine, light-leaks, transitions, motion-blur, shapes, skia, rive, lottie, template-prompt-to-motion-graphics, etc.)
 │   ├── src/
-│   │   ├── Root.tsx                  # 9 registered compositions (3D, VFX, Motion Doctrine, NLE, Promo, Cards)
+│   │   ├── Root.tsx                  # 10 registered compositions (3D, VFX, Motion Doctrine, NLE, Cinema Studio 4.0, Promo, Cards)
 │   │   ├── Cinematic3DShowcase.tsx   # 3D Geodesic Wireframe + Higgsfield DoP Rigs + Godrays + Lens Flare
 │   │   ├── VFXCompositorSuite.tsx    # 4-Pass VFX Breakdown + Bullet-Time Shatter + Matchmove HUD
 │   │   ├── MotionDoctrineReel.tsx    # Waterfall Entry + 7cqw Cursor + Cut-the-Curve + Climax Stillness
 │   │   ├── NLEMasterTimeline.tsx     # Multi-Track NLE + Parakeet Caption Rail/Embed + LUT Color Grade
+│   │   ├── HiggsfieldCinemaStudioShowreel.tsx # Cinema Studio 4.0 + 3D Carousel + Sliding Stack + Physics + 2-Bone IK Character
 │   │   ├── ThaddeusTechzPromo.tsx    # Channel Promo (16:9 Landscape & 9:16 Shorts with procedural card fallback)
 │   │   ├── TitleCard.tsx             # Prop-driven editorial title card (16:9 & 1:1)
 │   │   ├── ScriptureCard.tsx         # Minimalist warm editorial card
-│   │   └── engine/                   # Reusable Remotion 3D / VFX / DoP / Seam / NLE Engine
+│   │   └── engine/                   # 7-Module Remotion 3D / VFX / DoP / Seam / NLE / Cinema Studio 4.0 / IK Engine
 │   │       ├── cameraRig.tsx         # Seeded PRNG, 3D point projection, 10 Higgsfield DoP camera presets
 │   │       ├── seamTransitions.ts    # Cut-the-Curve, Zoom-Through, Waterfall Entry, 10/65/25 Nudge, 7cqw Cursor
 │   │       ├── vfxShaders.tsx        # Anamorphic Flare, Volumetric Godrays, 3D Particles, Shatter Debris, Grain
-│   │       └── nleTrackEngine.tsx    # LUT Color Grading, Drop/Rail/Embed Captions, Lower-Thirds, Audio Meter
+│   │       ├── nleTrackEngine.tsx    # LUT Color Grading, Drop/Rail/Embed Captions, Lower-Thirds, Audio Meter
+│   │       ├── threeSceneStudio.tsx  # 3D Cylindrical Carousel, 3D Sliding Stack, 3D Physics Bouncing Sphere, Torus Knot
+│   │       ├── cinemaStudio4.tsx     # Higgsfield Cinema Studio 4.0 Stage, Portal Vortex, Plasma Lightning, Agamemnon
+│   │       └── characterRig2D.tsx    # Analytic 2-Bone IK Solver (solveTwoBoneIK) + Lip-Sync Viseme Character Rig
 ├── packages/                         # Complete heygen-com/hyperframes monorepo (15 packages)
 │   ├── cli/  core/  engine/  lint/  parsers/  player/  producer/  sdk/
 │   ├── shader-transitions/  studio/  studio-server/  inspector/  aws-lambda/  gcp-cloud-run/

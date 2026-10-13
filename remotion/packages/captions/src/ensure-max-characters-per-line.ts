@@ -1,0 +1,77 @@
+import type {Caption} from './caption';
+
+const splitWords = (inputCaptions: Caption[]): Caption[] => {
+	const captions: Caption[] = [];
+
+	for (let i = 0; i < inputCaptions.length; i++) {
+		const w = inputCaptions[i];
+		const words = w.text.split(' ').filter(Boolean);
+
+		for (let j = 0; j < words.length; j++) {
+			const word = words[j];
+			captions.push({
+				text: ` ${word}`,
+				startMs: w.startMs,
+				endMs: w.endMs,
+				confidence: w.confidence,
+				timestampMs: w.timestampMs,
+				...(j === words.length - 1 && w.pageBreakAfter
+					? {pageBreakAfter: true}
+					: {}),
+			});
+		}
+	}
+
+	return captions;
+};
+
+export type EnsureMaxCharactersPerLineInput = {
+	captions: Caption[];
+	maxCharsPerLine: number;
+};
+
+export type EnsureMaxCharactersPerLineOutput = {segments: Caption[][]};
+
+export const ensureMaxCharactersPerLine = ({
+	captions,
+	maxCharsPerLine,
+}: EnsureMaxCharactersPerLineInput): EnsureMaxCharactersPerLineOutput => {
+	const splitted = splitWords(captions);
+
+	const segments: Caption[][] = [];
+	let currentSegment: Caption[] = [];
+
+	for (let i = 0; i < splitted.length; i++) {
+		const w = splitted[i] as Caption;
+		const remainingWords = splitted.slice(i + 1);
+		const filledCharactersInLine = currentSegment
+			.map((s) => s.text.length)
+			.reduce((a, b) => a + b, 0);
+
+		const preventOrphanWord =
+			remainingWords.length < 4 &&
+			remainingWords.length > 1 &&
+			filledCharactersInLine > maxCharsPerLine / 2;
+
+		if (
+			currentSegment.length > 0 &&
+			(filledCharactersInLine + w.text.length > maxCharsPerLine ||
+				preventOrphanWord)
+		) {
+			segments.push(currentSegment);
+			currentSegment = [];
+		}
+
+		currentSegment.push(w);
+		if (w.pageBreakAfter && i < splitted.length - 1) {
+			segments.push(currentSegment);
+			currentSegment = [];
+		}
+	}
+
+	if (currentSegment.length > 0) {
+		segments.push(currentSegment);
+	}
+
+	return {segments};
+};

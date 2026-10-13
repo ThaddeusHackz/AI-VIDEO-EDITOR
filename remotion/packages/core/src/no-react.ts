@@ -1,0 +1,106 @@
+import {
+	evaluateSourceNumericValue,
+	evaluateSourcePropStatuses,
+} from './evaluate-source-expressions.js';
+import {DEFAULT_SEQUENCE_ACTIVITY_LIMIT} from './sequence-activity-defaults.js';
+export type {
+	ArtifactAsset,
+	AudioOrVideoAsset,
+	InlineAudioAsset,
+	TRenderAsset,
+} from './CompositionManager';
+export type {DownloadBehavior} from './download-behavior';
+export {
+	assertValidInterpolateEasingOption,
+	assertValidInterpolatePosterizeOption,
+	interpolate,
+} from './interpolate';
+export type {
+	EasingFunction,
+	ExtrapolateType,
+	InterpolateOptions,
+	InterpolateOutputOption,
+	InterpolateOutputType,
+} from './interpolate';
+export {random} from './random.js';
+export type {RandomSeed} from './random.js';
+export type {VideoConfig} from './video-config';
+
+import {
+	DEFAULT_PREMOUNT_IN_SECONDS,
+	DEFAULT_STUDIO_PREMOUNT_IN_SECONDS,
+	validateDefaultPremountInSeconds,
+} from './default-premount-in-seconds';
+import {
+	DELAY_RENDER_CALLSTACK_TOKEN,
+	DELAY_RENDER_CLEAR_TOKEN,
+	DELAY_RENDER_RETRIES_LEFT,
+	DELAY_RENDER_RETRY_TOKEN,
+} from './delay-render-constants';
+import {findPropsToDelete} from './find-props-to-delete';
+import {
+	fetchFontData,
+	getRegisteredFontFaces,
+	registerFontFace,
+} from './font-face-registry';
+import {
+	deserializeJSONWithSpecialTypes,
+	serializeJSONWithSpecialTypes,
+} from './input-props-serialization';
+import {DATE_TOKEN, FILE_TOKEN} from './input-props-serialization.js';
+import {sequenceSchema} from './interactivity-schema';
+import {colorNames, processColor} from './interpolate-colors';
+import {proResProfileOptions} from './prores-profile';
+import {parseScaleValue, serializeScaleValue} from './scale-value';
+import {truthy} from './truthy';
+import {ENABLE_V5_BREAKING_CHANGES} from './v5-flag';
+import {validateFrame} from './validate-frame';
+import {validateCodec} from './validation/validate-default-codec';
+import {validateDefaultAndInputProps} from './validation/validate-default-props';
+import {validateDimension} from './validation/validate-dimensions';
+import {validateDurationInFrames} from './validation/validate-duration-in-frames';
+import {validateFps} from './validation/validate-fps';
+import {getExpectedMediaFrameUncorrected} from './video/get-current-time';
+import {getOffthreadVideoSource} from './video/offthread-video-source';
+
+export const NoReactInternals = {
+	DEFAULT_PREMOUNT_IN_SECONDS,
+	DEFAULT_STUDIO_PREMOUNT_IN_SECONDS,
+	DEFAULT_SEQUENCE_ACTIVITY_LIMIT,
+	validateDefaultPremountInSeconds,
+	evaluateSourceNumericValue,
+	evaluateSourcePropStatuses,
+	processColor,
+	truthy,
+	validateFps,
+	validateDimension,
+	validateDurationInFrames,
+	validateDefaultAndInputProps,
+	validateFrame,
+	serializeJSONWithSpecialTypes,
+	bundleName: 'bundle.js',
+	bundleMapName: 'bundle.js.map',
+	deserializeJSONWithSpecialTypes,
+	DELAY_RENDER_CALLSTACK_TOKEN,
+	DELAY_RENDER_RETRY_TOKEN,
+	DELAY_RENDER_CLEAR_TOKEN,
+	DELAY_RENDER_ATTEMPT_TOKEN: DELAY_RENDER_RETRIES_LEFT,
+	getOffthreadVideoSource,
+	getExpectedMediaFrameUncorrected,
+	ENABLE_V5_BREAKING_CHANGES,
+	MIN_NODE_VERSION: ENABLE_V5_BREAKING_CHANGES ? 22 : 16,
+	MIN_BUN_VERSION: ENABLE_V5_BREAKING_CHANGES ? '1.1.3' : '1.0.3',
+	MIN_ESLINT_VERSION: ENABLE_V5_BREAKING_CHANGES ? '8.57.0' : '7.15.0',
+	colorNames,
+	DATE_TOKEN,
+	FILE_TOKEN,
+	validateCodec,
+	proResProfileOptions,
+	findPropsToDelete,
+	sequenceSchema,
+	parseScaleValue,
+	serializeScaleValue,
+	getRegisteredFontFaces,
+	registerFontFace,
+	fetchFontData,
+};

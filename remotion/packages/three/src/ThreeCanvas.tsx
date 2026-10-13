@@ -1,0 +1,258 @@
+import type {RootState} from '@react-three/fiber';
+import {Canvas, useThree} from '@react-three/fiber';
+import React, {
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from 'react';
+import {
+	Freeze,
+	Sequence,
+	Internals,
+	type InteractiveBaseProps,
+	type InteractivePremountProps,
+	useCurrentFrame,
+	useDelayRender,
+	useRemotionEnvironment,
+} from 'remotion';
+import {SuspenseLoader} from './SuspenseLoader';
+import {validateDimension} from './validate';
+
+export type ThreeCanvasProps = Omit<
+	React.ComponentProps<typeof Canvas>,
+	keyof InteractiveBaseProps
+> &
+	InteractiveBaseProps &
+	InteractivePremountProps & {
+		readonly width: number;
+		readonly height: number;
+		readonly children: React.ReactNode;
+	};
+
+export type ThreeCanvasFrameRendererProps = {
+	readonly onRendered: () => void;
+};
+
+type ThreeCanvasInternalsProps = ThreeCanvasProps & {
+	readonly FrameRenderer: React.ComponentType<ThreeCanvasFrameRendererProps>;
+	readonly advanceOnCreated: boolean;
+	readonly documentationLink: string;
+};
+
+const Scale = ({
+	width,
+	height,
+}: {
+	readonly width: number;
+	readonly height: number;
+}) => {
+	const {set, setSize: threeSetSize} = useThree();
+	const [setSize] = useState(() => threeSetSize);
+	useLayoutEffect(() => {
+		setSize(width, height);
+		set({setSize: () => null});
+		return () => set({setSize});
+	}, [setSize, width, height, set]);
+	return null;
+};
+
+const ManualFrameRenderer = ({onRendered}: ThreeCanvasFrameRendererProps) => {
+	const {advance} = useThree();
+	const frame = useCurrentFrame();
+
+	useEffect(() => {
+		advance(performance.now());
+		onRendered();
+	}, [frame, advance, onRendered]);
+
+	return null;
+};
+
+const ThreeCanvasContent = (props: ThreeCanvasInternalsProps) => {
+	const {
+		children,
+		width,
+		height,
+		style,
+		resize,
+		frameloop,
+		onCreated,
+		FrameRenderer,
+		advanceOnCreated,
+		documentationLink: _,
+		...rest
+	} = props;
+	const {isRendering} = useRemotionEnvironment();
+	const {delayRender, continueRender} = useDelayRender();
+	const contexts = Internals.useRemotionContexts();
+	const frame = useCurrentFrame();
+
+	// Taken at commit and released on unmount, so a canvas that unmounts before it is
+	// created, or a render React discards, does not leave the hold open.
+	const createdHold = useRef<number | null>(null);
+	const created = useRef(false);
+	useLayoutEffect(() => {
+		if (created.current) {
+			return;
+		}
+
+		createdHold.current = delayRender(
+			'Waiting for <ThreeCanvas/> to be created',
+		);
+		return () => {
+			if (createdHold.current !== null) {
+				continueRender(createdHold.current);
+				createdHold.current = null;
+			}
+		};
+	}, [delayRender, continueRender]);
+	const frameDelayHandle = useRef<number | null>(null);
+
+	validateDimension(width, 'width', 'of the <ThreeCanvas /> component');
+	validateDimension(height, 'height', 'of the <ThreeCanvas /> component');
+
+	const actualStyle = {
+		width,
+		height,
+		...style,
+	};
+
+	const remotion_onCreated: typeof onCreated = useCallback(
+		(state: RootState) => {
+			if (isRendering && advanceOnCreated) {
+				state.advance(performance.now());
+			}
+
+			created.current = true;
+			if (createdHold.current !== null) {
+				continueRender(createdHold.current);
+				createdHold.current = null;
+			}
+
+			onCreated?.(state);
+		},
+		[onCreated, continueRender, isRendering, advanceOnCreated],
+	);
+
+	useLayoutEffect(() => {
+		if (!isRendering || frame === 0) {
+			return;
+		}
+
+		frameDelayHandle.current = delayRender(
+			`Waiting for R3F to render frame ${frame}`,
+		);
+
+		return () => {
+			if (frameDelayHandle.current !== null) {
+				continueRender(frameDelayHandle.current);
+			}
+		};
+	}, [frame, isRendering, delayRender, continueRender]);
+
+	const handleRendered = useCallback(() => {
+		if (frameDelayHandle.current !== null) {
+			continueRender(frameDelayHandle.current);
+			frameDelayHandle.current = null;
+		}
+	}, [continueRender]);
+
+	return (
+		<SuspenseLoader>
+			<Canvas
+				style={actualStyle}
+				{...rest}
+				resize={{offsetSize: true, ...resize}}
+				frameloop={isRendering ? 'never' : (frameloop ?? 'always')}
+				onCreated={remotion_onCreated}
+			>
+				<Scale width={width} height={height} />
+				<Internals.RemotionContextProvider contexts={contexts}>
+					{isRendering && <FrameRenderer onRendered={handleRendered} />}
+					{children}
+				</Internals.RemotionContextProvider>
+			</Canvas>
+		</SuspenseLoader>
+	);
+};
+
+export const ThreeCanvasInternals = ({
+	from,
+	durationInFrames,
+	trimBefore,
+	playbackRate,
+	loop,
+	freeze,
+	hidden,
+	name,
+	showInTimeline,
+	premountFor,
+	postmountFor,
+	styleWhilePremounted,
+	styleWhilePostmounted,
+	style,
+	...props
+}: ThreeCanvasInternalsProps) => {
+	const {
+		effectivePremountFor,
+		effectivePostmountFor,
+		freezeFrame,
+		isPremountingOrPostmounting,
+		premountingActive,
+		postmountingActive,
+		premountingStyle,
+	} = Internals.usePremounting({
+		from: from ?? 0,
+		durationInFrames: Internals.resolveSequenceDuration({
+			durationInFrames,
+			playbackRate,
+			loop,
+		}),
+		premountFor: premountFor ?? null,
+		postmountFor: postmountFor ?? null,
+		style: style ?? null,
+		styleWhilePremounted: styleWhilePremounted ?? null,
+		styleWhilePostmounted: styleWhilePostmounted ?? null,
+		hideWhilePremounted: 'opacity',
+	});
+	return (
+		<Freeze frame={freezeFrame} active={isPremountingOrPostmounting}>
+			<Sequence
+				layout="none"
+				from={from}
+				durationInFrames={durationInFrames}
+				trimBefore={trimBefore}
+				playbackRate={playbackRate}
+				loop={loop}
+				freeze={freeze}
+				hidden={hidden}
+				name={name ?? '<ThreeCanvas>'}
+				_remotionInternalDocumentationLink={props.documentationLink}
+				showInTimeline={showInTimeline ?? false}
+				_remotionInternalPremountDisplay={effectivePremountFor || null}
+				_remotionInternalPostmountDisplay={effectivePostmountFor || null}
+				_remotionInternalIsPremounting={premountingActive}
+				_remotionInternalIsPostmounting={postmountingActive}
+			>
+				<ThreeCanvasContent {...props} style={premountingStyle ?? undefined} />
+			</Sequence>
+		</Freeze>
+	);
+};
+
+/*
+ * @description A wrapper for React Three Fiber's <Canvas /> which synchronizes with Remotion's useCurrentFrame().
+ * @see [Documentation](https://www.remotion.dev/docs/three-canvas)
+ */
+export const ThreeCanvas = (props: ThreeCanvasProps) => {
+	return (
+		<ThreeCanvasInternals
+			{...props}
+			FrameRenderer={ManualFrameRenderer}
+			advanceOnCreated
+			documentationLink="https://www.remotion.dev/docs/three-canvas"
+		/>
+	);
+};
