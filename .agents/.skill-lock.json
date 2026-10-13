@@ -1,6 +1,6 @@
 {
-  "source": "ThaddeusHackz/AI-VIDEO-EDITOR (heygen-com/hyperframes + remotion-dev/remotion + morluto/rea + opus-gpt-higgsfield-ultrahigh)",
-  "totalSkills": 50,
+  "source": "ThaddeusHackz/AI-VIDEO-EDITOR (heygen-com/hyperframes + remotion-dev/remotion + morluto/rea + opus-js-animations + gpt-js-animations + higgsfield-ultrahigh)",
+  "totalSkills": 53,
   "skills": {
     "captions-overlay": {
       "hash": "dde58d4fcad6b244",
@@ -42,8 +42,16 @@
       "hash": "a021a8ffde41ac46",
       "files": 6
     },
+    "gpt-js-animations": {
+      "hash": "9b61727f1e2d7608",
+      "files": 29
+    },
     "higgsfield-camera-dop": {
       "hash": "15b52f5b72a1c251",
+      "files": 1
+    },
+    "higgsfield-effects-mix": {
+      "hash": "59841c352e463f4a",
       "files": 1
     },
     "hyperframes": {
@@ -105,6 +113,10 @@
     "opus-gpt-director": {
       "hash": "6f83c4d21b3ac157",
       "files": 1
+    },
+    "opus-js-animations": {
+      "hash": "6ead22a5f1f6dba6",
+      "files": 28
     },
     "oversized-cursor": {
       "hash": "a176b1f251c37908",

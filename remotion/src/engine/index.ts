@@ -5,3 +5,4 @@ export * from "./nleTrackEngine";
 export * from "./threeSceneStudio";
 export * from "./cinemaStudio4";
 export * from "./characterRig2D";
+export * from "./higgsfieldEffectsMix";

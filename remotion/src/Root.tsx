@@ -8,6 +8,7 @@ import { VFXCompositorSuite } from "./VFXCompositorSuite";
 import { MotionDoctrineReel } from "./MotionDoctrineReel";
 import { NLEMasterTimeline } from "./NLEMasterTimeline";
 import { HiggsfieldCinemaStudioShowreel } from "./HiggsfieldCinemaStudioShowreel";
+import { HiggsfieldEffectsMixLab } from "./HiggsfieldEffectsMixLab";
 
 /**
  * Every <Composition> here becomes a renderable target:
@@ -65,6 +66,16 @@ export const RemotionRoot: React.FC = () => {
         id="Higgsfield-CinemaStudio-4"
         component={HiggsfieldCinemaStudioShowreel}
         durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+
+      {/* 6. Higgsfield Effects Mix Lab (Multi-VFX Stacker: Thunder God + Levitation + Fire + Disintegration) */}
+      <Composition
+        id="Higgsfield-EffectsMix-Lab"
+        component={HiggsfieldEffectsMixLab}
+        durationInFrames={240}
         fps={30}
         width={1920}
         height={1080}
