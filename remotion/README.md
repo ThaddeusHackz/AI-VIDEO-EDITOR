@@ -64,8 +64,14 @@ Audio-only changes (VO, SFX table, bed levels) do not need a re-render:
 `python3 scripts/zw-remix.py out/<rendered>.mp4 out/<final>.mp4` rebuilds the mix from
 `timeline.ts` + the `SFX` table and remuxes it onto the existing video stream.
 
+Changes confined to one shot do not need a full re-render either: render just that range with
+`--frames=A-B --muted` (same crf/quality flags) and splice it in losslessly with
+`python3 scripts/zw-splice.py out/<base>.mp4 out/<segment>.mp4 A out/<final>.mp4`. The range must
+start and end on hard cuts (x264 puts keyframes there; the script checks and refuses otherwise).
+
 Scene layout: `scene/direction.ts` (world layout, per-shot cameras, per-frame scene state),
-`scene/Window.tsx` (wall + three-pane assembly, fog/crack overlays), `scene/Cabin.tsx` (set
+`scene/Window.tsx` (wall + three-pane assembly, fog overlay), `scene/Crack.tsx` (pre-fractured
+outer pane: Voronoi prisms whose fracture faces are revealed by an expanding front), `scene/Cabin.tsx` (set
 dressing: overhead bin + PSU, dado trim, lap belt, curved fuselage with a row of windows),
 `scene/Props.tsx` (seat, arrows, pressure field, airflow particles), `scene/Passenger.tsx`
 (procedurally posed Ready Player Me avatar — `public/zack-window/models/passenger.glb` is

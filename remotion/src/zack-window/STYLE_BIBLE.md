@@ -11,6 +11,7 @@ and they are the acceptance checklist for any new short rendered with this pipel
 | Tooling | Blender + Cascadeur (physics-assisted character animation), BlenderKit assets, After Effects, EmberGen, Flamenco render farm; ~60-person team, contract 3D generalists make 20–45 s clips | React-Three-Fiber inside Remotion (`@remotion/three`), SwiftShader software GL in a headless Chromium, deterministic per-frame posing/IK |
 | World | "The emptiness": a plain light-blue/cyan void with a soft white hot-spot behind the subject; no horizon, no sky, slight vignette | CSS radial gradient backdrop (`#dff3fd → #b3e0f8 → #74c3ee → #3f9fdc`) behind an alpha WebGL canvas |
 | Characters | Semi-realistic 3D humans (recurring "Robert" demo man: casual tee/jeans), real objects, nothing cartoon | Ready Player Me full-body avatar in a white tee + jeans (`public/zack-window/models/passenger.glb`, from the MIT-licensed `carlosfranzreb/ravas` repo, `avatar_2_m.glb`), posed with two-bone IK + bone aiming; ARKit blendshapes drive blinks, a slight smile and brow interest |
+| Breakage | Real fracture geometry, never a drawn crack texture: the broken object is pre-cut into pieces and the break propagates in 3D | `scene/Crack.tsx`: outer pane = Voronoi prisms of a jittered polar seed grid around the impact (radial + concentric cracks); fracture faces carry per-vertex alpha revealed by a front expanding from the impact (concentric faces a beat later), facets settle by <1° so reflections break up |
 | Sets | A "slice" of a real place floating in the void: just the props that identify it (seat row, bin, window), never a full environment; glass slabs read by their bright edges | `scene/Cabin.tsx`: overhead bin + PSU (reading lights, gaspers), dado seam, raised-shade lip, contoured seat with wings + cream headrest cover, lap belt with buckle; outside, a curved fuselage belt with a row of five windows (dark / shade-down neighbours). Acrylic panes use a denser edge material on ExtrudeGeometry group 1 so slab thickness reads against the void |
 | Shots | Macro/ECU, centred 9:16 framing, slow continuous push-ins, ~1 shot per sentence, hard cuts, cutaways/exploded views, literal 3D arrows for forces | `timeline.ts` SHOTS + `direction.ts` camera moves (`drift` easing = never fully stops), cutaway via `gl.localClippingEnabled`, exploded rig in the void, instanced arrows/particles |
 | Light | Bright, soft, even; glossy-clean materials, soft contact shadows | Hemisphere + 1 PCF-shadowed key + fills, RoomEnvironment PMREM for reflections, ACES |
@@ -32,6 +33,13 @@ and they are the acceptance checklist for any new short rendered with this pipel
 Sound changes don't need a 3D re-render: `python3 scripts/zw-remix.py out/zack-window-v2.mp4 out/final.mp4`
 rebuilds the exact composition mix (VO beats from `timeline.ts`, the `SFX` table and pad ramp from
 `ZackWindowShort.tsx`) and muxes it onto the rendered video with the bundled ffmpeg.
+
+## Shot-only iteration
+
+A change inside one shot (e.g. the crack) is re-rendered as a range that starts/ends on hard cuts
+(`--frames=814-975 --muted`, ≈8 min) and spliced into the previous full render without re-encoding:
+`python3 scripts/zw-splice.py out/zack-window-v4.mp4 out/seg.mp4 814 out/zack-window-v5.mp4`.
+Verified on v5: untouched frames byte-identical to v4, clean whole-file decode.
 
 ## Render notes
 
