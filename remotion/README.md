@@ -60,6 +60,18 @@ package skips outside Amazon Linux) to `/tmp`, and `scripts/chrome-wrapper.sh` l
 SwiftShader WebGL flags. Debug any frame from any angle with
 `ZW_PROPS='{"cam":{"pos":[x,y,z],"look":[x,y,z],"fov":45}}' node scripts/stills.mjs ZackWindow-Short out/dbg 0.4 100`.
 
+Audio-only changes (VO, SFX table, bed levels) do not need a re-render:
+`python3 scripts/zw-remix.py out/<rendered>.mp4 out/<final>.mp4` rebuilds the mix from
+`timeline.ts` + the `SFX` table and remuxes it onto the existing video stream.
+
+Scene layout: `scene/direction.ts` (world layout, per-shot cameras, per-frame scene state),
+`scene/Window.tsx` (wall + three-pane assembly, fog/crack overlays), `scene/Cabin.tsx` (set
+dressing: overhead bin + PSU, dado trim, lap belt, curved fuselage with a row of windows),
+`scene/Props.tsx` (seat, arrows, pressure field, airflow particles), `scene/Passenger.tsx`
+(procedurally posed Ready Player Me avatar — `public/zack-window/models/passenger.glb` is
+`avatar_2_m.glb` from the MIT-licensed `carlosfranzreb/ravas` repo; same Wolf3D/Mixamo rig +
+52 ARKit blendshapes as any RPM full-body export, so the GLB can be swapped without code changes).
+
 ## Compositions available
 
 | id | size | length | purpose |
