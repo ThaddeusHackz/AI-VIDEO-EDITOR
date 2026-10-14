@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "fps": { "num": 30, "den": 1 },
+  "source": {
+    "id": "synthetic-speaker-example",
+    "path": "NOT_SUPPLIED/speaker-cfr.mp4",
+    "sha256": null,
+    "frames": 360,
+    "rights": "unknown",
+    "timing": "cfr"
+  },
+  "segments": [
+    { "id": "hook", "source_in": 30, "source_out": 150, "reason": "Illustrative opening sentence; discard leading setup." },
+    { "id": "payoff", "source_in": 210, "source_out": 330, "reason": "Illustrative conclusion after an omitted pause and filler." }
+  ],
+  "words": [
+    { "id": "w0", "text": "Ready?", "source_in": 0, "source_out": 20 },
+    { "id": "w1", "text": "Make", "source_in": 35, "source_out": 50 },
+    { "id": "w2", "text": "every", "source_in": 52, "source_out": 70 },
+    { "id": "w3", "text": "frame", "source_in": 73, "source_out": 95 },
+    { "id": "w4", "text": "count.", "source_in": 98, "source_out": 135 },
+    { "id": "w5", "text": "Um,", "source_in": 160, "source_out": 175 },
+    { "id": "w6", "text": "Keep", "source_in": 215, "source_out": 235 },
+    { "id": "w7", "text": "the", "source_in": 236, "source_out": 246 },
+    { "id": "w8", "text": "meaning.", "source_in": 250, "source_out": 310 }
+  ]
+}

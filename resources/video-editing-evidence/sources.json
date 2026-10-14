@@ -1,0 +1,271 @@
+{
+  "format_version": 1,
+  "prepared_date": "2026-10-14",
+  "provenance_recorded_at_utc": "2026-10-14T12:47:47.936164+00:00",
+  "local_start_revision": "1eaac10af1fe3a6f73ad30c7d436d43b73d6794e",
+  "audit_scope": "Bounded source inspection and additive production guidance. Not a YouTube video review, whole-repository security scan or executed REA provider benchmark.",
+  "requested_references": [
+    {
+      "id": "youtube-search-claude",
+      "kind": "search",
+      "url": "https://www.youtube.com/results?search_query=claude+opus+5.5+",
+      "requested_start_seconds": null,
+      "status": "not_accessed_network_restricted",
+      "fetch_attempted": false,
+      "title": null,
+      "author": null,
+      "transcript": null,
+      "watched_intervals_seconds": [],
+      "results_enumerated": false,
+      "reason": "YouTube is outside the session network allowlist. No content or visual claims are supported."
+    },
+    {
+      "id": "youtube-5UnK3c-nlIs",
+      "kind": "video",
+      "url": "https://www.youtube.com/watch?v=5UnK3c-nlIs",
+      "requested_start_seconds": null,
+      "status": "not_accessed_network_restricted",
+      "fetch_attempted": false,
+      "title": null,
+      "author": null,
+      "transcript": null,
+      "watched_intervals_seconds": [],
+      "results_enumerated": null,
+      "reason": "YouTube is outside the session network allowlist. No content or visual claims are supported."
+    },
+    {
+      "id": "youtube-5XSwP0DaHF4",
+      "kind": "video",
+      "url": "https://www.youtube.com/watch?v=5XSwP0DaHF4&t=565s",
+      "requested_start_seconds": 565,
+      "status": "not_accessed_network_restricted",
+      "fetch_attempted": false,
+      "title": null,
+      "author": null,
+      "transcript": null,
+      "watched_intervals_seconds": [],
+      "results_enumerated": null,
+      "reason": "YouTube is outside the session network allowlist. No content or visual claims are supported."
+    },
+    {
+      "id": "youtube-search-gpt",
+      "kind": "search",
+      "url": "https://www.youtube.com/results?search_query=gpt+6.1+sol+",
+      "requested_start_seconds": null,
+      "status": "not_accessed_network_restricted",
+      "fetch_attempted": false,
+      "title": null,
+      "author": null,
+      "transcript": null,
+      "watched_intervals_seconds": [],
+      "results_enumerated": false,
+      "reason": "YouTube is outside the session network allowlist. No content or visual claims are supported."
+    },
+    {
+      "id": "youtube-dT5-x3u5nCg",
+      "kind": "video",
+      "url": "https://www.youtube.com/watch?v=dT5-x3u5nCg",
+      "requested_start_seconds": null,
+      "status": "not_accessed_network_restricted",
+      "fetch_attempted": false,
+      "title": null,
+      "author": null,
+      "transcript": null,
+      "watched_intervals_seconds": [],
+      "results_enumerated": null,
+      "reason": "YouTube is outside the session network allowlist. No content or visual claims are supported."
+    }
+  ],
+  "youtube_coverage": {
+    "search_pages_enumerated": 0,
+    "videos_watched": 0,
+    "transcripts_retrieved": 0,
+    "frames_inspected": 0
+  },
+  "model_attribution": {
+    "claude_opus_5_5": "user-supplied label; not independently verified",
+    "gpt_6_1_sol": "user-supplied label; not independently verified"
+  },
+  "rea": {
+    "requested_url": "https://github.com/morluto/rea",
+    "upstream_revision": "3b79af28e80785afce9f5998d8f03289402a1847",
+    "upstream_declared_version": "6.5.0",
+    "local_declared_version": "6.4.0",
+    "local_updated": false,
+    "runtime_providers_executed": false
+  },
+  "upstream_sources": [
+    {
+      "url": "https://github.com/morluto/rea/blob/3b79af28e80785afce9f5998d8f03289402a1847/README.md",
+      "path": "README.md",
+      "revision": "3b79af28e80785afce9f5998d8f03289402a1847",
+      "retrieval": "GitHub contents API through gh",
+      "git_blob_sha": "2be1774fc0e7229028fcaa99d367cb3e26633e6f",
+      "content_sha256": "005e4c8acaa5a2a56f17bfac8f68b9fc9b3531bb370ed5f410154b65aa3ff124",
+      "bytes": 22125,
+      "review_scope": "introductory description, setup and capability table excerpt",
+      "provider_execution": "not_run"
+    },
+    {
+      "url": "https://github.com/morluto/rea/blob/3b79af28e80785afce9f5998d8f03289402a1847/package.json",
+      "path": "package.json",
+      "revision": "3b79af28e80785afce9f5998d8f03289402a1847",
+      "retrieval": "GitHub contents API through gh",
+      "git_blob_sha": "12a81a9867a2269ba1dd4242b8f016fc883bac5f",
+      "content_sha256": "a500302319c1214a8bb6c9a8b4a4a090806e95eef884204a9d9fbb4003050a6c",
+      "bytes": 23946,
+      "review_scope": "identity, version, engines and distribution metadata",
+      "provider_execution": "not_run"
+    },
+    {
+      "url": "https://github.com/morluto/rea/blob/3b79af28e80785afce9f5998d8f03289402a1847/docs/browser-observation.md",
+      "path": "docs/browser-observation.md",
+      "revision": "3b79af28e80785afce9f5998d8f03289402a1847",
+      "retrieval": "GitHub contents API through gh",
+      "git_blob_sha": "9c52ae8779cafae3d5beeaa545f7ac13afd30f31",
+      "content_sha256": "b418cb5d3577734cf0b0314e6bbc8519991e753cc51af077e3fb385ffad4e151",
+      "bytes": 28015,
+      "review_scope": "passive browser surfaces, provider authority and connection excerpt",
+      "provider_execution": "not_run"
+    },
+    {
+      "url": "https://github.com/morluto/rea/blob/3b79af28e80785afce9f5998d8f03289402a1847/docs/reconstruction-readiness.md",
+      "path": "docs/reconstruction-readiness.md",
+      "revision": "3b79af28e80785afce9f5998d8f03289402a1847",
+      "retrieval": "GitHub contents API through gh",
+      "git_blob_sha": "cf4784aca8c2760131292f90eeea4e4ab1aeea16",
+      "content_sha256": "0479c2a7c8dbc809db1feef6be5db7c6d551283137e48e5c28c3179be41c14a9",
+      "bytes": 5253,
+      "review_scope": "verifier scope, required stages and fail-closed rules excerpt",
+      "provider_execution": "not_run"
+    }
+  ],
+  "local_sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "bf4c01097b55c58bf78ed0be3b44364d3612d1063513db199e7313a452375fe1",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "README.md",
+      "sha256": "3db59359c6d0329fed8a80a3a9d54b29c5af5ec09c5d621c9927790e905eda09",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "bin/ai-video",
+      "sha256": "7d5cab32afb1dafc6d09a8cdf7d27c6ddee9f397bbd7f428b68508a627e8ce01",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "scripts/ai-video-pipeline.mjs",
+      "sha256": "ff9f9651e7c88b192b248fc2416b031dad17bd6de59162e70df24837d38335e2",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "remotion/package.json",
+      "sha256": "17948bd61a755655d899263da7eb59336a48c9a6af3ac59bc6074fd57c61da23",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "remotion/src/Root.tsx",
+      "sha256": "205a666426c5c917f80428a8aaf2210253658d0b5a82241a059d9024edbffc69",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "remotion/src/NLEMasterTimeline.tsx",
+      "sha256": "00e42d35b9ca4e25e687bd237878a9bf01be3cf22b0eba9d02a301b62184125c",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "remotion/src/engine/nleTrackEngine.tsx",
+      "sha256": "6d9822d43deb3afd58967cf7b6fd16a64d97e02a11251101e3f9f0ccb916da24",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "remotion/src/VFXCompositorSuite.tsx",
+      "sha256": "17043ac29e773bfb3348e603b58d5855b164f26b57ffae18f8381a3791685ff5",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "skills/opus-gpt-director/SKILL.md",
+      "sha256": "6f83c4d21b3ac157053d3e451ce1bbfc1af0263b6c5acc205baea6bc8c6361c1",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "skills/cinematic-3d-vfx-cgi/SKILL.md",
+      "sha256": "6369e75f7d432223409a4b53689f7517a3812910bf87dd1f047c869d288560ee",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "skills/nle-video-editor-pro/SKILL.md",
+      "sha256": "e1a9a1758a11e9f0eb512f261c26785f39d3f6c7767ef6e841e959c7bcf2af64",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "skills/talking-head-recut/SKILL.md",
+      "sha256": "84bb6ba0ac3cb0505f09dd1ded0a07e2298daed6c33c05d7bb9a56d0ade53d2c",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "skills/rea-video-reverse-engineer/SKILL.md",
+      "sha256": "214431117dfd254f5b9d59e6375c0551fd90a67c4d4ea294087fd48cb9d08c84",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "skills/reverse-engineer-anything/SKILL.md",
+      "sha256": "f3ce4a48cfd3500d0741e845a6d27c52167753801014fbac922909678b5d7493",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "skills/youtube-opus-gpt-benchmarks/SKILL.md",
+      "sha256": "67f1b7b4fde0b01047c83ea82f7050d0649619096b11dae73cca02061dc82ab1",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "toolkit/OPUS_5_5_VIDEO_WORKFLOW_RESEARCH.md",
+      "sha256": "1a571e124e7b949b1f55961f159f905cc2fb7b66b98f79f1f5ef25152efcf330",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "rea/AGENTS.md",
+      "sha256": "ce00721805a56c078eeefd73cc51ba2a4455a4564e0d37720856f28d8bc6b032",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "rea/README.md",
+      "sha256": "eaa7f452a3d5aa557fa10789dd1dc3e986e2857f41bf3d3f1507822be32c0f6a",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "rea/package.json",
+      "sha256": "31098831d800aba3a1c7683f26caec93b9bc547b144a79c5fbd1eea5cc74ebad",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "rea/docs/browser-observation.md",
+      "sha256": "025628421583b2b768865375f85b219903f51dcafa89bf383715b979b6b90c79",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "rea/src/cli/browserCommands.ts",
+      "sha256": "1886d66e3ccba67fdaf6edfa0035a527959f58f76c477d9773fe5c19b79df527",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    },
+    {
+      "path": "rea/src/cli/setupCommands.ts",
+      "sha256": "c84c2e6a851a68c948f9e9dc36fc56daec5b97718b191cb3decab5b1c9b49e34",
+      "coverage": "selected source sections inspected; not a full runtime audit"
+    }
+  ],
+  "original_file_baseline": {
+    "algorithm": "sha256",
+    "tracked_file_count": 9089,
+    "manifest_location": "outside repository; used for final preservation comparison"
+  },
+  "limitations": [
+    "No footage supplied or obtained.",
+    "No ASR, render, listening review, camera solve, or media decode was performed.",
+    "Static documentation and source review do not establish installed runtime capabilities.",
+    "Guidance is model-agnostic and cannot guarantee arbitrary editing or CGI."
+  ]
+}
