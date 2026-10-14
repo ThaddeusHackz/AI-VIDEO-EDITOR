@@ -15,7 +15,7 @@ and they are the acceptance checklist for any new short rendered with this pipel
 | Light | Bright, soft, even; glossy-clean materials, soft contact shadows | Hemisphere + 1 PCF-shadowed key + fills, RoomEnvironment PMREM for reflections, ACES |
 | Script | Calm plain second person, "most people think… but…", "You see…", one idea per sentence, 60–110 words, ~2.4–2.6 words/s, PG | 6 beats / 101 words / 39.8 s of VO (`timeline.ts` BEATS) |
 | Subtitles | Small unobtrusive white phrase subtitles (present on all but ~18 of his shorts) | Inter 700 ≈50 px, dark stroke, ~69 % down, 2–6-word chunks |
-| Sound | Quiet pad under the VO, minimal SFX | `public/zack-window/music/bed.wav` (generated pad, −20 dBFS RMS, mixed at 0.3) |
+| Sound | Quiet pad under the VO, a handful of literal SFX (taps, whooshes, cracks) | `public/zack-window/music/bed.wav` (generated pad, −20 dBFS RMS, mixed at 0.3) + five synthesized SFX in `public/zack-window/sfx/` (tap 3.3 s, pressure whoosh 14.9 s, crack 30.6 s, air hiss 32.75 s, fog-clear shimmer 38.9 s) |
 
 ## Acceptance checklist for a shot
 
@@ -25,6 +25,12 @@ and they are the acceptance checklist for any new short rendered with this pipel
 4. Every physical claim is drawn literally (arrows push cabin → window; air flows cabin → hole → gap).
 5. Clean, bright, white/blue palette. No dark grading, no grain, no giant stat callouts.
 6. Captions match the spoken phrase; never emoji (renderer has no emoji font).
+
+## Audio-only iteration
+
+Sound changes don't need a 3D re-render: `python3 scripts/zw-remix.py out/zack-window-v2.mp4 out/final.mp4`
+rebuilds the exact composition mix (VO beats from `timeline.ts`, the `SFX` table and pad ramp from
+`ZackWindowShort.tsx`) and muxes it onto the rendered video with the bundled ffmpeg.
 
 ## Render notes
 

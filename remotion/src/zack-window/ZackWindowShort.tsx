@@ -5,6 +5,15 @@ import { perfFlags } from "./scene/materials";
 import { Scene } from "./scene/Scene";
 import { BEATS, TOTAL_FRAMES } from "./timeline";
 
+/** name → start frame, length (frames), mix volume. Keep it sparse: his shorts use very few SFX. */
+export const SFX = [
+  { name: "tap", frame: 99, frames: 8, volume: 0.5 },
+  { name: "whoosh", frame: 447, frames: 84, volume: 0.35 },
+  { name: "crack", frame: 918, frames: 48, volume: 0.45 },
+  { name: "hiss", frame: 983, frames: 156, volume: 0.35 },
+  { name: "shimmer", frame: 1167, frames: 54, volume: 0.3 },
+] as const;
+
 /**
  * "Why Airplane Windows Have A Tiny Hole" — a Zack-D-Films-format short.
  *
@@ -91,6 +100,12 @@ export const ZackWindowShort: React.FC = () => {
       {BEATS.map((b) => (
         <Sequence key={b.id} from={b.from} durationInFrames={b.duration} name={`VO ${b.id}`}>
           <Audio src={staticFile(`zack-window/vo/${b.file}`)} volume={0.95} />
+        </Sequence>
+      ))}
+      {/* Small literal SFX, timed to direction.ts beats (tap 3.3 s, pressure 14.9 s, crack 30.6 s, air 32.75 s, fog clears 38.9 s) */}
+      {SFX.map((x) => (
+        <Sequence key={x.name} from={x.frame} durationInFrames={x.frames} name={`SFX ${x.name}`}>
+          <Audio src={staticFile(`zack-window/sfx/${x.name}.wav`)} volume={x.volume} />
         </Sequence>
       ))}
       <Sequence from={0} durationInFrames={TOTAL_FRAMES} name="Music bed">
