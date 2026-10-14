@@ -3,7 +3,8 @@ import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { getInputProps, useCurrentFrame } from "remotion";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
-import { CrackSheet, FogSheet, Panes, WindowAssembly, paneLayout } from "./Window";
+import { FogSheet, Panes, WindowAssembly, paneLayout } from "./Window";
+import { CrackedPane } from "./Crack";
 import { perfFlags } from "./materials";
 import { AirFlow, Arrow, PressureField, Seat } from "./Props";
 import { Fuselage, OverheadBin, SeatBelt, WallTrim } from "./Cabin";
@@ -146,7 +147,6 @@ const Exploded: React.FC<{ visible: boolean; explode: number; yaw: number; bow: 
   visible, explode, yaw, bow, middleGlow, crack, gapArrows, frame,
 }) => {
   const lay = paneLayout(1, explode, bow);
-  const crackX = lay.xo + lay.to + 0.0005;
   const gapTail = lay.xm + lay.tm + 0.006;
   const gapLen = Math.max(0.01, lay.xo - gapTail - 0.004);
   const isCrack = Math.abs(explode - CRACK_EXPLODE) < 1e-6;
@@ -155,8 +155,8 @@ const Exploded: React.FC<{ visible: boolean; explode: number; yaw: number; bow: 
       <KeyLight position={[-1.2, 2.4, 2.2]} target={[0, 0, 0]} intensity={2.0} size={1.0} />
       <directionalLight position={[2.5, 1.0, 1.5]} intensity={0.9} color="#dcefff" />
       <group rotation={[0, yaw, 0]} position={[-0.06 - 0.08 * explode, 0, 0]}>
-        <Panes explode={explode} bow={bow} middleGlow={middleGlow} tint="#eaf7ff" opacity={0.22} side={THREE.DoubleSide} />
-        {isCrack && <CrackSheet progress={crack} x={crackX} />}
+        <Panes explode={explode} bow={bow} middleGlow={middleGlow} tint="#eaf7ff" opacity={0.22} side={THREE.DoubleSide} outerVisible={!isCrack} />
+        {isCrack && <CrackedPane progress={crack} x={lay.xo} bow={bow} tint="#eaf7ff" opacity={0.22} side={THREE.DoubleSide} />}
         <group visible={gapArrows > 0.001}>
           {[-0.13, -0.065, 0.0, 0.065, 0.13].map((y, i) => (
             <Arrow key={i} len={gapLen} r={0.007} position={[gapTail + 0.004 * Math.sin(frame * 0.25 + i), y, 0.0]} scale={gapArrows} />

@@ -140,7 +140,7 @@ export const sceneAt = (frame: number): SceneState => {
   const expYaw = sh === "exploded" ? -0.75 + Math.sin(t * 0.5) * 0.08 : -0.12;
   const bow = sh === "crack" ? smooth(t, 26.0, 28.0) : 0;
   const middleGlow = sh === "crack" ? smooth(t, 28.8, 29.8) * (1 - smooth(t, 31.0, 32.3)) : 0;
-  const crack = sh === "crack" ? easeOut(ramp(t, 30.6, 32.0)) : 0;
+  const crack = sh === "crack" ? easeOut(ramp(t, 30.6, 31.8)) : 0;
   const flow = sh === "bleed" ? smooth(t, 32.75, 33.7) : 0;
   // Interior fog: a thin haze on the gap clears away in the outro ("never fogs up").
   const fogInterior = sh === "outro" ? 0.9 * (1 - smooth(t, 38.9, 40.6)) : 0;

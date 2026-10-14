@@ -1,10 +1,10 @@
-import React, { useLayoutEffect, useMemo, useRef } from "react";
+import React, { useLayoutEffect, useMemo } from "react";
 import * as THREE from "three";
 import {
   matte,
   acrylic, aluminum, frameDark, insulation, plasticWhite, wallBeige, type Clip,
 } from "./materials";
-import { circlePath, roundedRect, windowShape, lerp, rng, clamp01 } from "./util";
+import { circlePath, roundedRect, windowShape, rng, clamp01 } from "./util";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
 /**
@@ -73,6 +73,8 @@ type PanesProps = {
   middleGlow?: number;
   /** opacity of the slab edges (defaults to ~3× the face opacity) */
   edgeOpacity?: number;
+  /** hide the outer slab (a CrackedPane stands in for it) */
+  outerVisible?: boolean;
 };
 
 /** x-positions of the pane slabs for a given exaggeration factor (start x of each slab). */
@@ -87,7 +89,7 @@ export const paneLayout = (thick = 1, explode = 0, bow = 0) => {
 };
 
 export const Panes: React.FC<PanesProps> = ({
-  explode = 0, bow = 0, clip, tint, opacity, middleGlow = 0, thick = 1, side, middleOpacity, holeRim = true, edgeOpacity,
+  explode = 0, bow = 0, clip, tint, opacity, middleGlow = 0, thick = 1, side, middleOpacity, holeRim = true, edgeOpacity, outerVisible = true,
 }) => {
   const geo = useMemo(() => {
     const inner = extrude(windowShape(INNER_W, INNER_H), 0.003, 0.0006);
@@ -150,6 +152,7 @@ export const Panes: React.FC<PanesProps> = ({
         position={[xo, 0, 0]}
         rotation={ROT_TO_X}
         scale={[1, 1 + bow * 0.01, 1 + bow * 0.01]}
+        visible={outerVisible}
         castShadow
         receiveShadow
       />
@@ -303,111 +306,5 @@ export const FogSheet: React.FC<{ amount: number; x?: number }> = ({ amount, x =
     mat.opacity = clamp01(amount) * 0.92;
   }, [amount, mat]);
   // ShapeGeometry lies in XY; rotate so it faces ±x
-  return <mesh geometry={geo} material={mat} position={[x, 0, 0]} rotation={[0, Math.PI / 2, 0]} />;
-};
-
-type Seg = { pts: { x: number; y: number }[]; delay: number; w: number };
-
-/** Builds a deterministic crack network radiating from an impact point. */
-const buildCracks = (seed: number): Seg[] => {
-  const r = rng(seed);
-  const segs: Seg[] = [];
-  const cx = 0.36, cy = 0.58; // impact point (uv)
-  const main = 7;
-  for (let i = 0; i < main; i++) {
-    const ang = (i / main) * Math.PI * 2 + (r() - 0.5) * 0.6;
-    const pts = [{ x: cx, y: cy }];
-    let x = cx, y = cy, a = ang;
-    const steps = 9 + Math.floor(r() * 6);
-    for (let k = 0; k < steps; k++) {
-      a += (r() - 0.5) * 0.7;
-      const len = 0.03 + r() * 0.05;
-      x += Math.cos(a) * len;
-      y += Math.sin(a) * len;
-      pts.push({ x, y });
-      if (x < 0.02 || x > 0.98 || y < 0.02 || y > 0.98) break;
-    }
-    segs.push({ pts, delay: 0, w: 2.6 });
-    // branches
-    const nb = 1 + Math.floor(r() * 3);
-    for (let b = 0; b < nb; b++) {
-      const at = 2 + Math.floor(r() * Math.max(1, pts.length - 3));
-      const p0 = pts[Math.min(at, pts.length - 1)];
-      const bp = [{ x: p0.x, y: p0.y }];
-      let bx = p0.x, by = p0.y, ba = ang + (r() < 0.5 ? 1 : -1) * (0.6 + r() * 0.8);
-      const bs = 3 + Math.floor(r() * 5);
-      for (let k = 0; k < bs; k++) {
-        ba += (r() - 0.5) * 0.8;
-        const len = 0.02 + r() * 0.035;
-        bx += Math.cos(ba) * len;
-        by += Math.sin(ba) * len;
-        bp.push({ x: bx, y: by });
-      }
-      segs.push({ pts: bp, delay: 0.25 + r() * 0.35, w: 1.4 });
-    }
-  }
-  return segs;
-};
-
-/** Crack overlay drawn on a canvas; `progress` 0..1 reveals it. Placed on the outer pane's outer face. */
-export const CrackSheet: React.FC<{ progress: number; x?: number }> = ({ progress, x = X_OUTER + T_OUTER / 2 + 0.0004 }) => {
-  const size = 1024;
-  const canvas = useMemo(() => makeCanvas(size), []);
-  const segs = useMemo(() => buildCracks(21), []);
-  const tex = useMemo(() => {
-    const t = new THREE.CanvasTexture(canvas);
-    t.colorSpace = THREE.SRGBColorSpace;
-    return t;
-  }, [canvas]);
-  const geo = useMemo(() => new THREE.ShapeGeometry(windowShape(WIN_W, WIN_H), 32), []);
-  const mat = useMemo(
-    () =>
-      new THREE.MeshBasicMaterial({
-        map: tex,
-        transparent: true,
-        opacity: 1,
-        depthWrite: false,
-        side: THREE.DoubleSide,
-        toneMapped: false,
-      }),
-    [tex],
-  );
-  const last = useRef(-1);
-  useLayoutEffect(() => {
-    const p = clamp01(progress);
-    if (p === last.current) return;
-    last.current = p;
-    const ctx = canvas.getContext("2d")!;
-    ctx.clearRect(0, 0, size, size);
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    const draw = (sg: Seg, frac: number, width: number, style: string) => {
-      if (frac <= 0) return;
-      const n = sg.pts.length - 1;
-      const total = frac * n;
-      const full = Math.floor(total);
-      const part = total - full;
-      ctx.strokeStyle = style;
-      ctx.lineWidth = width;
-      ctx.beginPath();
-      ctx.moveTo(sg.pts[0].x * size, sg.pts[0].y * size);
-      for (let i = 1; i <= Math.min(full, n); i++) ctx.lineTo(sg.pts[i].x * size, sg.pts[i].y * size);
-      if (full < n) {
-        const a = sg.pts[full], b = sg.pts[full + 1];
-        ctx.lineTo(lerp(a.x, b.x, part) * size, lerp(a.y, b.y, part) * size);
-      }
-      ctx.stroke();
-    };
-    for (const sg of segs) {
-      const f = clamp01((p - sg.delay) / (1 - sg.delay));
-      // halo, then bright core, then a thin dark edge for contrast on bright backgrounds
-      const w = Math.max(3.4, sg.w * 1.4);
-      draw(sg, f, w * 4.0, "rgba(255,255,255,0.25)");
-      draw(sg, f, w * 1.9, "rgba(40,60,85,0.7)");
-      draw(sg, f, w, "rgba(255,255,255,1)");
-    }
-    mat.opacity = p > 0 ? 1 : 0;
-    tex.needsUpdate = true;
-  }, [progress, canvas, segs, tex, mat]);
   return <mesh geometry={geo} material={mat} position={[x, 0, 0]} rotation={[0, Math.PI / 2, 0]} />;
 };
