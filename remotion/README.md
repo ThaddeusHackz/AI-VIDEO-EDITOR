@@ -36,6 +36,30 @@ remotion/
 └── out/                  rendered output
 ```
 
+## `ZackWindow-Short` — 3D explainer short (Zack D. Films format)
+
+`src/zack-window/` is a complete 1080×1920 @ 30 fps, 41.9 s short ("Why airplane windows have a
+tiny hole") built as **real 3D animation** with React-Three-Fiber inside Remotion: a posed
+passenger, a sectioned cabin wall, exploded panes, force arrows, airflow particles, fog and a crack
+sim, narrated with pre-rendered VO and small phrase subtitles. The research behind the look and the
+shot checklist live in [`src/zack-window/STYLE_BIBLE.md`](src/zack-window/STYLE_BIBLE.md).
+
+```bash
+cd remotion
+npm install && npm i --no-save @types/three@0.170.0 @sparticuz/chromium@153.0.0   # once per machine
+# a few review frames (one bundle, one browser) → out/stills/fNNNN.jpg, then a contact sheet
+node scripts/stills.mjs ZackWindow-Short out/stills 0.5 30 200 520 950
+python3 scripts/sheet.py out/stills/sheet.jpg out/stills/f0030.jpg out/stills/f0200.jpg
+# full render (≈55 min on a 2-vCPU box: SwiftShader software GL)
+npx remotion render src/index.ts ZackWindow-Short out/zack-window-v2.mp4 \
+  --browser-executable=$PWD/scripts/chrome-wrapper.sh --concurrency=2 --crf=20 --jpeg-quality=88 --timeout=180000
+```
+
+`scripts/chrome-path.cjs` extracts `@sparticuz/chromium` (plus its `al2023` nss/nspr libs, which the
+package skips outside Amazon Linux) to `/tmp`, and `scripts/chrome-wrapper.sh` launches it with
+SwiftShader WebGL flags. Debug any frame from any angle with
+`ZW_PROPS='{"cam":{"pos":[x,y,z],"look":[x,y,z],"fov":45}}' node scripts/stills.mjs ZackWindow-Short out/dbg 0.4 100`.
+
 ## Compositions available
 
 | id | size | length | purpose |

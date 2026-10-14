@@ -9,6 +9,8 @@ import { MotionDoctrineReel } from "./MotionDoctrineReel";
 import { NLEMasterTimeline } from "./NLEMasterTimeline";
 import { HiggsfieldCinemaStudioShowreel } from "./HiggsfieldCinemaStudioShowreel";
 import { HiggsfieldEffectsMixLab } from "./HiggsfieldEffectsMixLab";
+import { ZackWindowShort } from "./zack-window/ZackWindowShort";
+import { FPS as ZW_FPS, HEIGHT as ZW_H, TOTAL_FRAMES as ZW_FRAMES, WIDTH as ZW_W } from "./zack-window/timeline";
 
 /**
  * Every <Composition> here becomes a renderable target:
@@ -21,6 +23,16 @@ import { HiggsfieldEffectsMixLab } from "./HiggsfieldEffectsMixLab";
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      {/* 0. Zack-D-Films-format 3D explainer short (9:16): "Why airplane windows have a tiny hole" */}
+      <Composition
+        id="ZackWindow-Short"
+        component={ZackWindowShort}
+        durationInFrames={ZW_FRAMES}
+        fps={ZW_FPS}
+        width={ZW_W}
+        height={ZW_H}
+      />
+
       {/* 1. Cinematic 3D Motion Graphics + Higgsfield DoP Camera Showcase */}
       <Composition
         id="Cinematic3D-Showcase"
