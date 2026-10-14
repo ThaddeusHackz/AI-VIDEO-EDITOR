@@ -78,10 +78,25 @@ overlay), `scene/Crack.tsx` (pre-fractured outer pane: Voronoi prisms whose frac
 an expanding front), `scene/Cabin.tsx` (set dressing: overhead bin + PSU, dado trim, lap belt, curved
 fuselage with a row of windows), `scene/Airliner.tsx` (narrow-body airliner lofted from airfoil sections
 for the wide "high up in the void" shot), `scene/Props.tsx` (seat, arrows, pressure field, airflow
-particles), `scene/Passenger.tsx`
-(procedurally posed Ready Player Me avatar — `public/zack-window/models/passenger.glb` is
-`avatar_2_m.glb` from the MIT-licensed `carlosfranzreb/ravas` repo; same Wolf3D/Mixamo rig +
-52 ARKit blendshapes as any RPM full-body export, so the GLB can be swapped without code changes).
+particles), `scene/Passenger.tsx` (the passenger: Microsoft Rocketbox `Male_Adult_06`, MIT —
+`public/zack-window/models/rb/male_adult_06_facial.fbx` + the `m011_*` textures converted from the
+repo's TGAs, red henley recoloured white; loaded through `scene/useFBX.ts`, posed procedurally per
+frame in world space on its 3ds-Max Biped rig, ARKit blendshapes for blink/smile/brows).
+
+Swapping the avatar for another Rocketbox adult: download `Export/<Name>_facial.fbx` + `Textures/*.tga`
+with `gh api -H "Accept: application/vnd.github.raw" repos/microsoft/Microsoft-Rocketbox/contents/...`,
+convert the TGAs (colour 2048 jpg, normal 1024 jpg, opacity 2048×1024 RGBA png, plus a hand-made
+`<prefix>_head_rough.jpg` — skin ≈0.56 / hair ≈0.86), then change `MODEL` / `TEX_PREFIX` in
+`Passenger.tsx`. `node scripts/inspect-fbx.mjs file.fbx` dumps the bone hierarchy, morph names,
+materials and texture file names of any FBX without a browser. Debug props for the passenger:
+`ZW_PROPS='{"dbg":{"markers":1,"log":true,"hideBody":1,"noHair":1,"noShadow":1,"curl":3}}'`
+(markers: red = wrist bone, green = index-tip bone, blue = touch point).
+
+Rig gotchas learnt the hard way: the Biped clavicles are children of `Bip01_Neck`, so the head/neck
+must be posed *before* the arm IK; a few hair-card vertices ship with zero-length normals (NaN
+lighting → bloom smears a black rectangle) and are repaired on load; the hair cards live in their own
+non-shadowing `SkinnedMesh`; FBXLoader needs a `.tga` handler registered even though the URL modifier
+serves PNG/JPG.
 
 ## Compositions available
 

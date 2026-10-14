@@ -61,8 +61,9 @@ const CAMS: Record<ShotId, Move> = {
     focus: { range: 0.03, bokeh: 2.2, offset: 0 },
   },
   face: {
-    from: { pos: V(0.52, 1.27, -0.96), look: add(HEAD, -0.02, -0.06, 0), fov: 34 },
-    to:   { pos: V(0.52, 1.26, -0.86), look: add(HEAD, -0.02, -0.06, 0), fov: 32 },
+    // Rocketbox head: eyes ≈ y 1.35, face swings towards +x while he looks at the hole
+    from: { pos: V(0.54, 1.33, -0.96), look: add(HEAD, 0.05, 0.03, -0.05), fov: 34 },
+    to:   { pos: V(0.54, 1.32, -0.86), look: add(HEAD, 0.05, 0.03, -0.05), fov: 32 },
     ease: drift,
     focus: { range: 0.22, bokeh: 1.6, offset: -0.07 },
   },
