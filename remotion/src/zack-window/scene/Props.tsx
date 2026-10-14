@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
-import { airParticle, arrowBlue, arrowRed, fabricBlue, fabricDark, plasticGrey } from "./materials";
+import { airParticle, arrowBlue, arrowRed, fabricBlue, fabricDark, matte, plasticGrey } from "./materials";
 import { clamp01, rng } from "./util";
 
 /* ───────────────────────────── Seat ───────────────────────────── */
@@ -12,21 +12,40 @@ export const Seat: React.FC<{ position?: [number, number, number] }> = ({ positi
     () => ({
       pan: new RoundedBoxGeometry(0.48, 0.11, 0.48, 4, 0.03),
       back: new RoundedBoxGeometry(0.48, 0.66, 0.12, 4, 0.035),
-      head: new RoundedBoxGeometry(0.30, 0.20, 0.09, 4, 0.03),
-      arm: new RoundedBoxGeometry(0.06, 0.05, 0.42, 3, 0.015),
+      bolster: new RoundedBoxGeometry(0.075, 0.50, 0.15, 3, 0.03),
+      head: new RoundedBoxGeometry(0.31, 0.19, 0.09, 4, 0.03),
+      wing: new RoundedBoxGeometry(0.045, 0.16, 0.085, 3, 0.018),
+      cover: new RoundedBoxGeometry(0.24, 0.15, 0.004, 2, 0.002),
+      arm: new RoundedBoxGeometry(0.06, 0.05, 0.42, 3, 0.02),
+      armPad: new RoundedBoxGeometry(0.052, 0.014, 0.36, 2, 0.005),
       leg: new RoundedBoxGeometry(0.05, 0.42, 0.05, 2, 0.01),
       base: new RoundedBoxGeometry(0.48, 0.05, 0.44, 2, 0.01),
     }),
     [],
   );
-  const m = useMemo(() => ({ blue: fabricBlue(), dark: fabricDark(), grey: plasticGrey() }), []);
+  const m = useMemo(
+    () => ({ blue: fabricBlue(), dark: fabricDark(), grey: plasticGrey(), cover: matte({ color: "#f3f3f0", roughness: 0.9 }) }),
+    [],
+  );
+  const lean = -0.12;
   return (
     <group position={position}>
       <mesh geometry={g.pan} material={m.blue} position={[0, 0.44, 0]} castShadow receiveShadow />
-      <mesh geometry={g.back} material={m.blue} position={[0, 0.80, 0.26]} rotation={[-0.16, 0, 0]} castShadow receiveShadow />
-      <mesh geometry={g.head} material={m.dark} position={[0, 1.18, 0.20]} rotation={[-0.16, 0, 0]} castShadow receiveShadow />
+      <mesh geometry={g.back} material={m.blue} position={[0, 0.80, 0.26]} rotation={[lean, 0, 0]} castShadow receiveShadow />
+      {/* side bolsters give the backrest a contoured silhouette */}
+      <mesh geometry={g.bolster} material={m.dark} position={[0.205, 0.78, 0.225]} rotation={[lean, 0, 0]} castShadow receiveShadow />
+      <mesh geometry={g.bolster} material={m.dark} position={[-0.205, 0.78, 0.225]} rotation={[lean, 0, 0]} castShadow receiveShadow />
+      {/* headrest with fold-forward wings and a cream cover */}
+      <group position={[0, 1.18, 0.20]} rotation={[lean, 0, 0]}>
+        <mesh geometry={g.head} material={m.dark} castShadow receiveShadow />
+        <mesh geometry={g.cover} material={m.cover} position={[0, -0.005, -0.047]} />
+        <mesh geometry={g.wing} material={m.dark} position={[0.165, 0, -0.02]} rotation={[0, -0.55, 0]} castShadow />
+        <mesh geometry={g.wing} material={m.dark} position={[-0.165, 0, -0.02]} rotation={[0, 0.55, 0]} castShadow />
+      </group>
       <mesh geometry={g.arm} material={m.grey} position={[0.27, 0.62, 0.05]} castShadow receiveShadow />
       <mesh geometry={g.arm} material={m.grey} position={[-0.27, 0.62, 0.05]} castShadow receiveShadow />
+      <mesh geometry={g.armPad} material={m.dark} position={[0.27, 0.652, 0.03]} />
+      <mesh geometry={g.armPad} material={m.dark} position={[-0.27, 0.652, 0.03]} />
       <mesh geometry={g.base} material={m.grey} position={[0, 0.36, 0.02]} castShadow receiveShadow />
       <mesh geometry={g.leg} material={m.grey} position={[0.18, 0.18, -0.12]} castShadow />
       <mesh geometry={g.leg} material={m.grey} position={[-0.18, 0.18, -0.12]} castShadow />

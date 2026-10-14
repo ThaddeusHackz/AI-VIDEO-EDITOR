@@ -5,11 +5,12 @@ import { easeInOut, easeOut, lerp, ramp, smooth } from "./util";
 
 /** World layout (metres). */
 export const WIN = new THREE.Vector3(0.62, 1.12, -0.35);   // interior window centre
+export const WALL_X = WIN.x - 0.04;                          // sidewall inner surface (flat panel)
 export const HOLE = WIN.clone().add(HOLE_LOCAL);            // bleed hole (interior assembly)
 export const TOUCH = new THREE.Vector3(0.646, HOLE.y, HOLE.z); // fingertip on the inner pane over the hole
 export const HIPS: [number, number, number] = [0.30, 0.56, -0.10];
-export const SEAT: [number, number, number] = [0.30, 0, -0.15];
-export const SEAT2: [number, number, number] = [-0.22, 0, -0.15];
+export const SEAT: [number, number, number] = [0.30, 0, -0.19];
+export const SEAT2: [number, number, number] = [-0.22, 0, -0.19];
 export const HEAD = new THREE.Vector3(0.30, 1.28, -0.15); // approx. head centre when seated
 export const CUT = new THREE.Vector3(0, -20, 0);             // cutaway rig origin
 export const CUT_THICK = 3;                                  // pane thickness exaggeration in the cutaway
@@ -42,7 +43,7 @@ const drift = (t: number) => t * 0.75 + easeInOut(t) * 0.25;
 const CAMS: Record<ShotId, Move> = {
   // Profile from the aisle side: man + window in frame, his finger finds the hole; push in on it.
   hook: {
-    from: { pos: V(-1.25, 1.40, -0.34), look: V(0.42, 1.02, -0.27), fov: 46 },
+    from: { pos: V(-1.38, 1.42, -0.34), look: V(0.40, 1.06, -0.27), fov: 50 },
     to:   { pos: V(-0.05, 1.09, -0.27), look: V(0.645, 0.975, -0.35), fov: 30 },
     ease: drift,
   },
@@ -57,7 +58,7 @@ const CAMS: Record<ShotId, Move> = {
     ease: drift,
   },
   exterior: {
-    from: { pos: V(2.45, 1.0, -1.05), look: add(WIN, 0.1, 0, 0), fov: 28 },
+    from: { pos: V(3.05, 1.02, -1.10), look: add(WIN, 0.1, 0.04, 0), fov: 46 },
     to:   { pos: V(2.05, 1.12, -0.62), look: add(WIN, 0.1, 0, 0), fov: 26 },
     ease: drift,
   },
@@ -82,8 +83,8 @@ const CAMS: Record<ShotId, Move> = {
     ease: drift,
   },
   outro: {
-    from: { pos: V(-1.10, 1.36, -0.30), look: V(0.42, 1.05, -0.26), fov: 44 },
-    to:   { pos: V(-0.85, 1.30, -0.32), look: V(0.46, 1.06, -0.28), fov: 40 },
+    from: { pos: V(-1.18, 1.38, -0.30), look: V(0.42, 1.07, -0.26), fov: 47 },
+    to:   { pos: V(-0.88, 1.31, -0.32), look: V(0.46, 1.07, -0.28), fov: 42 },
     ease: drift,
   },
 };

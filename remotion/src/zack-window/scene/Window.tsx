@@ -5,6 +5,7 @@ import {
   acrylic, aluminum, frameDark, insulation, plasticWhite, wallBeige, type Clip,
 } from "./materials";
 import { circlePath, roundedRect, windowShape, lerp, rng, clamp01 } from "./util";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
 /**
  * Airliner window assembly, local frame: origin = window centre, +x = outboard
@@ -70,6 +71,8 @@ type PanesProps = {
   opacity?: number;
   /** highlight the middle pane (0..1) – used when "the middle one is a backup" */
   middleGlow?: number;
+  /** opacity of the slab edges (defaults to ~3× the face opacity) */
+  edgeOpacity?: number;
 };
 
 /** x-positions of the pane slabs for a given exaggeration factor (start x of each slab). */
@@ -84,7 +87,7 @@ export const paneLayout = (thick = 1, explode = 0, bow = 0) => {
 };
 
 export const Panes: React.FC<PanesProps> = ({
-  explode = 0, bow = 0, clip, tint, opacity, middleGlow = 0, thick = 1, side, middleOpacity, holeRim = true,
+  explode = 0, bow = 0, clip, tint, opacity, middleGlow = 0, thick = 1, side, middleOpacity, holeRim = true, edgeOpacity,
 }) => {
   const geo = useMemo(() => {
     const inner = extrude(windowShape(INNER_W, INNER_H), 0.003, 0.0006);
@@ -99,22 +102,32 @@ export const Panes: React.FC<PanesProps> = ({
     return { inner, middle, outer, rim, rimFar, bore };
   }, [thick]);
   const mats = useMemo(() => {
+    // ExtrudeGeometry puts the caps in group 0 and the side walls (+ bevels) in group 1:
+    // a denser, whiter edge material makes the slab thickness read against the void.
+    const edge = () => {
+      const e = acrylic(clip, "#f6fbff", Math.min(1, (edgeOpacity ?? (opacity ?? 0.13) * 3.2)), side);
+      e.roughness = 0.14;
+      return e;
+    };
     const a = acrylic(clip, tint, opacity, side);
     const m = acrylic(clip, tint, middleOpacity ?? opacity, side);
     const o = acrylic(clip, tint, opacity, side);
+    const aE = edge(), mE = edge(), oE = edge();
     const rim = matte({ color: "#59616b" }, clip);
     const rimFar = matte({ color: "#a3abb4" }, clip);
     const bore = matte({ color: "#b9c3cc", side: THREE.DoubleSide }, clip);
     bore.transparent = true;
     bore.opacity = 0.75;
-    return { a, m, o, rim, rimFar, bore };
-  }, [clip, tint, opacity, side, middleOpacity]);
+    return { a: [a, aE], m: [m, mE], o: [o, oE], rim, rimFar, bore };
+  }, [clip, tint, opacity, side, middleOpacity, edgeOpacity]);
 
   useLayoutEffect(() => {
     const g = clamp01(middleGlow);
-    mats.m.emissive = new THREE.Color("#58c8ff");
-    mats.m.emissiveIntensity = g * 0.55;
-    mats.m.opacity = (middleOpacity ?? opacity ?? 0.13) + g * 0.35;
+    for (const mm of mats.m) {
+      mm.emissive = new THREE.Color("#58c8ff");
+      mm.emissiveIntensity = g * 0.55;
+    }
+    mats.m[0].opacity = (middleOpacity ?? opacity ?? 0.13) + g * 0.35;
   }, [middleGlow, mats, opacity, middleOpacity]);
 
   const { xi, xm, xo, tm } = paneLayout(thick, explode, bow);
@@ -144,6 +157,27 @@ export const Panes: React.FC<PanesProps> = ({
   );
 };
 
+/* ───────────────────────── Window shade (fully raised: only its bottom lip shows) ───────────────────────── */
+
+/** Local window coordinates (origin = window centre, +x outboard). */
+export const ShadeLip: React.FC<{ openingH: number }> = ({ openingH }) => {
+  const g = useMemo(
+    () => ({
+      lip: new RoundedBoxGeometry(0.008, 0.036, 0.30, 2, 0.003),
+      notch: new RoundedBoxGeometry(0.003, 0.014, 0.034, 2, 0.002),
+    }),
+    [],
+  );
+  const m = useMemo(() => ({ lip: matte({ color: "#e3e6ea", roughness: 0.5 }), notch: matte({ color: "#c4c9d0" }) }), []);
+  const top = openingH / 2;
+  return (
+    <group>
+      <mesh geometry={g.lip} material={m.lip} position={[0.020, top - 0.008, 0]} />
+      <mesh geometry={g.notch} material={m.notch} position={[0.0152, top - 0.019, 0]} />
+    </group>
+  );
+};
+
 type AssemblyProps = PanesProps & {
   /** multiplies the structural frame depth (cutaways with exaggerated panes) */
   frameDepth?: number;
@@ -153,12 +187,14 @@ type AssemblyProps = PanesProps & {
   exterior?: boolean;
   /** render the insulation/structure block (for cutaways) */
   structure?: boolean;
+  /** show the raised window shade's bottom lip at the top of the reveal */
+  shade?: boolean;
   children?: React.ReactNode;
 };
 
 /** Full wall section around the window. */
 export const WindowAssembly: React.FC<AssemblyProps> = ({
-  interior = true, exterior = true, structure = true, clip, children, frameDepth = 1, ...panes
+  interior = true, exterior = true, structure = true, shade = false, clip, children, frameDepth = 1, ...panes
 }) => {
   const geo = useMemo(() => {
     // Interior trim panel 2.0 (z) × 2.4 (y) with the window cut-out, slightly curved inwards at the top.
@@ -206,6 +242,7 @@ export const WindowAssembly: React.FC<AssemblyProps> = ({
         <>
           <mesh geometry={geo.wallGeo} material={mats.wall} position={[-0.04, 0, 0]} rotation={ROT_TO_X} receiveShadow castShadow />
           <mesh geometry={geo.reveal} material={mats.reveal} position={[-0.012, 0, 0]} rotation={ROT_TO_X} receiveShadow castShadow />
+          {shade && <ShadeLip openingH={INNER_H} />}
         </>
       )}
       {structure && (

@@ -6,9 +6,10 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 import { CrackSheet, FogSheet, Panes, WindowAssembly, paneLayout } from "./Window";
 import { perfFlags } from "./materials";
 import { AirFlow, Arrow, PressureField, Seat } from "./Props";
+import { Fuselage, OverheadBin, SeatBelt, WallTrim } from "./Cabin";
 import { Passenger } from "./Passenger";
 import {
-  CRACK_EXPLODE, CUT, CUT_HOLE_LOCAL, CUT_LAYOUT, CUT_THICK, EXP, HIPS, SEAT, SEAT2, TOUCH, WIN, cameraAt, sceneAt,
+  CRACK_EXPLODE, CUT, CUT_HOLE_LOCAL, CUT_LAYOUT, CUT_THICK, EXP, HIPS, SEAT, SEAT2, TOUCH, WALL_X, WIN, cameraAt, sceneAt,
 } from "./direction";
 
 /** Studio-ish environment reflections + renderer flags (shadows, clipping, tone mapping). */
@@ -104,9 +105,14 @@ const Interior: React.FC<{ visible: boolean; reach: number; look: THREE.Vector3;
       <directionalLight position={[4, 1.6, -1.2]} intensity={1.1} color="#dcefff" />
       <directionalLight position={[-2, 1.2, -3]} intensity={0.5} color="#ffffff" />
       <group position={WIN.toArray() as [number, number, number]}>
-        <WindowAssembly interior exterior structure middleOpacity={middleOpacity} />
+        <WindowAssembly interior exterior={false} structure shade middleOpacity={middleOpacity} />
         <FogSheet amount={fog} x={lay.gapX} />
       </group>
+      {/* outside: window belt with the neighbouring windows + curved skin above/below */}
+      <Fuselage win={WIN} />
+      {/* cabin slice: overhead bin + PSU, dado trim */}
+      <OverheadBin wallX={WALL_X} z={WIN.z} />
+      <WallTrim wallX={WALL_X} z={WIN.z} />
       {/* floor shadow catcher + carpet */}
       <mesh position={[0.1, 0.0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[2.4, 2.4]} />
@@ -115,6 +121,7 @@ const Interior: React.FC<{ visible: boolean; reach: number; look: THREE.Vector3;
       <Seat position={SEAT} />
       <Seat position={SEAT2} />
       <Passenger hips={HIPS} pose={pose} />
+      <SeatBelt hips={HIPS} />
     </group>
   );
 };
