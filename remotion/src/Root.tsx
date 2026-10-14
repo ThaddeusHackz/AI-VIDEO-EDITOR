@@ -9,7 +9,6 @@ import { MotionDoctrineReel } from "./MotionDoctrineReel";
 import { NLEMasterTimeline } from "./NLEMasterTimeline";
 import { HiggsfieldCinemaStudioShowreel } from "./HiggsfieldCinemaStudioShowreel";
 import { HiggsfieldEffectsMixLab } from "./HiggsfieldEffectsMixLab";
-import { ZackWindowShort, ZACK_WINDOW_META } from "./zack-window/ZackWindowShort";
 
 /**
  * Every <Composition> here becomes a renderable target:
@@ -22,16 +21,6 @@ import { ZackWindowShort, ZACK_WINDOW_META } from "./zack-window/ZackWindowShort
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      {/* 0. Zack-D-Films-style 3D explainer Short (9:16) — data-driven from zack-window/timeline.json */}
-      <Composition
-        id={ZACK_WINDOW_META.id}
-        component={ZackWindowShort}
-        durationInFrames={ZACK_WINDOW_META.durationInFrames}
-        fps={ZACK_WINDOW_META.fps}
-        width={ZACK_WINDOW_META.width}
-        height={ZACK_WINDOW_META.height}
-      />
-
       {/* 1. Cinematic 3D Motion Graphics + Higgsfield DoP Camera Showcase */}
       <Composition
         id="Cinematic3D-Showcase"
