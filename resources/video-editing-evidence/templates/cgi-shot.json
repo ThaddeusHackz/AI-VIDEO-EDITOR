@@ -1,0 +1,70 @@
+{
+  "template_version": 1,
+  "status": "unfilled_not_ready_for_render",
+  "shot_id": null,
+  "creative_intent": null,
+  "plate": {
+    "path": null,
+    "sha256": null,
+    "rights_basis": null,
+    "source_frame_in": null,
+    "source_frame_out_exclusive": null,
+    "fps_num": null,
+    "fps_den": null,
+    "width": null,
+    "height": null,
+    "color_primaries": null,
+    "transfer": null,
+    "matrix": null,
+    "range": null,
+    "lens_metadata": null
+  },
+  "edit": {
+    "output_frame_in": null,
+    "output_frame_out_exclusive": null,
+    "handle_frames_before": null,
+    "handle_frames_after": null
+  },
+  "tracking": {
+    "method": null,
+    "lens_distortion_model": null,
+    "scale_reference": null,
+    "track_artifact": null,
+    "measured_residuals": null,
+    "proxy_alignment_review": "not_run"
+  },
+  "subject_matte": {
+    "required": null,
+    "method": null,
+    "artifact": null,
+    "edge_and_temporal_review": "not_run"
+  },
+  "cg": {
+    "assets_and_licenses": [],
+    "renderer_and_version": null,
+    "seed": null,
+    "simulation_cache": null,
+    "light_reference": null,
+    "shutter": null,
+    "required_passes": [],
+    "working_color_space": null,
+    "alpha_convention": null
+  },
+  "delivery": {
+    "output_color_space": null,
+    "codec": null,
+    "proof_render_budget": null,
+    "output_path": null
+  },
+  "qa": {
+    "camera_alignment": "not_run",
+    "matte_edges": "not_run",
+    "lighting_and_contact": "not_run",
+    "temporal_stability": "not_run",
+    "seek_determinism": "not_run",
+    "color_and_alpha": "not_run",
+    "full_playback": "not_run",
+    "full_decode": "not_run"
+  },
+  "unknowns": ["Template only: no source plate, tracked camera, matte, assets or render supplied."]
+}
