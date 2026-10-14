@@ -65,16 +65,12 @@ export const Passenger: React.FC<Props> = ({ hips, yaw = Math.PI, pose }) => {
           if (o.name === "Wolf3D_Head" || o.name === "Wolf3D_Body") {
             m.roughness = 0.62;
           }
-          // The example avatar ships in a pink wedding tux: multiply it down to a plain dark suit.
-          if (o.name === "Wolf3D_Outfit_Top") { m.color.set("#38405a"); m.roughness = 0.85; }
-          if (o.name === "Wolf3D_Outfit_Bottom") { m.color.set("#2e3448"); m.roughness = 0.9; }
-          if (o.name === "Wolf3D_Outfit_Footwear") { m.color.set("#2a2a2e"); }
         }
       }
     });
     const b = (n: string) => bones.get(n)!;
     const headMesh = scene.getObjectByName("Wolf3D_Head") as THREE.Mesh | undefined;
-    const morphMeshes = ["Wolf3D_Head", "Wolf3D_Teeth", "Wolf3D_Beard", "EyeLeft", "EyeRight"]
+    const morphMeshes = ["Wolf3D_Avatar", "Wolf3D_Head", "Wolf3D_Teeth", "Wolf3D_Beard", "EyeLeft", "EyeRight"]
       .map((n) => scene.getObjectByName(n) as THREE.Mesh | undefined)
       .filter(Boolean) as THREE.Mesh[];
     return { scene, bones, rest, b, headMesh, morphMeshes };
@@ -192,8 +188,21 @@ export const Passenger: React.FC<Props> = ({ hips, yaw = Math.PI, pose }) => {
       const dict = m.morphTargetDictionary;
       const inf = m.morphTargetInfluences;
       if (!dict || !inf) continue;
-      if (dict.mouthSmile !== undefined) inf[dict.mouthSmile] = pose.smile ?? 0.12;
+      const smile = pose.smile ?? 0.12;
+      if (dict.mouthSmile !== undefined) inf[dict.mouthSmile] = smile;
       if (dict.mouthOpen !== undefined) inf[dict.mouthOpen] = 0.0;
+      if (dict.mouthSmileLeft !== undefined) inf[dict.mouthSmileLeft] = smile * 0.9;
+      if (dict.mouthSmileRight !== undefined) inf[dict.mouthSmileRight] = smile * 0.8;
+      // blink: a 7-frame close/open every ~108 frames, offset so it never lands on a cut
+      const cyc = (f + 37) % 108;
+      const blink = cyc < 7 ? Math.sin((cyc / 7) * Math.PI) : 0;
+      if (dict.eyeBlinkLeft !== undefined) inf[dict.eyeBlinkLeft] = blink;
+      if (dict.eyeBlinkRight !== undefined) inf[dict.eyeBlinkRight] = blink;
+      // mild interest while he looks at the hole
+      const brow = 0.25 * (pose.reach ?? 0);
+      if (dict.browInnerUp !== undefined) inf[dict.browInnerUp] = brow;
+      if (dict.browOuterUpLeft !== undefined) inf[dict.browOuterUpLeft] = brow * 0.6;
+      if (dict.browOuterUpRight !== undefined) inf[dict.browOuterUpRight] = brow * 0.6;
     }
 
     grp.updateWorldMatrix(true, true);
