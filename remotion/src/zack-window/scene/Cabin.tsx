@@ -214,6 +214,9 @@ const pathFromShape = (sh: THREE.Shape) => {
   return p;
 };
 
+/** window offsets along the fuselage (multiples of the pitch), main window = 0 */
+const NEIGHBOURS = [0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5, 6, -6, 7, -7].map((k) => k * 0.53);
+
 export const Fuselage: React.FC<{
   /** world centre of the main window */
   win: THREE.Vector3;
@@ -221,12 +224,12 @@ export const Fuselage: React.FC<{
   pitch?: number;
   length?: number;
   radius?: number;
-}> = ({ win, pitch = 0.53, length = 4.8, radius = 1.95 }) => {
+}> = ({ win, pitch = 0.53, length = 8.4, radius = 3.0 }) => {
   const skinX = win.x + X_SKIN;
   const halfBelt = 0.36;
   const g = useMemo(() => {
     const belt = roundedRect(length, halfBelt * 2, 0.002);
-    for (const d of [0, pitch, -pitch, 2 * pitch, -2 * pitch]) {
+    for (const d of NEIGHBOURS) {
       const cut = windowShape(0.315, 0.425);
       const path = new THREE.Path();
       const pts = cut.getPoints(48);
@@ -238,14 +241,20 @@ export const Fuselage: React.FC<{
     const beltGeo = new THREE.ExtrudeGeometry(belt, { depth: 0.004, bevelEnabled: false, curveSegments: 28 });
     const th1 = Math.asin(halfBelt / radius);
     const xc = skinX - radius * Math.cos(th1);
-    const upper = arcPanel(xc, win.y, radius, th1, th1 + 1.25, win.z - length / 2, win.z + length / 2);
-    const lower = arcPanel(xc, win.y, radius, -th1, -th1 - 1.05, win.z - length / 2, win.z + length / 2);
+    // skin wraps past the crown and well under the belly so low exterior angles see a clean silhouette
+    const upper = arcPanel(xc, win.y, radius, th1, th1 + 1.55, win.z - length / 2, win.z + length / 2, 64);
+    const lower = arcPanel(xc, win.y, radius, -th1, -th1 - 2.7, win.z - length / 2, win.z + length / 2, 96);
     const seam = new THREE.BoxGeometry(0.004, 0.008, length);
+    // lap-joint lines on the curved skin (scale cue in the wide exterior): angle + placement on the cylinder
+    const laps = [th1 + 0.42, th1 + 0.86, -th1 - 0.40, -th1 - 0.82, -th1 - 1.3].map((a) => ({
+      pos: [xc + (radius + 0.002) * Math.cos(a), win.y + (radius + 0.002) * Math.sin(a), win.z] as [number, number, number],
+      rot: [0, 0, a] as [number, number, number],
+    }));
     const outer = roundedRect(0.37, 0.48, 0.17);
     outer.holes.push(pathFromShape(windowShape(0.285, 0.395)));
     const frame = new THREE.ExtrudeGeometry(outer, { depth: 0.036, bevelEnabled: true, bevelThickness: 0.0015, bevelSize: 0.0015, bevelSegments: 2, curveSegments: 28 });
     const pane = new THREE.ExtrudeGeometry(windowShape(0.30, 0.41), { depth: 0.01, bevelEnabled: false, curveSegments: 28 });
-    return { beltGeo, upper, lower, seam, frame, pane };
+    return { beltGeo, upper, lower, seam, frame, pane, laps };
   }, [length, pitch, radius, skinX, win.y, win.z]);
   const m = useMemo(
     () => ({
@@ -264,11 +273,14 @@ export const Fuselage: React.FC<{
       <mesh geometry={g.lower} material={m.skin} />
       <mesh geometry={g.seam} material={m.seam} position={[skinX + 0.0015, win.y + halfBelt, win.z]} />
       <mesh geometry={g.seam} material={m.seam} position={[skinX + 0.0015, win.y - halfBelt, win.z]} />
+      {g.laps.map((l, i) => (
+        <mesh key={i} geometry={g.seam} material={m.seam} position={l.pos} rotation={l.rot} />
+      ))}
       {/* neighbouring windows: dark (shade up, dim cabin) or with the shade pulled down */}
-      {[pitch, -pitch, 2 * pitch, -2 * pitch].map((d, i) => (
+      {NEIGHBOURS.filter((d) => d !== 0).map((d, i) => (
         <group key={d} position={[win.x, win.y, win.z + d]}>
           <mesh geometry={g.frame} material={m.frame} position={[0.080, 0, 0]} rotation={ROT_TO_X} />
-          <mesh geometry={g.pane} material={i === 0 || i === 3 ? m.dark : m.shaded} position={[0.101, 0, 0]} rotation={ROT_TO_X} />
+          <mesh geometry={g.pane} material={i % 3 === 0 ? m.dark : m.shaded} position={[0.101, 0, 0]} rotation={ROT_TO_X} />
         </group>
       ))}
     </group>

@@ -41,7 +41,8 @@ remotion/
 `src/zack-window/` is a complete 1080×1920 @ 30 fps, 41.9 s short ("Why airplane windows have a
 tiny hole") built as **real 3D animation** with React-Three-Fiber inside Remotion: a posed
 passenger, a sectioned cabin wall, exploded panes, force arrows, airflow particles, fog and a crack
-sim, narrated with pre-rendered VO and small phrase subtitles. The research behind the look and the
+sim, a lofted airliner for the wide shot, and a lens/post stack (depth of field, bloom, ACES, vignette),
+narrated with pre-rendered VO and small phrase subtitles. The research behind the look and the
 shot checklist live in [`src/zack-window/STYLE_BIBLE.md`](src/zack-window/STYLE_BIBLE.md).
 
 ```bash
@@ -50,8 +51,8 @@ npm install && npm i --no-save @types/three@0.170.0 @sparticuz/chromium@153.0.0 
 # a few review frames (one bundle, one browser) → out/stills/fNNNN.jpg, then a contact sheet
 node scripts/stills.mjs ZackWindow-Short out/stills 0.5 30 200 520 950
 python3 scripts/sheet.py out/stills/sheet.jpg out/stills/f0030.jpg out/stills/f0200.jpg
-# full render (≈55 min on a 2-vCPU box: SwiftShader software GL)
-npx remotion render src/index.ts ZackWindow-Short out/zack-window-v2.mp4 \
+# full render (≈80 min on a 2-vCPU box: SwiftShader software GL + post stack)
+npx remotion render src/index.ts ZackWindow-Short out/zack-window-v6.mp4 \
   --browser-executable=$PWD/scripts/chrome-wrapper.sh --concurrency=2 --crf=20 --jpeg-quality=88 --timeout=180000
 ```
 
@@ -69,11 +70,15 @@ Changes confined to one shot do not need a full re-render either: render just th
 `python3 scripts/zw-splice.py out/<base>.mp4 out/<segment>.mp4 A out/<final>.mp4`. The range must
 start and end on hard cuts (x264 puts keyframes there; the script checks and refuses otherwise).
 
-Scene layout: `scene/direction.ts` (world layout, per-shot cameras, per-frame scene state),
-`scene/Window.tsx` (wall + three-pane assembly, fog overlay), `scene/Crack.tsx` (pre-fractured
-outer pane: Voronoi prisms whose fracture faces are revealed by an expanding front), `scene/Cabin.tsx` (set
-dressing: overhead bin + PSU, dado trim, lap belt, curved fuselage with a row of windows),
-`scene/Props.tsx` (seat, arrows, pressure field, airflow particles), `scene/Passenger.tsx`
+Scene layout: `scene/direction.ts` (world layout, per-shot cameras + lens focus, per-frame scene state),
+`scene/Post.tsx` (the look: `postprocessing` composer — MSAA scene buffer → depth of field focused on
+each shot's look target → bloom → ACES → the cyan void composited under the premultiplied scene →
+vignette; `{"perf":{"post":false}}` bypasses it), `scene/Window.tsx` (wall + three-pane assembly, fog
+overlay), `scene/Crack.tsx` (pre-fractured outer pane: Voronoi prisms whose fracture faces are revealed by
+an expanding front), `scene/Cabin.tsx` (set dressing: overhead bin + PSU, dado trim, lap belt, curved
+fuselage with a row of windows), `scene/Airliner.tsx` (narrow-body airliner lofted from airfoil sections
+for the wide "high up in the void" shot), `scene/Props.tsx` (seat, arrows, pressure field, airflow
+particles), `scene/Passenger.tsx`
 (procedurally posed Ready Player Me avatar — `public/zack-window/models/passenger.glb` is
 `avatar_2_m.glb` from the MIT-licensed `carlosfranzreb/ravas` repo; same Wolf3D/Mixamo rig +
 52 ARKit blendshapes as any RPM full-body export, so the GLB can be swapped without code changes).

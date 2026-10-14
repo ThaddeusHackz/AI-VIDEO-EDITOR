@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { getInputProps, useCurrentFrame } from "remotion";
+import { shotAt } from "../timeline";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { FogSheet, Panes, WindowAssembly, paneLayout } from "./Window";
 import { CrackedPane } from "./Crack";
@@ -9,8 +10,10 @@ import { perfFlags } from "./materials";
 import { AirFlow, Arrow, PressureField, Seat } from "./Props";
 import { Fuselage, OverheadBin, SeatBelt, WallTrim } from "./Cabin";
 import { Passenger } from "./Passenger";
+import { Post } from "./Post";
+import { Airliner } from "./Airliner";
 import {
-  CRACK_EXPLODE, CUT, CUT_HOLE_LOCAL, CUT_LAYOUT, CUT_THICK, EXP, HIPS, SEAT, SEAT2, TOUCH, WALL_X, WIN, cameraAt, sceneAt,
+  CRACK_EXPLODE, CUT, CUT_HOLE_LOCAL, CUT_LAYOUT, CUT_THICK, EXP, HIPS, PLANE, SEAT, SEAT2, TOUCH, WALL_X, WIN, cameraAt, sceneAt,
 } from "./direction";
 
 /** Studio-ish environment reflections + renderer flags (shadows, clipping, tone mapping). */
@@ -20,8 +23,9 @@ const Setup: React.FC = () => {
     gl.localClippingEnabled = true;
     gl.shadowMap.enabled = perfFlags().shadows !== false;
     gl.shadowMap.type = THREE.PCFShadowMap;
-    gl.toneMapping = THREE.ACESFilmicToneMapping;
+    gl.toneMapping = THREE.ACESFilmicToneMapping; // applied by the post stack (ToneMappingEffect reads the exposure)
     gl.toneMappingExposure = 1.08;
+    gl.setClearColor(0x000000, 0); // premultiplied-by-coverage scene buffer; the void is composited in post
     const pmrem = new THREE.PMREMGenerator(gl);
     const env = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = env;
@@ -43,23 +47,25 @@ const CameraRig: React.FC = () => {
     // Debug override: --props='{"cam":{"pos":[x,y,z],"look":[x,y,z],"fov":40}}'
     const dbg = (getInputProps() as { cam?: { pos: number[]; look: number[]; fov?: number } }).cam;
     if (dbg) {
-      c = { pos: new THREE.Vector3(...(dbg.pos as [number, number, number])), look: new THREE.Vector3(...(dbg.look as [number, number, number])), fov: dbg.fov ?? c.fov };
+      c = { ...c, pos: new THREE.Vector3(...(dbg.pos as [number, number, number])), look: new THREE.Vector3(...(dbg.look as [number, number, number])), fov: dbg.fov ?? c.fov };
     }
     const cam = camera as THREE.PerspectiveCamera;
     cam.position.copy(c.pos);
     cam.up.set(0, 1, 0);
     cam.lookAt(c.look);
     cam.fov = c.fov;
-    cam.near = 0.006;
-    cam.far = 80;
+    // macro work needs a tiny near plane; the 80 m airliner needs the opposite (and the depth precision)
+    const wide = shotAt(frame).id === "planeWide";
+    cam.near = wide ? 1.5 : 0.006;
+    cam.far = wide ? 400 : 80;
     cam.updateProjectionMatrix();
     cam.updateMatrixWorld();
   }, [frame, camera]);
   return null;
 };
 
-const KeyLight: React.FC<{ position: [number, number, number]; target: [number, number, number]; intensity: number; size?: number; color?: string }> = ({
-  position, target, intensity, size = 1.6, color = "#fff7ee",
+const KeyLight: React.FC<{ position: [number, number, number]; target: [number, number, number]; intensity: number; size?: number; color?: string; near?: number; far?: number }> = ({
+  position, target, intensity, size = 1.6, color = "#fff7ee", near = 0.2, far = 12,
 }) => {
   const light = useRef<THREE.DirectionalLight>(null);
   const tgt = useMemo(() => new THREE.Object3D(), []);
@@ -70,10 +76,10 @@ const KeyLight: React.FC<{ position: [number, number, number]; target: [number, 
       light.current.target = tgt;
       const cam = light.current.shadow.camera;
       cam.left = -size; cam.right = size; cam.top = size; cam.bottom = -size;
-      cam.near = 0.2; cam.far = 12;
+      cam.near = near; cam.far = far;
       cam.updateProjectionMatrix();
     }
-  }, [tgt, target, size]);
+  }, [tgt, target, size, near, far]);
   return (
     <>
       <directionalLight
@@ -94,8 +100,8 @@ const KeyLight: React.FC<{ position: [number, number, number]; target: [number, 
 };
 
 /* ───────────── Interior world: wall + window + seats + passenger ───────────── */
-const Interior: React.FC<{ visible: boolean; reach: number; look: THREE.Vector3; frame: number; fog: number; smile: number; middleOpacity: number }> = ({
-  visible, reach, look, frame, fog, smile, middleOpacity,
+const Interior: React.FC<{ visible: boolean; reach: number; look: THREE.Vector3; frame: number; fog: number; smile: number; middleOpacity: number; exteriorView: boolean }> = ({
+  visible, reach, look, frame, fog, smile, middleOpacity, exteriorView,
 }) => {
   const pose = useMemo(() => ({ reach, touch: TOUCH, look, frame, smile }), [reach, look, frame, smile]);
   const lay = paneLayout(1, 0, 0);
@@ -106,19 +112,21 @@ const Interior: React.FC<{ visible: boolean; reach: number; look: THREE.Vector3;
       <directionalLight position={[4, 1.6, -1.2]} intensity={1.1} color="#dcefff" />
       <directionalLight position={[-2, 1.2, -3]} intensity={0.5} color="#ffffff" />
       <group position={WIN.toArray() as [number, number, number]}>
-        <WindowAssembly interior exterior={false} structure shade middleOpacity={middleOpacity} />
+        <WindowAssembly interior wall={!exteriorView} exterior={false} structure shade middleOpacity={middleOpacity} />
         <FogSheet amount={fog} x={lay.gapX} />
       </group>
       {/* outside: window belt with the neighbouring windows + curved skin above/below */}
       <Fuselage win={WIN} />
-      {/* cabin slice: overhead bin + PSU, dado trim */}
-      <OverheadBin wallX={WALL_X} z={WIN.z} />
-      <WallTrim wallX={WALL_X} z={WIN.z} />
-      {/* floor shadow catcher + carpet */}
-      <mesh position={[0.1, 0.0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[2.4, 2.4]} />
-        <meshLambertMaterial color="#5e6b85" />
-      </mesh>
+      {/* cabin slice (flat pieces that would poke through the curved skin from outside): bin + PSU, dado trim, floor */}
+      <group visible={!exteriorView}>
+        <OverheadBin wallX={WALL_X} z={WIN.z} />
+        <WallTrim wallX={WALL_X} z={WIN.z} />
+        {/* floor shadow catcher + carpet */}
+        <mesh position={[0.1, 0.0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <planeGeometry args={[2.4, 2.4]} />
+          <meshLambertMaterial color="#5e6b85" />
+        </mesh>
+      </group>
       <Seat position={SEAT} />
       <Seat position={SEAT2} />
       <Passenger hips={HIPS} pose={pose} />
@@ -167,6 +175,16 @@ const Exploded: React.FC<{ visible: boolean; explode: number; yaw: number; bow: 
   );
 };
 
+/* ───────────── Wide shot: the airliner alone in the void ───────────── */
+const PlaneWide: React.FC<{ visible: boolean; roll: number }> = ({ visible, roll }) => (
+  <group visible={visible} position={PLANE.toArray() as [number, number, number]}>
+    {/* sun high and ahead-right; a soft bounce from below so the belly (which faces us) stays bright */}
+    <KeyLight position={[30, 60, -40]} target={[0, 0, 0]} intensity={2.2} size={30} near={20} far={160} />
+    <directionalLight position={[20, -40, 30]} intensity={0.4} color="#eaf4ff" />
+    <Airliner roll={roll} />
+  </group>
+);
+
 export const Scene: React.FC = () => {
   const frame = useCurrentFrame();
   const st = useMemo(() => sceneAt(frame), [frame]);
@@ -174,8 +192,10 @@ export const Scene: React.FC = () => {
     <>
       <Setup />
       <CameraRig />
+      <Post />
       <hemisphereLight args={["#d9efff", "#ffffff", 1.5]} />
-      <Interior visible={st.interiorVisible} reach={st.reach} look={st.look} frame={frame} fog={st.fogInterior} smile={st.smile} middleOpacity={st.middleOpacity} />
+      <Interior visible={st.interiorVisible} reach={st.reach} look={st.look} frame={frame} fog={st.fogInterior} smile={st.smile} middleOpacity={st.middleOpacity} exteriorView={st.exteriorView} />
+      <PlaneWide visible={st.planeVisible} roll={st.planeRoll} />
       <Cutaway visible={st.cutawayVisible} arrows={st.arrows} flow={st.flow} frame={frame} />
       <Exploded
         visible={st.explodedVisible}

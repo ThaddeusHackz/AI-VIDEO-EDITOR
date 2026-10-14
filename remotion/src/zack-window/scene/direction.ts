@@ -20,21 +20,27 @@ export const CUT_HOLE = CUT.clone().add(CUT_HOLE_LOCAL);
 export const EXP = new THREE.Vector3(0, -40, 0);             // exploded / crack rig origin
 export const CRACK_EXPLODE = 0.35;
 export const FAR_OUT = new THREE.Vector3(12, 1.6, -3);       // where he looks when gazing outside
+export const PLANE = new THREE.Vector3(0, -90, 0);           // wide-shot airliner rig origin
 
 const sec = (f: number) => f / FPS;
 
-export type CamState = { pos: THREE.Vector3; look: THREE.Vector3; fov: number };
+/** Lens: focus sits on the look target (+offset, metres); `range` = depth kept sharp; `bokeh` = blur scale. */
+export type Focus = { range: number; bokeh: number; offset: number };
+export type CamState = { pos: THREE.Vector3; look: THREE.Vector3; fov: number; focus: Focus };
+const WIDE: Focus = { range: 1.6, bokeh: 0, offset: 0 }; // bokeh 0 = lens passes off
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 const add = (a: THREE.Vector3, x: number, y: number, z: number) => a.clone().add(V(x, y, z));
 
-type Move = { from: CamState; to: CamState; ease?: (t: number) => number };
+type Key = { pos: THREE.Vector3; look: THREE.Vector3; fov: number };
+type Move = { from: Key; to: Key; ease?: (t: number) => number; focus?: Focus };
 const move = (m: Move, t: number): CamState => {
   const e = (m.ease ?? easeInOut)(t);
   return {
     pos: m.from.pos.clone().lerp(m.to.pos, e),
     look: m.from.look.clone().lerp(m.to.look, e),
     fov: lerp(m.from.fov, m.to.fov, e),
+    focus: m.focus ?? WIDE,
   };
 };
 // Gentle, continuous push-ins (never fully easing to a stop mid-shot reads more "animated").
@@ -46,46 +52,63 @@ const CAMS: Record<ShotId, Move> = {
     from: { pos: V(-1.38, 1.42, -0.34), look: V(0.40, 1.06, -0.27), fov: 50 },
     to:   { pos: V(-0.05, 1.09, -0.27), look: V(0.645, 0.975, -0.35), fov: 30 },
     ease: drift,
+    focus: WIDE,
   },
   holeMacro: {
     from: { pos: add(HOLE, -0.115, 0.034, 0.024), look: add(HOLE, 0, -0.010, 0), fov: 28 },
     to:   { pos: add(HOLE, -0.085, 0.026, 0.018), look: add(HOLE, 0, -0.008, 0), fov: 26 },
     ease: drift,
+    focus: { range: 0.03, bokeh: 2.2, offset: 0 },
   },
   face: {
     from: { pos: V(0.52, 1.27, -0.96), look: add(HEAD, -0.02, -0.06, 0), fov: 34 },
     to:   { pos: V(0.52, 1.26, -0.86), look: add(HEAD, -0.02, -0.06, 0), fov: 32 },
     ease: drift,
+    focus: { range: 0.22, bokeh: 1.6, offset: -0.07 },
   },
-  exterior: {
-    from: { pos: V(3.05, 1.02, -1.10), look: add(WIN, 0.1, 0.04, 0), fov: 46 },
-    to:   { pos: V(2.05, 1.12, -0.62), look: add(WIN, 0.1, 0, 0), fov: 26 },
+  // The airliner alone in the void, seen from below and ahead (we are very high up); slow orbit + push.
+  planeWide: {
+    from: { pos: add(PLANE, 46, -50.5, 34.5), look: add(PLANE, -2.5, -0.5, 1.6), fov: 46 },
+    to:   { pos: add(PLANE, 43.5, -48.5, 36.5), look: add(PLANE, -1.0, -0.5, 1.3), fov: 44 },
     ease: drift,
+    focus: WIDE,
+  },
+  // Outside, low and aft: the fuselage curves up into the void, then a push-in to his window at eye level.
+  exterior: {
+    from: { pos: V(3.3, 0.25, -1.8), look: V(0.80, 1.08, -0.45), fov: 44 },
+    to:   { pos: V(2.15, 1.10, -0.70), look: add(WIN, 0.1, 0, 0), fov: 28 },
+    ease: drift,
+    focus: WIDE,
   },
   cutaway: {
     from: { pos: add(CUT, -0.70, 0.46, 1.50), look: add(CUT, 0.02, -0.07, 0.0), fov: 30 },
     to:   { pos: add(CUT, -0.50, 0.32, 1.12), look: add(CUT, 0.05, -0.08, 0.0), fov: 28 },
     ease: drift,
+    focus: { range: 0.55, bokeh: 1.2, offset: 0 },
   },
   exploded: {
     from: { pos: add(EXP, -0.66, 0.30, 1.42), look: add(EXP, -0.02, 0.0, 0.0), fov: 34 },
     to:   { pos: add(EXP, -0.54, 0.27, 1.28), look: add(EXP, -0.02, 0.0, 0.0), fov: 32 },
     ease: drift,
+    focus: { range: 0.7, bokeh: 1.0, offset: 0 },
   },
   crack: {
     from: { pos: add(EXP, 0.80, 0.20, 1.08), look: add(EXP, 0.14, -0.02, 0.0), fov: 30 },
     to:   { pos: add(EXP, 0.68, 0.17, 0.92), look: add(EXP, 0.14, -0.02, 0.0), fov: 28 },
     ease: drift,
+    focus: { range: 0.5, bokeh: 1.2, offset: 0 },
   },
   bleed: {
     from: { pos: add(CUT_HOLE, -0.105, 0.046, 0.100), look: add(CUT_HOLE, 0.006, -0.002, 0.0), fov: 30 },
     to:   { pos: add(CUT_HOLE, -0.080, 0.036, 0.078), look: add(CUT_HOLE, 0.006, -0.002, 0.0), fov: 28 },
     ease: drift,
+    focus: { range: 0.045, bokeh: 2.2, offset: 0 },
   },
   outro: {
     from: { pos: V(-1.18, 1.38, -0.30), look: V(0.42, 1.07, -0.26), fov: 47 },
     to:   { pos: V(-0.88, 1.31, -0.32), look: V(0.46, 1.07, -0.28), fov: 42 },
     ease: drift,
+    focus: WIDE,
   },
 };
 
@@ -113,6 +136,11 @@ export type SceneState = {
   smile: number;
   /** middle-pane opacity in the interior rig (raised for the hole macro) */
   middleOpacity: number;
+  /** camera is outside the aircraft: hide the flat cabin pieces that poke through the curved skin */
+  exteriorView: boolean;
+  planeVisible: boolean;
+  /** airliner roll (radians) in the wide shot */
+  planeRoll: number;
 };
 
 export const sceneAt = (frame: number): SceneState => {
@@ -165,5 +193,8 @@ export const sceneAt = (frame: number): SceneState => {
     fogInterior,
     smile,
     middleOpacity,
+    exteriorView: sh === "exterior",
+    planeVisible: sh === "planeWide",
+    planeRoll: 0.08 + 0.015 * Math.sin(t * 0.9),
   };
 };

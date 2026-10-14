@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { getInputProps } from "remotion";
 
-export type PerfFlags = { aa?: boolean; shadows?: boolean; lambert?: boolean; pbrMatte?: boolean; dpr?: number };
+export type PerfFlags = { aa?: boolean; shadows?: boolean; lambert?: boolean; pbrMatte?: boolean; dpr?: number; post?: boolean; msaa?: number };
 export const perfFlags = (): PerfFlags => ((getInputProps() as { perf?: PerfFlags }).perf ?? {});
 
 /** Cheap matte material (Lambert) or PBR depending on perf flags. */

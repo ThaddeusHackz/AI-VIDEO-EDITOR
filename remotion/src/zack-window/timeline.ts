@@ -68,7 +68,8 @@ export const SHOTS = {
   hook: { from: 0, to: s(5.95) },          // interior, finger finds the hole
   holeMacro: { from: s(5.95), to: s(8.1) },  // ECU of the hole
   face: { from: s(8.1), to: s(10.45) },      // passenger close-up, calm
-  exterior: { from: s(10.45), to: s(14.6) }, // outside the plane, looking in
+  planeWide: { from: s(10.45), to: s(12.6) },// the whole airliner alone in the void, high up
+  exterior: { from: s(12.6), to: s(14.6) },  // outside the plane, looking in at him
   cutaway: { from: s(14.6), to: s(21.25) },  // cross-section, pressure arrows
   exploded: { from: s(21.25), to: s(25.55) },// three panes separate
   crack: { from: s(25.55), to: s(32.55) },   // outer pane loaded, cracks, middle holds

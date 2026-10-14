@@ -186,6 +186,8 @@ type AssemblyProps = PanesProps & {
   frameDepth?: number;
   /** render interior trim + reveal */
   interior?: boolean;
+  /** render the flat sidewall panel (off for exterior views: it pokes through the curved skin) */
+  wall?: boolean;
   /** render exterior aluminium skin */
   exterior?: boolean;
   /** render the insulation/structure block (for cutaways) */
@@ -197,7 +199,7 @@ type AssemblyProps = PanesProps & {
 
 /** Full wall section around the window. */
 export const WindowAssembly: React.FC<AssemblyProps> = ({
-  interior = true, exterior = true, structure = true, shade = false, clip, children, frameDepth = 1, ...panes
+  interior = true, wall = true, exterior = true, structure = true, shade = false, clip, children, frameDepth = 1, ...panes
 }) => {
   const geo = useMemo(() => {
     // Interior trim panel 2.0 (z) × 2.4 (y) with the window cut-out, slightly curved inwards at the top.
@@ -243,7 +245,7 @@ export const WindowAssembly: React.FC<AssemblyProps> = ({
     <group>
       {interior && (
         <>
-          <mesh geometry={geo.wallGeo} material={mats.wall} position={[-0.04, 0, 0]} rotation={ROT_TO_X} receiveShadow castShadow />
+          {wall && <mesh geometry={geo.wallGeo} material={mats.wall} position={[-0.04, 0, 0]} rotation={ROT_TO_X} receiveShadow castShadow />}
           <mesh geometry={geo.reveal} material={mats.reveal} position={[-0.012, 0, 0]} rotation={ROT_TO_X} receiveShadow castShadow />
           {shade && <ShadeLip openingH={INNER_H} />}
         </>
