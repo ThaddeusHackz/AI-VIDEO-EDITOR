@@ -14,3 +14,16 @@ coverage/
 *.tsbuildinfo
 *.log
 .DS_Store
+
+# The Singularity Engine — regenerable media (rebuild: ./bin/ai-video singularity audio|plate)
+remotion/public/singularity/audio/
+remotion/public/singularity/hf/
+productions/singularity-engine/audio/build/
+# HyperFrames per-project, per-machine state (history ids, locks, preview cache) written by `hyperframes lint/render`.
+# The repo-root .hyperframes/cache (offline registry manifests) stays tracked.
+examples/**/.hyperframes/
+productions/**/.hyperframes/
+
+# Python bytecode
+__pycache__/
+*.pyc

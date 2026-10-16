@@ -1,0 +1,10 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/hyperframes.json",
+  "name": "singularity-genesis-code",
+  "version": "1.0.0",
+  "entry": "index.html",
+  "width": 1440,
+  "height": 1440,
+  "fps": 60,
+  "duration": 2.4
+}

@@ -11,6 +11,8 @@ import { HiggsfieldCinemaStudioShowreel } from "./HiggsfieldCinemaStudioShowreel
 import { HiggsfieldEffectsMixLab } from "./HiggsfieldEffectsMixLab";
 import { ZackWindowShort } from "./zack-window/ZackWindowShort";
 import { FPS as ZW_FPS, HEIGHT as ZW_H, TOTAL_FRAMES as ZW_FRAMES, WIDTH as ZW_W } from "./zack-window/timeline";
+import { SingularityEngine } from "./singularity/SingularityEngine";
+import { FPS as SE_FPS, TOTAL as SE_FRAMES } from "./singularity/data";
 
 /**
  * Every <Composition> here becomes a renderable target:
@@ -23,6 +25,27 @@ import { FPS as ZW_FPS, HEIGHT as ZW_H, TOTAL_FRAMES as ZW_FRAMES, WIDTH as ZW_W
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      {/* ★ CLAUDE OPUS 5.5 vs. GPT ASTRA 6.1 SOL — THE SINGULARITY ENGINE (30 s · 60 fps · 1800 frames)
+          16:9 master + 9:16 companion from ONE component tree (productions/singularity-engine/FILM.md). */}
+      <Composition
+        id="Singularity-Master"
+        component={SingularityEngine}
+        durationInFrames={SE_FRAMES}
+        fps={SE_FPS}
+        width={1920}
+        height={1080}
+        defaultProps={{ withAudio: true }}
+      />
+      <Composition
+        id="Singularity-Vertical"
+        component={SingularityEngine}
+        durationInFrames={SE_FRAMES}
+        fps={SE_FPS}
+        width={1080}
+        height={1920}
+        defaultProps={{ withAudio: true }}
+      />
+
       {/* 0. Zack-D-Films-format 3D explainer short (9:16): "Why airplane windows have a tiny hole" */}
       <Composition
         id="ZackWindow-Short"

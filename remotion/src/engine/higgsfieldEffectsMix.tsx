@@ -56,8 +56,13 @@ export const HiggsfieldEffectsMix: React.FC<{
   effects: HiggsfieldEffectName[];
   triggerFrame?: number;
   intensity?: number;
+  /** Optional brand palette [primary, secondary, ash] for Thunder God bolts and Disintegration ash. Defaults keep the original cyan/lime/slate look. */
+  accentColors?: [string, string, string?];
   children: React.ReactNode;
-}> = ({ effects, triggerFrame = 0, intensity = 1, children }) => {
+}> = ({ effects, triggerFrame = 0, intensity = 1, accentColors, children }) => {
+  const accentA = accentColors?.[0] ?? "#35D9F2";
+  const accentB = accentColors?.[1] ?? "#C5F75A";
+  const ash = accentColors?.[2] ?? "#9CB0C1";
   const frame = useCurrentFrame();
   const { width, height, fps } = useVideoConfig();
 
@@ -210,7 +215,7 @@ export const HiggsfieldEffectsMix: React.FC<{
                   y={sy}
                   width={sz}
                   height={sz}
-                  fill={i % 4 === 0 ? "#C5F75A" : "#9CB0C1"}
+                  fill={i % 4 === 0 ? accentB : ash}
                   opacity={interpolate(relFrame, [0, 80], [0.85, 0], clamp)}
                   transform={`rotate(${relFrame * 4 + i * 15} ${sx} ${sy})`}
                 />
@@ -228,7 +233,7 @@ export const HiggsfieldEffectsMix: React.FC<{
             y1={0}
             x2={width * 0.5 - 40}
             y2={height * 0.62}
-            color="#35D9F2"
+            color={accentA}
             branches={3}
           />
           <PlasmaLightningCGI
@@ -236,7 +241,7 @@ export const HiggsfieldEffectsMix: React.FC<{
             y1={0}
             x2={width * 0.5 + 40}
             y2={height * 0.62}
-            color="#C5F75A"
+            color={accentB}
             branches={3}
           />
         </>

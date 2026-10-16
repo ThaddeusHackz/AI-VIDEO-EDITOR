@@ -88,9 +88,22 @@ case "$CMD" in
     hyperframes lint "${REPO_ROOT}/examples/ultrahigh-3d-vfx-showreel"
     ok "HyperFrames lint check passed (0 errors, 0 warnings)"
 
-    bold "== 3/3 Seam-Stamp Vector Ledger Verification =="
+    bold "== 3/5 Seam-Stamp Vector Ledger Verification =="
     node "${REPO_ROOT}/scripts/seam-stamp.mjs" --ledger "${REPO_ROOT}/examples/ultrahigh-3d-vfx-showreel/ledger.json" >/dev/null
     ok "Vector Ledger (ledger.json) verified"
+
+    bold "== 4/5 The Singularity Engine · HyperFrames plate lint =="
+    hyperframes lint "${REPO_ROOT}/productions/singularity-engine/hyperframes/genesis-code"
+    ok "genesis-code plate lint passed"
+
+    bold "== 5/5 The Singularity Engine · Remotion Seam Gate (Vector Ledger, numeric) =="
+    "${REPO_ROOT}/productions/singularity-engine/qa/seam_check.sh" | tail -1
+    ok "Remotion seam gate passed"
+    ;;
+
+  singularity)
+    shift || true
+    exec "${REPO_ROOT}/productions/singularity-engine/render/studio_render.sh" "${@:-all}"
     ;;
 
   skills)
@@ -124,6 +137,8 @@ EOF
   compositions)
     bold "== Remotion Renderable Compositions (remotion/src/Root.tsx) =="
     cat <<'EOF'
+  ★ Singularity-Master      (1920x1080, 60fps, 1800f / 30.0s) — Claude Opus 5.5 vs GPT Astra 6.1 Sol: The Singularity Engine
+  ★ Singularity-Vertical    (1080x1920, 60fps, 1800f / 30.0s) — same component tree, 9:16 companion
   • Cinematic3D-Showcase    (1920x1080, 30fps, 240f / 8.0s)  — 3D Geodesic + Higgsfield DoP + Godrays
   • VFX-CGI-Compositor      (1920x1080, 30fps, 240f / 8.0s)  — 4-Pass VFX Breakdown + Bullet-Time Shatter
   • MotionDoctrine-Showreel (1920x1080, 30fps, 300f / 10.0s) — Waterfall + 7cqw Cursor + Cut-the-Curve + Climax
@@ -140,7 +155,7 @@ EOF
     ;;
 
   *)
-    echo "Usage: ./bin/ai-video {setup|doctor|verify|skills|presets|compositions}"
+    echo "Usage: ./bin/ai-video {setup|doctor|verify|skills|presets|compositions|singularity [stage] [master|vertical]}"
     exit 1
     ;;
 esac
