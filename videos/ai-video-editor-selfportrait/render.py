@@ -629,7 +629,7 @@ def scene_scale(frame: int) -> np.ndarray:
 
     pkgs = f"{REPO['hf_packages']} HYPERFRAMES + {REPO['remotion_packages']} REMOTION PACKAGES"
     pp = waterfall_entry(frame, F2 + 8, 0, duration_frames=18, distance_y=36)
-    put(canvas, txt(pkgs, "inter-700", 27, "#fff8ff", 1.2), 1120, 950 + pp.translate_y,
+    put(canvas, txt(pkgs, "inter-700", 24, "#fff8ff", 1.0), 1120, 952 + pp.translate_y,
         opacity=pp.opacity, anchor="topleft")
 
     hud1 = cyber_hud(frame, F2 + 14, "GEODESIC-IOSA", f"V:12 · E:{len(GEO_EDGES)} · R:195")
@@ -647,7 +647,7 @@ def scene_scale(frame: int) -> np.ndarray:
         wash[..., 0], wash[..., 1], wash[..., 2] = ACCENT2
         wash[..., 3] = 0.045 * hold
         over(canvas, wash, 1.0, 0, 0, add=True)
-        put(canvas, txt("HOLD", "mono-700", 28, "#00d4ff", 9.0), 1782, 940, opacity=hold * 0.9)
+        put(canvas, txt("HOLD", "mono-700", 28, "#00d4ff", 9.0), 1640, 940, opacity=hold * 0.9)
 
     fi = interpolate(frame, [FLARE_FROM, (FLARE_FROM + FLARE_TO) / 2, FLARE_TO], [0, 1.3, 0.35])
     flare_x = interpolate(frame, [FLARE_FROM, FLARE_TO], [8, 108], easing=Easing.in_(Easing.cubic))
@@ -672,11 +672,11 @@ def _hud_reticle(accent_hex: str) -> np.ndarray:
 
 def cyber_hud(frame: int, start: int, label: str, sublabel: str, accent: str = "#35d9f2") -> np.ndarray:
     """CyberHUDTracker (vfxShaders.tsx §5): reticle + leader badge with live frame counter."""
-    layer = np.zeros((196, 480, 4), dtype=np.float32)
+    layer = np.zeros((196, 530, 4), dtype=np.float32)
     pulse = 0.94 + math.sin(frame * 0.25) * 0.06
     ret, rx, ry = tform(_hud_reticle(accent), cx=44, cy=44, scale=pulse)
     over(layer, ret, 1.0, rx, ry)
-    badge = rounded_rect(336, 76, 6, "#070b12", 0.86, border_color=hex2rgb(accent), border_width=1)
+    badge = rounded_rect(384, 76, 6, "#070b12", 0.86, border_color=hex2rgb(accent), border_width=1)
     over(badge, bar(3, 76, 1, accent, 1.0), 1.0, 0, 0)
     over(badge, txt(label, "mono-700", 21, accent, 2.6), 1.0, 18, 12)
     over(badge, txt(f"{sublabel} · F:{frame:04d}", "mono-400", 18, "#d2e3ec", 1.3), 1.0, 18, 44)
