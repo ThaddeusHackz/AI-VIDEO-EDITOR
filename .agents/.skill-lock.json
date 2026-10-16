@@ -1,6 +1,6 @@
 {
   "source": "ThaddeusHackz/AI-VIDEO-EDITOR (heygen-com/hyperframes + remotion-dev/remotion + morluto/rea + opus-js-animations + gpt-js-animations + higgsfield-ultrahigh)",
-  "totalSkills": 53,
+  "totalSkills": 59,
   "skills": {
     "captions-overlay": {
       "hash": "dde58d4fcad6b244",
@@ -38,6 +38,14 @@
       "hash": "8382c404c6a08a3d",
       "files": 2
     },
+    "forensic-scan-protocol": {
+      "hash": "6a404a21d9db11fc",
+      "files": 2
+    },
+    "gemini-4-argon-forensic-atlas": {
+      "hash": "a832cc8fe8b31e68",
+      "files": 5
+    },
     "general-video": {
       "hash": "a021a8ffde41ac46",
       "files": 6
@@ -46,6 +54,10 @@
       "hash": "9b61727f1e2d7608",
       "files": 29
     },
+    "heygen-github-forensic-atlas": {
+      "hash": "af11e0844338b14c",
+      "files": 4
+    },
     "higgsfield-camera-dop": {
       "hash": "15b52f5b72a1c251",
       "files": 1
@@ -53,6 +65,10 @@
     "higgsfield-effects-mix": {
       "hash": "59841c352e463f4a",
       "files": 1
+    },
+    "higgsfield-forensic-atlas": {
+      "hash": "403ce647d0d17c10",
+      "files": 6
     },
     "hyperframes": {
       "hash": "71ff42947e12d7d0",
@@ -110,6 +126,10 @@
       "hash": "e1a9a1758a11e9f0",
       "files": 1
     },
+    "opus-5-5-sol-6-1-director": {
+      "hash": "1f284dd617da7414",
+      "files": 4
+    },
     "opus-gpt-director": {
       "hash": "6f83c4d21b3ac157",
       "files": 1
@@ -157,6 +177,10 @@
     "remotion-docs": {
       "hash": "1125a237e758475e",
       "files": 3
+    },
+    "remotion-github-forensic-atlas": {
+      "hash": "96e994c0f10af867",
+      "files": 4
     },
     "remotion-interactivity": {
       "hash": "7661ab8d7b9647c6",

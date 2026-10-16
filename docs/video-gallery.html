@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI VIDEO EDITOR — Render Gallery</title>
+<meta name="description" content="Films rendered with THE-AI-VIDEO-EDITOR: 4K60, 1080p and vertical AI-generated motion graphics, VFX and CGI." />
+<style>
+  :root{
+    --bg:#07080c; --panel:#0e1016; --line:#1e2230; --text:#e9ecf5; --muted:#94a0b8;
+    --accent:#5eead4; --accent2:#a78bfa; --warn:#fbbf24; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+    font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Inter,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  header{padding:54px 22px 26px;text-align:center;
+    background:radial-gradient(1200px 380px at 50% -120px, rgba(94,234,212,.14), transparent 70%),
+               radial-gradient(900px 320px at 80% -60px, rgba(167,139,250,.12), transparent 70%)}
+  h1{margin:0 0 10px;font-size:clamp(26px,4.4vw,46px);letter-spacing:-.02em;
+     background:linear-gradient(92deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);max-width:820px;margin:0 auto;font-size:clamp(14px,1.6vw,17px)}
+  .stats{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin:26px auto 0;max-width:900px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 18px;min-width:132px}
+  .stat b{display:block;font-size:22px;color:var(--accent)}
+  .stat span{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+  main{max-width:1280px;margin:0 auto;padding:10px 22px 70px}
+  h2{margin:44px 0 6px;font-size:20px;letter-spacing:-.01em}
+  h2 .tag{font-size:12px;color:var(--muted);font-weight:500;margin-left:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;margin-top:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;display:flex;flex-direction:column;transition:transform .16s ease,border-color .16s ease}
+  .card:hover{transform:translateY(-3px);border-color:#2c3350}
+  .thumb{position:relative;aspect-ratio:16/9;background:#0a0c12;cursor:pointer;overflow:hidden}
+  .thumb.vertical{aspect-ratio:9/16;max-height:430px}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .thumb .fallback{position:absolute;inset:0;display:grid;place-items:center;color:#39405a;font-size:34px}
+  .thumb .play{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity .16s ease;
+    background:linear-gradient(0deg,rgba(7,8,12,.72),rgba(7,8,12,.30))}
+  .thumb:hover .play{opacity:1}
+  .play span{width:56px;height:56px;border-radius:50%;background:rgba(94,234,212,.92);color:#04120f;
+    display:grid;place-items:center;font-size:20px;font-weight:700}
+  .badges{position:absolute;top:10px;left:10px;display:flex;gap:6px;flex-wrap:wrap}
+  .badge{font-size:11px;padding:3px 8px;border-radius:999px;background:rgba(7,8,12,.78);border:1px solid var(--line);color:var(--text)}
+  .badge.k{color:var(--accent);border-color:rgba(94,234,212,.35)}
+  .badge.v{color:var(--warn);border-color:rgba(251,191,36,.35)}
+  .body{padding:13px 15px 15px;display:flex;flex-direction:column;gap:9px;flex:1}
+  .title{font-weight:600;font-size:15px;line-height:1.35}
+  .meta{color:var(--muted);font-size:12.5px;display:flex;gap:10px;flex-wrap:wrap}
+  .row{display:flex;gap:8px;margin-top:auto;padding-top:4px}
+  .btn{flex:1;text-align:center;padding:9px 10px;border-radius:9px;border:1px solid var(--line);
+    background:#141824;color:var(--text);font-size:13px;cursor:pointer}
+  .btn.primary{background:linear-gradient(92deg,rgba(94,234,212,.16),rgba(167,139,250,.16));border-color:#2c3350}
+  .btn:hover{border-color:var(--accent)}
+  footer{color:var(--muted);text-align:center;padding:34px 22px 60px;border-top:1px solid var(--line);font-size:13px}
+  /* modal */
+  #modal{position:fixed;inset:0;z-index:50;display:none;background:rgba(4,5,8,.9);backdrop-filter:blur(6px)}
+  #modal.open{display:grid;place-items:center;padding:20px}
+  .frame{width:min(1180px,96vw);height:min(760px,88vh);background:#000;border:1px solid var(--line);
+    border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
+  .frame .bar{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--panel);border-bottom:1px solid var(--line)}
+  .frame .bar .name{font-size:13.5px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .frame .bar a,.frame .bar button{font-size:12.5px;color:var(--accent);background:none;border:1px solid var(--line);
+    border-radius:8px;padding:6px 10px;cursor:pointer}
+  .frame iframe{flex:1;width:100%;border:0;background:#000}
+  code{background:#12151f;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:12.5px;color:#cfe3ff}
+  .note{border-left:3px solid var(--accent);background:#0d1119;border-radius:0 10px 10px 0;padding:12px 16px;
+    color:var(--muted);font-size:13.5px;margin:22px 0 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>AI VIDEO EDITOR — Render Gallery</h1>
+  <p class="sub">Thirteen films produced through this repository's engines — Remotion (React/3D/VFX), HyperFrames
+  (HTML→video) and REA (reference replication) — including 4K60 masters, resolution cut-downs and vertical-first shorts.
+  Films live in the Google Drive <code>AI VIDEO EDITOR</code> folder; this page plays them in place.</p>
+  <div class="stats">
+    <div class="stat"><b>13</b><span>films</span></div>
+    <div class="stat"><b>3</b><span>4K60 masters</span></div>
+    <div class="stat"><b>1</b><span>9:16 vertical</span></div>
+    <div class="stat"><b>2</b><span>production packages</span></div>
+    <div class="stat"><b>0&nbsp;CDN</b><span>offline render</span></div>
+  </div>
+</header>
+
+<main>
+  <h2>DAVID — The Chronicles of Valor <span class="tag">180-second flagship</span></h2>
+  <div class="grid" id="grid-david"></div>
+
+  <h2>THADDEUS-TECHZ — Dark Pursuit <span class="tag">one sequence, five cuts</span></h2>
+  <div class="grid" id="grid-dp"></div>
+
+  <h2>The Shift <span class="tag">three iterations of 20 seconds</span></h2>
+  <div class="grid" id="grid-shift"></div>
+
+  <h2>Individual films <span class="tag">4K60 · vertical · self-portrait</span></h2>
+  <div class="grid" id="grid-solo"></div>
+
+  <p class="note"><b>How to add a film:</b> upload the MP4 to the Drive folder, then append one object to the
+  <code>FILMS</code> array in this file and a matching row to <code>docs/VIDEO-GALLERY.md</code> and <code>README.md</code>.
+  Keep the naming convention <code>&lt;SERIES&gt;-&lt;Title&gt;-&lt;WxH&gt;-&lt;duration&gt;s-&lt;tag&gt;.mp4</code>.
+  Thumbnails use the public Drive thumbnail endpoint; the player uses the Drive <code>/preview</code> embed.</p>
+</main>
+
+<footer>
+  Rendered with <strong>THE-AI-VIDEO-EDITOR</strong> · Remotion 4.0.534 · HyperFrames v0.8.x · REA ·
+  <a href="VIDEO-GALLERY.md">spec sheet</a> ·
+  <a href="forensics/README.md">2026 forensic atlases</a>
+</footer>
+
+<div id="modal" aria-modal="true" role="dialog">
+  <div class="frame">
+    <div class="bar">
+      <div class="name" id="m-name">—</div>
+      <a id="m-open" href="#" target="_blank" rel="noopener">Open in Drive ↗</a>
+      <button id="m-close" type="button">Close ✕</button>
+    </div>
+    <iframe id="m-frame" allow="autoplay; fullscreen" allowfullscreen title="Video player"></iframe>
+  </div>
+</div>
+
+<script>
+const FILMS = [
+  // series, title, id, resolution, fps, duration, size, vertical?
+  ["david","DAVID — The Chronicles of Valor","1tRU0vmaQgyVOfYGiCTrhOfYCHk_S8pFa","3840×2160","60 fps","3:00","82.3 MB",false],
+  ["david","DAVID — Chronicles of Valor (review master)","1L8dKnmVZUTF60mHOaWEYegVgu9cFFCWn","1280×720","60 fps","3:00","67.0 MB",false],
+
+  ["dp","Dark Pursuit — 4K Ultra-Bitrate","1e2pSmA0_Nh0XFSmcjq8GPnUlQijwVpuz","3840×2160","","1:30","78.7 MB",false],
+  ["dp","Dark Pursuit — 90s Full ULTRAHIGH-3D","1RTw38KvO4r9945ko_vCzlfrabIxOf-Y5","1280×720","","1:30","9.3 MB",false],
+  ["dp","Dark Pursuit — 1080p Master","1YMjF69kkZcjKJvk21ILm3DNoaFYw-eEG","1920×1080","","1:30","72.7 MB",false],
+  ["dp","Dark Pursuit — ULTRAHIGH-3D (30s)","1-vSvhKITM80UWM_Tdfmupo-DfSUUlxwO","1920×1080","","0:30","8.4 MB",false],
+  ["dp","Dark Pursuit — ULTRAHIGH-3D (24s)","11FQCpUcCsN3-aZzcQsgFkfhlhQGv_gPq","1920×1080","","0:24","7.8 MB",false],
+
+  ["shift","The Shift — v2 ULTRAHIGH-3D","1mzImEnRLI4KIDFL4oqgxz5imJWCgeQfh","1920×1080","","0:20","7.9 MB",false],
+  ["shift","The Shift — v1 ULTRAHIGH-3D","1ex6RwxydvlUfJllQvD1Kdw_Nm7xHiqOF","1920×1080","","0:20","8.7 MB",false],
+  ["shift","The Shift — flat cut","1KCWhY4xz8Q0MgBH7SKzEFLalk7HGwlIO","1920×1080","","0:20","3.4 MB",false],
+
+  ["solo","Tri-AI Convergence","1EEY_1VgwPEw_VrGU0e-vMEaQjM_QDejz","3840×2160","60 fps","1:00","65.8 MB",false],
+  ["solo","Why airplane windows have a tiny hole — 3D short (v6)","1N6gDIuigJ-HY7-gyW345syQR6XTGB0EJ","1080×1920","vertical","0:42","10.1 MB",true],
+  ["solo","AI-VIDEO-EDITOR — Self-Portrait","1BNNF0DziB9rO5WOqXiy3BXhkbEV1HbVE","1920×1080","30 fps","0:10","5.6 MB",false]
+];
+
+const thumb = id => `https://drive.google.com/thumbnail?id=${id}&sz=w1280`;
+const watch = id => `https://drive.google.com/file/d/${id}/view`;
+const embed = id => `https://drive.google.com/file/d/${id}/preview`;
+
+function card(f){
+  const [series,title,id,res,fps,dur,size,vertical] = f;
+  const el = document.createElement("article");
+  el.className = "card";
+  el.innerHTML = `
+    <div class="thumb ${vertical?"vertical":""}" data-id="${id}" data-title="${title}">
+      <div class="fallback">▶</div>
+      <img loading="lazy" src="${thumb(id)}" alt="${title}" onerror="this.style.display='none'">
+      <div class="badges">
+        <span class="badge k">${res}</span>
+        ${fps?`<span class="badge v">${fps}</span>`:""}
+        <span class="badge">${dur}</span>
+      </div>
+      <div class="play"><span>▶</span></div>
+    </div>
+    <div class="body">
+      <div class="title">${title}</div>
+      <div class="meta"><span>${dur}</span><span>${res}${fps?" · "+fps:""}</span><span>${size}</span></div>
+      <div class="row">
+        <button class="btn primary" data-play="${id}" data-title="${title}">Play here</button>
+        <a class="btn" href="${watch(id)}" target="_blank" rel="noopener">Drive ↗</a>
+      </div>
+    </div>`;
+  return el;
+}
+
+FILMS.forEach(f => {
+  const host = document.getElementById("grid-"+f[0]);
+  if (host) host.appendChild(card(f));
+});
+
+const modal = document.getElementById("modal");
+const frame = document.getElementById("m-frame");
+const mName = document.getElementById("m-name");
+const mOpen = document.getElementById("m-open");
+
+function openFilm(id,title){
+  mName.textContent = title;
+  mOpen.href = watch(id);
+  frame.src = embed(id) + "?autoplay=1";
+  modal.classList.add("open");
+}
+function closeFilm(){
+  modal.classList.remove("open");
+  frame.src = "";
+}
+
+document.addEventListener("click", e => {
+  const play = e.target.closest("[data-play], .thumb");
+  if (play){
+    const id = play.dataset.play || play.dataset.id;
+    const title = play.dataset.title || play.closest(".card")?.querySelector(".title")?.textContent || "Film";
+    if (id){ openFilm(id, title.trim()); }
+    return;
+  }
+  if (e.target.closest("#m-close") || e.target === modal) closeFilm();
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeFilm(); });
+</script>
+</body>
+</html>
