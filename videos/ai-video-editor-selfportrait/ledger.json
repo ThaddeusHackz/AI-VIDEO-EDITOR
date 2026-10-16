@@ -1,0 +1,37 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "duration_s": 10.0,
+  "current": "LEFT",
+  "seams": [
+    {
+      "id": "boot->identity",
+      "cut": 1.8,
+      "technique": "cut-the-curve LEFT",
+      "exit": { "selector": "#scene-boot", "axis": "x", "dir": -1, "dur": 0.267 },
+      "entry": { "selector": "#scene-identity", "axis": "x", "dir": -1, "dur": 0.367 }
+    },
+    {
+      "id": "identity->scale",
+      "cut": 4.6,
+      "technique": "zoom-through",
+      "exit": { "selector": "#scene-identity", "axis": "z", "dir": 1, "dur": 0.233 },
+      "entry": { "selector": "#scene-scale", "axis": "z", "dir": 1, "dur": 0.467, "scanRoot": "#scene-scale" }
+    },
+    {
+      "id": "scale->lockup",
+      "cut": 6.0,
+      "technique": "cut-the-curve LEFT",
+      "exit": { "selector": "#scene-scale", "axis": "x", "dir": -1, "dur": 0.267 },
+      "entry": { "selector": "#scene-lockup", "axis": "x", "dir": -1, "dur": 0.367 }
+    }
+  ],
+  "notes": {
+    "stillness_before_climax": { "from_frame": 162, "to_frame": 180, "seconds": 0.6 },
+    "cause_of_seam_2": "oversized-cursor click at frame 116 (t=3.867) ignites the Z push",
+    "cause_of_seam_3": "anamorphic flare sweep frames 168-180 lands on the cut frame",
+    "carrier_seam_1": "the #ff3d81 accent underline bar flies from the boot HUD into the wordmark slot",
+    "carrier_seam_3": "the geodesic wireframe shrinks and docks into the lockup mark slot"
+  }
+}
