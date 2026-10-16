@@ -158,10 +158,11 @@ Deliberately unused: `characterRig2D` (no characters in this brief) and REA (the
 | 18 | S10's post-lock hold eased its push to a stop before the snap-to-black. In both formats f1638–1691 was the film's lowest-motion stretch (motion 4–5.6 out of 10). | A steady dolly-in (`x^1.6`, never easing out) that is still travelling when the cut lands. Brighter comets with longer tails, and a denser electron shell (200). Both formats. |
 | 19 | In 9:16, S2's coin spin flipped the ring edge-on mid-shot (f139–147). Edge-on, the ring is a ~10 px line across a 1920 px tall frame. The match-cut's first frames (f110–111) were also just a thin line in a tall, empty frame. | In 9:16 the coin spins the other way, so the ring opens towards the lens across the shot (openness 0.42 → 0.99). The camera starts at the 16:9 distance and recoils (closed-form spring) to its wider framing. Both formats gain an **ignition feed**: two amber pulses race along Opus's line into the corona's crossing points as it ignites, which also lifted master f110 from 8.00 to 8.42. |
 | 20 | In 9:16, S7's Astra half (below the seam) was nearly bare late in the shot (f1064–1077: motion 6.5, density 8.6). Its ray fan pointed **down**, out of the frame, because of a sign error in the portrait angle. | The fan now opens upwards into the picture from its source below the frame. |
+| 21 | The sandbox was recycled again before the Google Drive hand-off. The rendered frames and both MP4s were lost with it. | Rebuilt from the committed sources at `5d6762f`, and both formats were re-rendered in full from one frozen bundle. The mix came back **bit-identical** (md5 `f21d8231…`), the plate re-rendered lint-clean and seam-gated, and the Remotion seam gate passed for 10 cuts × 2 formats. Re-scoring gave the same results. 16:9: mean 9.25, min 8.00, 0 below 8, and one frame (f352, S3) moved from 9.30 to 9.29. 9:16: mean 9.25, min 8.02, 0 below 8, with every frame total unchanged. These re-renders are the delivered files (§10.1). |
 
 ## 10. Results: final renders
 
-Both deliverables come from the same commit. Every frame was scored, the films were assembled with FFmpeg, and each file was verified from the encoded output (`studio_render.sh verify`).
+Both deliverables come from the same commit. Every frame was scored, the films were assembled with FFmpeg, and each file was verified from the encoded output (`studio_render.sh verify`). The files below are the full re-renders of §9 #21, which were uploaded to the client's Google Drive.
 
 ### 10.1 Deliverables (ffprobe / ebur128 on the encoded files)
 
@@ -172,9 +173,10 @@ Both deliverables come from the same commit. Every frame was scored, the films w
 | Frames · fps · duration | 1800 · 60/1 · 30.000 s | 1800 · 60/1 · 30.000 s |
 | Video | H.264 High, yuv420p, BT.709 primaries/transfer/matrix | same |
 | Audio | AAC 48 kHz stereo, the −16 LUFS trailer mix | same |
-| Size · bitrate | 48.9 MB · 13.0 Mb/s | 49.7 MB · 13.3 Mb/s |
+| Size · bitrate | 48.9 MB · 13.1 Mb/s | 49.7 MB · 13.3 Mb/s |
 | Loudness (encoded) | −16.0 LUFS integrated · peak −3.3 dBFS | −16.0 LUFS integrated · peak −3.3 dBFS |
 | Full decode | 0 errors | 0 errors |
+| MD5 (matches the Drive copy) | `897810db00f3a21a8e129dc83f85b6fe` | `50f0954f6bf789e38f64f7edb3df7ce1` |
 
 ### 10.2 Every frame scored (`qa/score_frames.py`, totals floored to 2 decimals)
 
@@ -199,6 +201,7 @@ Both deliverables come from the same commit. Every frame was scored, the films w
 
 - **16:9.** Seven design-fix passes took the frames below 8 from 617 → 446 → 274 → 149 → 122 → 66 → 14 → 0. After the sandbox rebuild (§9 #14), a from-scratch render of that code re-scored to the same totals: mean 9.24, min 8.0, 0 below 8. Four fixes from the companion's QA also improve the master: §9 #16 (S6), #17 (S1), #18 (S10) and #19 (S2). Their ranges were re-rendered in place (f0–121, 918–971, 1620–1691), giving mean 9.25, min 8.00, 0 below 8.
 - **9:16.** Pre-scoring 144 sampled frames found 8 below 8 (§9 #15). Spot-checking S1 and S10 found more (#17, #18). The first full render had 7 below 8 (S2 ×6, S7 ×1). The S2 spin and ignition feed brought it to 3, and the S2 recoil plus the S7 ray-fan fix (#19, #20) brought it to **0**.
+- **Second rebuild (§9 #21).** Both formats were re-rendered in full from the final bundle and re-scored. The summary scores are identical in both formats, and only one 16:9 frame moved, by 0.01.
 - Every fix was a design change, re-rendered and re-scored. No threshold or intent was loosened. The four fixes that touch both formats were re-checked against the master.
 
 ### 10.4 Declared intent (`qa/review.json`)
