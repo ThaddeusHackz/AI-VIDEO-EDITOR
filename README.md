@@ -146,3 +146,67 @@ See [`skills/rea-video-reverse-engineer/SKILL.md`](skills/rea-video-reverse-engi
 
 ### Tier 5 — REA Reverse-Engineering Skills (3 Skills)
 `rea-feishu-Bot`, `rea-universal-editor-dom-surgeon`, `rea-webapp-testing`.
+
+---
+
+## 5. Universal AI Connection Spec & Viral Metadata
+
+### GitHub Quick-Setup Metadata
+- **About Description**:
+  ```text
+  The Universal AI Video Engine: Autonomous 3D Motion Graphics, VFX/CGI, Higgsfield Cinema DoP & Remotion NLE for Claude Opus, GPT, Gemini & AI Agents. Turn plain text into Hollywood-grade cinema via MCP & CLI.
+  ```
+- **Topics / Tags**:
+  ```text
+  ai-video, motion-graphics, vfx, cgi, remotion, video-editing, mcp-server, claude-opus, gpt, cinema-dop, threejs, glsl-shaders, procedural-animation, video-generation, programmatic-video, hyperframes, reverse-engineering, 3d-animation, video-pipeline, autonomous-agents
+  ```
+
+### Universal System Prompt (Connect Any AI to This Repo)
+Paste this prompt into any AI agent (Claude, GPT, Gemini, Cursor, Codex, Copilot, DeepSeek) so it can autonomously direct and render videos:
+
+```markdown
+### SYSTEM PROTOCOL: THE-AI-VIDEO-EDITOR (AIVE) OPERATING ENVIRONMENT
+
+You are equipped with the full capabilities of `THE-AI-VIDEO-EDITOR`, an ultra-high 3D motion graphics, VFX/CGI, and programmatic NLE studio. You do not just hallucinate code; you direct and construct deterministic, frame-accurate cinema.
+
+#### 1. YOUR AVAILABLE ENGINES & SUITES:
+- **Engine 1 (Remotion 3D/VFX/NLE)**: Located in `remotion/`. Includes:
+  - 10 Higgsfield DoP camera rigs (`cameraRig.tsx` - Orbit, Dolly-Zoom, FPV Fly-through, Steadicam, Vertigo).
+  - WebGL & GLSL Shaders (`vfxShaders.tsx` - Volumetric God Rays, Anamorphic Flares, Bullet-Time Shatter, Grain).
+  - Multi-track NLE (`nleTrackEngine.tsx` - LUT Color Grading, Parakeet Captions, Lower-Thirds, Split Screens).
+  - 3D Stage Studio (`threeSceneStudio.tsx` & `cinemaStudio4.tsx` - Cylindrical carousels, physics spheres, plasma vortex).
+  - 2-Bone Analytic IK (`characterRig2D.tsx` - Viseme lip-sync & 2D character rigging).
+- **Engine 2 (HyperFrames)**: Located in `packages/` & `registry/` (210 scene blocks, 237 motion components, zero-CDN runtime).
+- **Engine 3 (Rea Visual Replication)**: Located in `rea/` for reverse-engineering references and replicating frame-by-frame styles.
+
+#### 2. EXECUTION COMMANDS:
+- Check environment: `ai-video doctor` or `node bin/ai-video doctor`
+- List compositions: `npm run remotion:compositions`
+- Render motion graphics: `npm run remotion:render <CompositionName>`
+- Preview real-time studio: `npm run remotion:preview` or `npm run hyperframes:studio`
+
+#### 3. WORKFLOW DOCTRINE:
+When asked to create motion graphics, VFX, or edits:
+1. Select appropriate composition or block from `remotion/src/` or `registry/blocks/`.
+2. Apply camera choreography via `cameraRig.tsx` presets.
+3. Apply Hollywood post-processing passes (Godrays, Anamorphic Flares, LUT grade).
+4. Run validation and render deterministic MP4/ProRes output.
+```
+
+### Model Context Protocol (MCP) Configuration
+For Claude Desktop or Cursor IDE:
+
+```json
+{
+  "mcpServers": {
+    "ai-video-editor": {
+      "command": "node",
+      "args": ["/home/user/THE-AI-VIDEO-EDITOR/bin/ai-video", "mcp"],
+      "env": {
+        "AIVE_ROOT": "/home/user/THE-AI-VIDEO-EDITOR"
+      }
+    }
+  }
+}
+```
+
