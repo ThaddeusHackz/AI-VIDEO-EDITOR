@@ -129,6 +129,25 @@ bone audits (`diag-framing`, `diag-bones`, `diag-shot1`), the transport experime
 four faster-looking dead ends (`diag-transport`, `diag-transport2`, `diag-codecs`, `diag-tiles`),
 and the contact-sheet builders (`probe.cjs`, `sheet.cjs`, `probe-film.cjs`).
 
+### The audits had to be repaired before they could be believed
+
+Both audits that guarded this pipeline were themselves broken, in the same way the film was:
+silently. They are worth recording because each one hid a real defect.
+
+* `tools/diag-tpose.cjs` measured hips motion with `a.bone('Hips')`. `Actor.bone()` is an
+  exact-name lookup, so on a Mixamo rig that call is always `null` and the column read `0.000`
+  for all 80 instances — which is how "hipsMove=0" came to look like a symptom instead of a
+  measurement. It now resolves the hips robustly, and reports 2–14 cm of displacement per
+  sampled frame.
+* `tools/validate-ual.html` bound all 17 CC0 clips to **one** character in sequence, and
+  `stripRootMotionHorizontal()` re-plants a clip against the hips' *current* local position — so
+  each clip inherited the previous clip's final pose and the hips marched downwards (heights of
+  −1.6 m that no single clip produces). The film was never affected: it strips each clip at load
+  time, on a pristine scene. The audit now resets the rig to rest before every bind, and its pass
+  bar is "above the floor" rather than "at standing height", because a combat roll is *supposed*
+  to take the hips down to 0.11 m and back up to 1.18 m. Result: **17/17 bind at 104 tracks**,
+  hips 0.11–1.18 m across the whole set, 0 failures.
+
 ## Known limits, stated plainly
 
 * The 3840×2160 file is a Lanczos rescale of the 1280×720 master, not a native 4K render; the

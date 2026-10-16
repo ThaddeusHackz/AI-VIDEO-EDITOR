@@ -33,7 +33,9 @@ let H=null;
         const d=ANGLE(r.q, o.quaternion); sum+=d; if(d>max) max=d;
         if(d>0.06) moved++;                       // >3.4 deg counts as "this bone is posed"
       });
-      const hips=a.bone&&a.bone('Hips');
+      // a.bone() is an exact-name lookup: a.bone('Hips') is always null on a Mixamo rig, which
+      // silently zeroed this whole column. Resolve the hips robustly.
+      const hips=a.hips||(a.bone&&a.bone('mixamorigHips'))||(a.bones&&[...a.bones.values()].find(x=>/Hips$/i.test(x.name)));
       if(hips){ const r=rest.get(hips.name); if(r) hipsDrop=hips.position.distanceTo(r.p); }
       rows.push({shot:shot.id, id, bones:n, movedPct:+(100*moved/Math.max(n,1)).toFixed(0),
                  maxDeg:+(max*180/Math.PI).toFixed(1), meanDeg:+((sum/Math.max(n,1))*180/Math.PI).toFixed(1),

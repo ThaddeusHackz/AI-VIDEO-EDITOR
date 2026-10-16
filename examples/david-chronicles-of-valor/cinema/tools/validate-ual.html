@@ -13,11 +13,26 @@ try {
   const charNames = [...charNodes.keys()];
   const ret = new Retargeter(charRoot, { scale: 1 });
   const { clips, missing } = await loadUALClips(UAL_FIGHT_CLIPS);
+  // Snapshot the true rest pose. stripRootMotionHorizontal() re-plants a clip against the
+  // hips' CURRENT local position, so if the character is still standing in the previous
+  // clip's final pose each strip inherits that offset and the hips walk downwards clip after
+  // clip (that is exactly what this audit used to report: negative hips heights that no
+  // single clip produces, while the film -- which strips on a pristine scene at load time --
+  // was fine). Reset to rest before every bind.
+  const REST = new Map();
+  charRoot.traverse(o => REST.set(o, { p: o.position.clone(), q: o.quaternion.clone(), s: o.scale.clone() }));
+  const resetToRest = () => {
+    for (const [o, t] of REST) { o.position.copy(t.p); o.quaternion.copy(t.q); o.scale.copy(t.s); }
+    charRoot.updateMatrixWorld(true);
+  };
+  let prevMixer = null;
   const rows = [];
   for (const [name, raw] of clips) {
     const clip = raw.animations[0];
     let row = { name, duration: +clip.duration.toFixed(2), ualTracks: clip.tracks.length, nodesRenamed: clip.ualStats.nodesRenamed };
     try {
+      resetToRest();
+      if (prevMixer) { prevMixer.stopAllAction(); prevMixer.uncacheRoot(charRoot); prevMixer = null; }
       const bound = ret.bind(raw, { label: name, clipIndex: 0 });
       stripRootMotionHorizontal(bound, ret, { nodes: null, keepY: true });
       row.bound = bound.retargetStats.bound;
@@ -25,6 +40,7 @@ try {
       row.missing = bound.retargetStats.missing.slice(0, 5);
       // rest sanity: play the on-air hips height across the clip
       const mixer = new THREE.AnimationMixer(charRoot);
+      prevMixer = mixer;
       const action = mixer.clipAction(bound); action.play();
       let minY = 1e9, maxY = -1e9, hipsY = [];
       const hips = charNodes.get([...charNodes.keys()].find(n => /Hips$/.test(n)));
@@ -36,7 +52,11 @@ try {
       }
       row.hipsY = [ +minY.toFixed(2), +maxY.toFixed(2) ];
       row.sample = hipsY.filter((_, i) => i % 5 === 0);
-      row.ok = row.bound > 12 && minY > 0.2;
+      // The bar is 'above the floor', not 'at standing height': a combat roll legitimately takes
+      // the hips down to ~0.1 m and back up to ~1.2 m (that is the clip doing its job). The old
+      // 0.2 m bar dates from when the retarget dropped all hips translation and a high, static
+      // hips height was itself the symptom.
+      row.ok = row.bound > 12 && minY > 0.05;
     } catch (e) { row.error = String(e.message).slice(0, 120); row.ok = false; }
     rows.push(row);
   }
