@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "target": "Unreal Engine 5.5; 60 display fps; centimeters; Z up",
+  "status": "Integration contract, not supplied character assets or completed Unreal project",
+  "required_plugins": ["Python Editor Script Plugin", "Sequencer Scripting"],
+  "production_plugins_to_evaluate": ["Control Rig", "IK Rig", "Niagara", "Chaos Caching", "Movie Render Queue", "Groom"],
+  "actors": [
+    {"id":"DAVID_A","asset_path":null,"root_motion":"approved animation / dedicated flight_source_s lane for the ramp jump","required_controls":["root","pelvis","spine","neck","head","eyes","hand_r","hand_l","foot_r","foot_l","weapon_r_socket","shield_carry_socket","sling_hand_socket"],"weapon_inventory":"right-hand original sword; acquired offhand dagger S20–S25 only; shield carried after S15"},
+    {"id":"JOSHEB_A","asset_path":null,"required_controls":["root","pelvis","hand_r","hand_l","foot_r","foot_l","spear_grip_primary","spear_grip_secondary"]},
+    {"id":"ELEAZAR_A","asset_path":null,"required_controls":["root","pelvis","hand_r","hand_l","foot_r","foot_l","bound_sword_socket","offhand_blade_socket"]},
+    {"id":"SHAMMAH_A","asset_path":null,"required_controls":["root","pelvis","hand_r","hand_l","foot_r","foot_l","two_hand_grip_primary","two_hand_grip_secondary"]},
+    {"id":"CHAMPION_A","asset_path":null,"required_controls":["root","pelvis","hands","feet","weapon_socket","pauldron_fracture_anchor"]}
+  ],
+  "weather_controller": {
+    "asset_path": null,
+    "lanes": {
+      "sun_lux_with_lightning":"Directional light Intensity; importer supplied",
+      "sun_kelvin":"Directional light Temperature; importer supplied",
+      "exposure_ev100":"manual exposure target; wire through calibrated project postprocess rig",
+      "fog_density":"project fog controller; tune to level scale",
+      "rain_mm_h":"art-direction precipitation reference; convert to Niagara emission density",
+      "wetness":"0–1 material accumulation control; do not reset between shots",
+      "mud_response":"0–1 ground deformation/water response strength",
+      "wind_m_s":"wind speed; convert to project cloth/groom/Niagara force units"
+    }
+  },
+  "caches": [
+    {"id":"helmet_crest","shot":"S05","kind":"authored rigid fragments","seed":73105,"clock":"shot_pose_source_s"},
+    {"id":"spear_arrows","shot":"S08","kind":"pre-authored projectile contacts","seed":73108,"clock":"shot_action_source_s"},
+    {"id":"wooden_shield","shot":"S14","kind":"Chaos cache plus Niagara splinters","seed":73114,"clock":"shot_pose_source_s"},
+    {"id":"sling_stone_bow","shot":"S16","kind":"authored ballistic path and bow-limb fracture","seed":73116,"clock":"shot_action_source_s"},
+    {"id":"landing_dust","shot":"S18","kind":"stylized pressure ring plus ballistic soil particles","seed":73118,"clock":"output time_s; character uses flight_source_s"},
+    {"id":"pauldron","shot":"S31","kind":"Chaos cache and restrained sparks","seed":73131,"clock":"shot_pose_source_s"}
+  ],
+  "clock_rules": {
+    "time_s":"output/editorial clock; camera and selected foreground weather",
+    "shot_action_source_s":"retimed action clip time before local pose-hold compensation",
+    "shot_pose_source_s":"retimed local pose clock, paused only during listed local hit-stop frames",
+    "flight_source_s":"physical source clock for the ramp jump; apply the dedicated ballistic solve, not global time dilation",
+    "audio_sample":"48 kHz sample index, frame × 800"
+  },
+  "missing_asset_policy":"Null asset paths must be resolved by production. Fail rather than silently substitute a generic mannequin as a finished photorealistic character.",
+  "crowd_budget":"8 near hero opponents, approximately 24 medium agents, remaining tableau instances/LOD representations; profile and revise on target hardware. The 300-person tableau is not 300 hero MetaHumans."
+}

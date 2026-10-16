@@ -1,0 +1,105 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>DAVID cinema render</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block;position:absolute;left:0;top:0}</style>
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from 'three';
+import { Film, WIDTH, HEIGHT } from '/src/film.js';
+import { terrainY as __terrainYFn } from '/src/world.js';
+import { SHOTS as __SHOTS } from '/src/shots.js';
+import '/src/shots-act3.js';
+
+const params = new URLSearchParams(location.search);
+const scale = parseFloat(params.get('scale') || '1');
+const quality = parseFloat(params.get('quality') || '1');
+const msaa = params.get('msaa') === '1';
+const res = [Math.round(WIDTH * scale), Math.round(HEIGHT * scale)];
+
+const canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(1);
+renderer.setSize(res[0], res[1], false);
+
+window.__info = { res, quality, msaa };
+window.__status = 'booting';
+window.__film = null;
+
+(async () => {
+  const film = new Film(renderer, { quality, res, msaa });
+  await film.init();
+  window.__film = film;
+  window.__three = THREE;
+  window.__status = 'ready';
+})().catch(e => { window.__status = 'error: ' + (e && e.message); });
+
+window.__frame = function (f) { window.__film.setFrame(f); window.__film.render(); return true; };
+window.__warm = function (f, step) { window.__film.warmTo(f, step || 2); window.__film.setFrame(f); window.__film.render(); return true; };
+window.__grab = function (q) {
+  const url = canvas.toDataURL('image/jpeg', q === undefined ? 0.93 : q);
+  return url.slice(url.indexOf(',') + 1);
+};
+window.__stats = () => window.__film.frameStats();
+// lean film path: one scene pass + one grade pass, then a tiled readback of the grade target
+window.__lean = function (f) {
+  const film = window.__film;
+  film.setFrame(f);
+  film.renderLean();
+  return true;
+};
+window.__readLean = function () {
+  // Render, then read the finished grade target and return it as base64 (top-down rows).
+  const film = window.__film;
+  const rt = film.gradeRT;
+  const w = rt.width, h = rt.height;
+  const raw = new Uint8Array(w * h * 4);
+  film.renderer.readRenderTargetPixels(rt, 0, 0, w, h, raw);   // GL rows arrive bottom-up
+  // flip vertically so the caller gets ordinary top-down raster order
+  const out = new Uint8Array(w * h * 4);
+  const rowBytes = w * 4;
+  for (let y = 0; y < h; y++) {
+    out.set(raw.subarray((h - 1 - y) * rowBytes, (h - y) * rowBytes), y * rowBytes);
+  }
+  let bin = '';
+  const CH = 0x8000;
+  for (let i = 0; i < out.length; i += CH) bin += String.fromCharCode.apply(null, out.subarray(i, i + CH));
+  return btoa(bin);
+};
+window.__probe = function (f) {
+  const film = window.__film;
+  film.warmTo(Math.max(0, f - 3), 2);
+  film.setFrame(f);
+  const c = film.camera;
+  const act = {};
+  for (const [id, a] of film.actors) if (a.root.visible) act[id] = [+a.root.position.x.toFixed(2), +a.root.position.y.toFixed(2), +a.root.position.z.toFixed(2)];
+  return {
+    f, shot: film.shot && film.shot.id, t: +(f / 60).toFixed(2),
+    cam: [+c.position.x.toFixed(2), +c.position.y.toFixed(2), +c.position.z.toFixed(2)],
+    fov: +c.fov.toFixed(1), fade: +(film.fadeAmount || 0).toFixed(3),
+    terrainAtCam: +__terrainYFn(c.position.x, c.position.z).toFixed(2),
+    actors: act,
+    sun: [+film.sun.position.x.toFixed(1), +film.sun.position.y.toFixed(1), +film.sun.position.z.toFixed(1)],
+    sunI: +film.sun.intensity.toFixed(2), env: +film.scene.environmentIntensity.toFixed(2),
+    weather: film.weather ? { storm: +film.weather.storm.toFixed(2), wet: +film.weather.wet.toFixed(2), lum: +film.weather.lum.toFixed(2), exp: +film.weather.exp.toFixed(2) } : null,
+  };
+};
+window.__terrainY = __terrainYFn;
+window.__shots = __SHOTS;
+window.__leanSize = function () { const rt = window.__film.gradeRT; return [rt.width, rt.height]; };
+window.__bench = function (frames) {
+  const out = [];
+  for (const f of frames) {
+    const a = performance.now();
+    window.__film.setFrame(f);
+    const b = performance.now();
+    window.__film.render();
+    const c = performance.now();
+    const j = window.__grab(0.93);
+    const d = performance.now();
+    out.push({ f, state: +(b - a).toFixed(1), render: +(c - b).toFixed(1), grab: +(d - c).toFixed(1), kb: Math.round(j.length * 0.75 / 1024) });
+  }
+  return out;
+};
+</script>
+</body></html>

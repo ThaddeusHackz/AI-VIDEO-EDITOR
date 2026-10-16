@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8"><title>validate UAL -> paladin</title></head><body>
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { loadGLTF } from '/src/assets.js';
+import { Retargeter, stripRootMotionHorizontal, boneMap } from '/src/retarget.js';
+import { UAL_FIGHT_CLIPS, loadUALClips, UE_TO_MIXAMO } from '/src/ual.js';
+window.__status = 'loading';
+try {
+  const charGltf = await loadGLTF('/assets/chars/paladin.glb');
+  const charRoot = charGltf.scene;
+  const charNodes = boneMap(charRoot);
+  const charNames = [...charNodes.keys()];
+  const ret = new Retargeter(charRoot, { scale: 1 });
+  const { clips, missing } = await loadUALClips(UAL_FIGHT_CLIPS);
+  const rows = [];
+  for (const [name, raw] of clips) {
+    const clip = raw.animations[0];
+    let row = { name, duration: +clip.duration.toFixed(2), ualTracks: clip.tracks.length, nodesRenamed: clip.ualStats.nodesRenamed };
+    try {
+      const bound = ret.bind(raw, { label: name, clipIndex: 0 });
+      stripRootMotionHorizontal(bound, ret, { nodes: null, keepY: true });
+      row.bound = bound.retargetStats.bound;
+      row.skipped = bound.retargetStats.skipped;
+      row.missing = bound.retargetStats.missing.slice(0, 5);
+      // rest sanity: play the on-air hips height across the clip
+      const mixer = new THREE.AnimationMixer(charRoot);
+      const action = mixer.clipAction(bound); action.play();
+      let minY = 1e9, maxY = -1e9, hipsY = [];
+      const hips = charNodes.get([...charNodes.keys()].find(n => /Hips$/.test(n)));
+      for (let i = 0; i <= 20; i++) {
+        mixer.setTime((i / 20) * bound.duration);
+        charRoot.updateMatrixWorld(true);
+        const p = new THREE.Vector3(); hips.getWorldPosition(p);
+        hipsY.push(+p.y.toFixed(2)); minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
+      }
+      row.hipsY = [ +minY.toFixed(2), +maxY.toFixed(2) ];
+      row.sample = hipsY.filter((_, i) => i % 5 === 0);
+      row.ok = row.bound > 12 && minY > 0.2;
+    } catch (e) { row.error = String(e.message).slice(0, 120); row.ok = false; }
+    rows.push(row);
+  }
+  window.__info = {
+    charBones: charNames.length,
+    charSample: charNames.slice(0, 6),
+    aliasEntries: Object.keys(UE_TO_MIXAMO).length,
+    clips: rows,
+    missing,
+    okCount: rows.filter(r => r.ok).length,
+    failCount: rows.filter(r => !r.ok).length,
+  };
+  window.__status = 'ready';
+} catch (e) { window.__status = 'error: ' + e.message; }
+</script></body></html>

@@ -1,0 +1,11 @@
+{
+  "name": "david-cinema",
+  "private": true,
+  "type": "module",
+  "description": "DAVID: THE CHRONICLES OF VALOR - real-rig cinematic render (Mixamo mocap + Quaternius props + three.js PBR, rendered 4K60 through headless Chromium/SwiftShader)",
+  "dependencies": {
+    "@sparticuz/chromium": "^153.0.0",
+    "puppeteer-core": "^24.0.0",
+    "three": "^0.181.0"
+  }
+}

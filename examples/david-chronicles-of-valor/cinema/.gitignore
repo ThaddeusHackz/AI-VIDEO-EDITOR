@@ -1,0 +1,11 @@
+node_modules/
+out/
+probe/
+
+# Third-party animation/character downloads (Mixamo-format clips + rigged characters, ~26 MB).
+# They are not ours to redistribute in a public repository: tools/fetch-assets.sh reproduces
+# them byte-for-byte from the sources named in that file's header. The CC0 Quaternius sets
+# (assets/quaternius, assets/props) ARE committed — they are public domain and the film's
+# licence story depends on them being present and verifiable.
+assets/anim/
+assets/chars/

@@ -1,0 +1,1 @@
+{"name":"david-stylized-film","version":"1.0.0","private":true,"type":"module","scripts":{"stills":"node render.mjs stills","test":"node --test test.mjs","audio":"node audio.mjs","qa":"node --expose-gc qa.mjs","render":"node render.mjs film","verify":"node verify.mjs"},"dependencies":{"@napi-rs/canvas":"0.1.80"}}

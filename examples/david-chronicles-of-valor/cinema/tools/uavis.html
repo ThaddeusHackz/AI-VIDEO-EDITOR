@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8"><title>UAL on Paladin</title>
+<style>html,body{margin:0;background:#151a1f}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+</head><body><script type="module">
+import * as THREE from 'three';
+import { loadGLTF } from '/src/assets.js';
+import { Retargeter, stripRootMotionHorizontal, boneMap } from '/src/retarget.js';
+import { loadUALSource, UE_TO_MIXAMO } from '/src/ual.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+const p = new URLSearchParams(location.search);
+const CLIP = p.get('clip') || 'sword_attack';
+const T = parseFloat(p.get('t') || '0.4');
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(640, 640); renderer.setPixelRatio(1);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x1d232a);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 1.1;
+const key = new THREE.DirectionalLight(0xfff0d8, 3.0); key.position.set(4, 6, 5);
+key.castShadow = true; key.shadow.mapSize.set(1024, 1024); scene.add(key);
+const rim = new THREE.DirectionalLight(0x9dc0ff, 1.4); rim.position.set(-5, 2.5, -4); scene.add(rim);
+const ground = new THREE.Mesh(new THREE.CircleGeometry(9, 48), new THREE.MeshStandardMaterial({ color: 0x4b4234, roughness: 0.95 }));
+ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
+const charGltf = await loadGLTF('/assets/chars/paladin.glb');
+const charRoot = charGltf.scene;
+scene.add(charRoot);
+charRoot.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true;
+  const ms = Array.isArray(o.material)?o.material:[o.material];
+  ms.forEach(m => { m.envMapIntensity = 1.2; if (m.metalness !== undefined) m.metalness = Math.min(m.metalness, 0.6); });
+  if (o.material.color) o.material.color.multiplyScalar(2.2);
+}});
+const ret = new Retargeter(charRoot, { scale: 1 });
+const src = await loadUALSource(CLIP);
+const bound = ret.bind(src, { label: CLIP, clipIndex: 0 });
+stripRootMotionHorizontal(bound, ret, { keepY: true });
+const mixer = new THREE.AnimationMixer(charRoot);
+mixer.clipAction(bound).play();
+mixer.setTime(T);
+charRoot.updateMatrixWorld(true);
+const cam = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+const box = new THREE.Box3().setFromObject(charRoot);
+const size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
+cam.position.set(c.x + size.y*1.15, c.y + size.y*0.12, c.z + size.y*1.7);
+cam.lookAt(c.x, c.y, c.z);
+renderer.setAnimationLoop(() => renderer.render(scene, cam));
+window.__info = { clip: CLIP, t: T, bound: bound.retargetStats.bound, missing: bound.retargetStats.missing,
+  bbox: [+box.min.y.toFixed(2), +box.max.y.toFixed(2)], duration: +bound.duration.toFixed(2) };
+window.__ready = true;
+</script></body></html>

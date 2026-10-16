@@ -1,0 +1,118 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>clip validation</title>
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+</head><body style="margin:0;background:#0b0f14">
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { Retargeter, boneMap } from '/src/retarget.js';
+import { clone as skeletonClone } from 'three/addons/utils/SkeletonUtils.js';
+
+const loader = new GLTFLoader();
+const cache = new Map();
+const load = u => cache.has(u) ? cache.get(u) : (cache.set(u, new Promise((res, rej) => loader.load(u, res, undefined, rej))), cache.get(u));
+
+window.__status = 'booting';
+const CHAR = '/assets/chars/paladin.glb';
+let charRoot = null, charBones = null, restHipY = 0;
+
+async function ensureChar() {
+  if (charRoot) return;
+  const g = await load(CHAR);
+  charRoot = g.scene;
+  charRoot.updateMatrixWorld(true);
+  charBones = boneMap(charRoot);
+  const hips = charBones.get('mixamorigHips');
+  restHipY = hips ? hips.getWorldPosition(new THREE.Vector3()).y : 0;
+}
+
+const UP = new THREE.Vector3(0, 1, 0);
+function sampleAt(mixer, root, t) {
+  mixer.setTime(t);
+  root.updateMatrixWorld(true);
+  const hips = charBones.get('mixamorigHips'), head = charBones.get('mixamorigHead');
+  const wp = new THREE.Vector3(), wh = new THREE.Vector3();
+  if (hips) hips.getWorldPosition(wp);
+  if (head) head.getWorldPosition(wh);
+  const dir = wh.clone().sub(wp);
+  const len = dir.length();
+  const angle = len > 1e-6 ? THREE.MathUtils.radToDeg(dir.normalize().angleTo(UP)) : NaN;
+  return { y: wp.y, head: wh.y, span: len, angle };
+}
+
+window.__status = 'ready-assets-pending';
+window.__validate = async function (clipUrls) {
+  await ensureChar();
+  const rt = new Retargeter(charRoot);
+  const results = [];
+  for (const url of clipUrls) {
+    try {
+      const g = await load(url);
+      const clip = rt.bind(g, { label: url.split('/').pop().replace('.glb', '') });
+      const mixer = new THREE.AnimationMixer(charRoot);
+      const action = mixer.clipAction(clip);
+      action.play();
+      const times = [0.05, 0.2, 0.35, 0.5, 0.65, 0.8, 0.95].map(f => +(clip.duration * f).toFixed(3));
+      const samples = times.map(t => sampleAt(mixer, charRoot, Math.min(t, clip.duration - 1e-3)));
+      const finite = samples.every(s => Number.isFinite(s.y) && Number.isFinite(s.head) && Number.isFinite(s.angle));
+      const headYs = samples.map(s => s.head);
+      const maxHead = Math.max(...headYs), minHead = Math.min(...headYs);
+      const maxY = Math.max(...samples.map(s => s.y));
+      const minY = Math.min(...samples.map(s => s.y));
+      const maxAngle = Math.max(...samples.map(s => s.angle));
+      const st = clip.retargetStats;
+      results.push({
+        clip: clip.name, duration: +clip.duration.toFixed(2), bound: st.bound, skipped: st.skipped,
+        maxY: +maxY.toFixed(3), minY: +minY.toFixed(3), maxAngle: +maxAngle.toFixed(1),
+        headRange: [+minHead.toFixed(2), +maxHead.toFixed(2)],
+        finite,
+        verdict: !finite ? 'NONFINITE'
+          : (maxHead < 0.9 ? 'COLLAPSED' : (maxHead > 2.6 ? 'GIANT' : (minHead < 0.35 ? 'PRONE' : 'ok'))),
+      });
+      mixer.uncacheClip(clip); action.stop();
+    } catch (e) {
+      results.push({ clip: url, error: String(e).slice(0, 160) });
+    }
+  }
+  return { restHipY: +restHipY.toFixed(3), results };
+};
+
+// render a still of one clip at time t so the shot can be inspected as an image
+window.__still = async function (baseUrl, clipUrl, t, opts = {}) {
+  const W = opts.w || 900, H = opts.h || 1100;
+  const renderer = window.__r || (window.__r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }));
+  renderer.setSize(W, H, false);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  const cam = new THREE.PerspectiveCamera(32, W / H, 0.05, 200);
+  renderer.setPixelRatio(1);
+  document.body.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x11161d);
+  const key = new THREE.DirectionalLight(0xfff2dd, 2.6); key.position.set(3, 6, 4); key.castShadow = true;
+  scene.add(key); scene.add(new THREE.HemisphereLight(0xa9c6ff, 0x50402c, 0.8));
+  const grid = new THREE.GridHelper(6, 12, 0x4d5a68, 0x2a323c); scene.add(grid);
+  const g = await load(baseUrl);
+  const root = skeletonClone(g.scene);      // independent skeleton per still (no cross-clip bleed)
+  root.updateMatrixWorld(true);
+  scene.add(root);
+  root.traverse(o => { if (o.isMesh) o.frustumCulled = false; });
+  if (clipUrl) {
+    const cg = await load(clipUrl);
+    const rtStill = new Retargeter(root);
+    const clip = rtStill.bind(cg, { label: 'still' });
+    const mx = new THREE.AnimationMixer(root);
+    mx.clipAction(clip).play();
+    mx.setTime(t);
+  }
+  root.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(root);
+  const c = box.getCenter(new THREE.Vector3());
+  const radius = Math.max(box.getSize(new THREE.Vector3()).length() * 0.55, 1.2);
+  cam.position.set(c.x + radius * 1.5, c.y + radius * 0.45, c.z + radius * 1.9);
+  cam.lookAt(c.x, c.y - radius * 0.1, c.z);
+  renderer.render(scene, cam);
+  const url = renderer.domElement.toDataURL('image/jpeg', 0.9);
+  return url.slice(url.indexOf(',') + 1);
+};
+</script>
+</body></html>

@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta charset="utf-8"><title>quaternius rig test</title>
+<style>html,body{margin:0;background:#111}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+</head><body><script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+const params = new URLSearchParams(location.search);
+const CLIP = params.get('clip') || 'sword_attack';
+const T = params.get('t') || '0.4';
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(720, 720); renderer.setPixelRatio(1);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x2a2f36);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.06).texture;
+scene.environmentIntensity = 0.9;
+const key = new THREE.DirectionalLight(0xfff2dc, 2.6); key.position.set(3, 5, 4); scene.add(key);
+const rim = new THREE.DirectionalLight(0x9fc4ff, 1.2); rim.position.set(-4, 2, -3); scene.add(rim);
+const cam = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+const loader = new GLTFLoader();
+const [rig, clipGltf] = await Promise.all([
+  loader.loadAsync('/assets/quaternius/rig-human.glb'),
+  loader.loadAsync('/assets/quaternius/anim/' + CLIP + '.glb'),
+]);
+const root = rig.scene;
+// restyle the mannequin: main body reads as dark armour, joints as bronze
+root.traverse(o => {
+  if (!o.isMesh) return;
+  o.castShadow = true; o.frustumCulled = false;
+  const mats = Array.isArray(o.material) ? o.material : [o.material];
+  o.material = mats.map(m => {
+    const n = new THREE.MeshStandardMaterial({
+      color: m.name === 'M_Joints' ? 0xb07a3a : 0x4a4f57,
+      roughness: m.name === 'M_Joints' ? 0.45 : 0.62,
+      metalness: m.name === 'M_Joints' ? 0.8 : 0.55,
+      envMapIntensity: 1.1, side: THREE.DoubleSide,
+    });
+    return n;
+  });
+  if (o.material.length === 1) o.material = o.material[0];
+});
+scene.add(root);
+const mixer = new THREE.AnimationMixer(root);
+const clips = clipGltf.animations.map(c => c.clone());
+clips.forEach(c => { c.name = CLIP; });
+const action = mixer.clipAction(clips[0]);
+action.play();
+mixer.setTime(parseFloat(T));
+// frame the whole body
+const box = new THREE.Box3().setFromObject(root);
+const size = box.getSize(new THREE.Vector3()), center = box.getCenter(new THREE.Vector3());
+cam.position.set(center.x + size.y * 1.5, center.y + size.y * 0.18, center.z + size.y * 1.9);
+cam.lookAt(center.x, center.y * 0.98, center.z);
+const ground = new THREE.Mesh(new THREE.CircleGeometry(size.y * 2.2, 48), new THREE.MeshStandardMaterial({ color: 0x3b3730, roughness: 0.95 }));
+ground.rotation.x = -Math.PI / 2; ground.position.y = box.min.y; scene.add(ground);
+renderer.setAnimationLoop(() => renderer.render(scene, cam));
+window.__ready = true;
+window.__info = { clip: CLIP, t: T, bones: root.children.length, box: [box.min.y.toFixed(2), box.max.y.toFixed(2)] };
+</script></body></html>
