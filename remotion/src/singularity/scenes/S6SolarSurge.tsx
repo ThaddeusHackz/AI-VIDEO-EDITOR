@@ -22,6 +22,7 @@ const S = shot("S6");
 const N = 10000;
 const [T_BURST, T_MACHINE, T_TOPO] = SCH.surgePhases;
 const SWARM = { mass: 1, stiffness: 95, damping: 12.5 };
+const FLYOVER = 0.45;
 
 interface Particle {
   a: number;
@@ -111,6 +112,10 @@ export const S6SolarSurge: React.FC = () => {
 
   const ox = L.pick(W * 0.66, W * 0.5);
   const oy = L.pick(H * 0.5, H * 0.56);
+  // 9:16: the blast ellipse stands upright (1.3 instead of 0.82) and the height-field is fitted to the narrow frame
+  // (1300 x 1900 instead of 2100 x 1300 world units), so the same 10,000 nodes stay on screen in both formats
+  const ellY = L.pick(0.82, 1.3);
+  const [terrW, terrD] = L.pick([2100, 1300], [1300, 1900]);
 
   const draw = useCallback(
     (ctx: CanvasRenderingContext2D, f: number) => {
@@ -121,6 +126,10 @@ export const S6SolarSurge: React.FC = () => {
       data.fill(0);
       const tm = (fr - T_MACHINE) / FPS;
       const tt = (fr - T_TOPO) / FPS;
+      // pre-impact charge: the field gathers light over the last 14 frames, so the cut-the-curve exit (wrapper easing
+      // to the 55 % opacity floor) reads as a surge into S7's collision instead of a dip
+      const charge = clamp01((fr - (S.to - 14)) / 14) ** 2;
+      const gain = 1 + 0.8 * charge;
       const rotY = 0.65 * t;
       const rotX = 0.42 + 0.12 * Math.sin(t * 0.9);
       const scaleM = u * L.pick(1.3, 1.05);
@@ -137,7 +146,7 @@ export const S6SolarSurge: React.FC = () => {
         const swirlA = p.a + p.swirl * 0.9 * blast;
         const r0 = (30 + (p.v / u) * 0.06) * u; // ignition ring: never one stacked pixel
         let x = ox + Math.cos(swirlA) * (r0 + p.v * blast);
-        let y = oy + Math.sin(swirlA) * (r0 + p.v * blast) * 0.82;
+        let y = oy + Math.sin(swirlA) * (r0 + p.v * blast) * ellY;
         let bright = 1.1 - 0.5 * blast;
         // machinery
         const pm = tm > p.delay ? springProgress(tm - p.delay, SWARM) : 0;
@@ -150,9 +159,11 @@ export const S6SolarSurge: React.FC = () => {
         // topography
         const pt = tt > p.delay2 ? springProgress(tt - p.delay2, SWARM) : 0;
         if (pt > 0) {
-          const gx = (p.gu - 0.5) * 2100 * u;
-          const gz = (p.gv - 0.5) * 1300 * u;
-          const h = noise.fbm3(p.gu * 3.2, p.gv * 2.4, tt * 0.35 + 3, 3);
+          const gx = (p.gu - 0.5) * terrW * u;
+          const gz = (p.gv - 0.5) * terrD * u;
+          // the map flows (3rd noise axis) AND the camera flies over it (the field scrolls toward the lens at
+          // FLYOVER noise units / s), so the settled terrain never reads as a held frame before the S7 cut
+          const h = noise.fbm3(p.gu * 3.2, p.gv * 2.4 - tt * FLYOVER, tt * 0.35 + 3, 3);
           const gy = -h * 430 * u;
           const tp = project3DPoint({ x: gx, y: gy, z: gz }, 0.95, 0.12 * Math.sin(tt * 0.6), 0, 1100 * u, 1500 * u, W * 0.5, oy + 60 * u);
           x += (tp.x - x) * pt;
@@ -166,7 +177,7 @@ export const S6SolarSurge: React.FC = () => {
         const yi = y | 0;
         if (xi < 1 || yi < 1 || xi >= W - 1 || yi >= H - 1) continue;
         const c = COLS[p.cls];
-        const a = Math.min(1.8, bright) * 1.25;
+        const a = Math.min(1.8, bright) * 1.25 * gain;
         // 2×2 splat (+ a plus-shaped halo for bright nodes), plus a velocity streak while the wave is still radiating
         const streak = pm < 0.5 && t < 1.1 ? Math.round(3 * (1 - blast * 1.2)) : 0;
         for (let sIdx = 0; sIdx <= streak; sIdx++) {
@@ -200,7 +211,7 @@ export const S6SolarSurge: React.FC = () => {
       sctx.drawImage(ctx.canvas, 0, 0, buffers.small.width, buffers.small.height);
       sctx.filter = "none";
       ctx.globalCompositeOperation = "lighter";
-      ctx.globalAlpha = 0.6;
+      ctx.globalAlpha = 0.6 + 0.3 * charge;
       ctx.drawImage(buffers.small, 0, 0, W, H);
       ctx.globalAlpha = 1;
       ctx.globalCompositeOperation = "source-over";
@@ -221,11 +232,11 @@ export const S6SolarSurge: React.FC = () => {
         ctx.strokeStyle = rgba(P.astraIce, 0.8 * (1 - t / 0.6));
         ctx.lineWidth = 6 * u * (1 - t / 0.6) + 1;
         ctx.beginPath();
-        ctx.ellipse(ox, oy, rr, rr * 0.82, 0, 0, Math.PI * 2);
+        ctx.ellipse(ox, oy, rr, rr * ellY, 0, 0, Math.PI * 2);
         ctx.stroke();
       }
     },
-    [buffers, parts, W, H, u, L, ox, oy, noise],
+    [buffers, parts, W, H, u, L, ox, oy, noise, ellY, terrW, terrD],
   );
 
   const showHud = frame >= T_MACHINE + 10 && frame < T_TOPO;

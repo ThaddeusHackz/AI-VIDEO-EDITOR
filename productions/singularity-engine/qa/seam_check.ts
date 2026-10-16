@@ -16,7 +16,7 @@
  * Run: productions/singularity-engine/qa/seam_check.sh
  */
 import timeline from "../../../remotion/src/singularity/timeline.json";
-import { seamPose } from "../../../remotion/src/singularity/components/seamPose";
+import { lateralScale, seamPose as seamPoseAt } from "../../../remotion/src/singularity/components/seamPose";
 import type { Cut } from "../../../remotion/src/singularity/data";
 
 type Row = { id: string; cut: number; seam: string; checks: Array<[string, "PASS" | "FAIL" | "WARN" | "INFO", string]> };
@@ -26,10 +26,18 @@ const rows: Row[] = [];
 let fails = 0;
 let warns = 0;
 
-const value = (axis: string, p: ReturnType<typeof seamPose>) => (axis === "x" ? p.translateX : axis === "y" ? p.translateY : p.scale);
+const value = (axis: string, p: ReturnType<typeof seamPoseAt>) => (axis === "x" ? p.translateX : axis === "y" ? p.translateY : p.scale);
 
+// Both deliverables: the 9:16 companion scales lateral travel to its narrower frame (seamPose.ts → lateralScale).
+const FORMATS: Array<[string, number]> = [
+  ["16:9", lateralScale(1920, u)],
+  ["9:16", lateralScale(1080, u)],
+];
+
+for (const [fmt, xs] of FORMATS)
 for (const cut of timeline.cuts as Cut[]) {
-  const row: Row = { id: `cut@${cut.frame}`, cut: cut.frame, seam: cut.seam, checks: [] };
+  const seamPose = (c: Cut, f: number, role: "outgoing" | "incoming", uu: number) => seamPoseAt(c, f, role, uu, xs);
+  const row: Row = { id: `cut@${cut.frame} ${fmt}`, cut: cut.frame, seam: cut.seam, checks: [] };
   rows.push(row);
   if (cut.seam === "match-cut") {
     const out = seamPose(cut, cut.frame, "outgoing", u);
@@ -82,5 +90,5 @@ for (const r of rows) {
   console.log(`\n■ ${r.id}  ${r.seam}  ${bad ? "✗" : "✓"}`);
   for (const [name, status, msg] of r.checks) console.log(`   ${status.padEnd(4)} ${name.padEnd(16)} ${msg}`);
 }
-console.log(`\nREMOTION SEAM GATE: ${fails ? "FAILED" : "PASSED"} — ${fails} fail, ${warns} warn across ${rows.length} cuts`);
+console.log(`\nREMOTION SEAM GATE: ${fails ? "FAILED" : "PASSED"} — ${fails} fail, ${warns} warn across ${rows.length / FORMATS.length} cuts × ${FORMATS.length} formats`);
 process.exit(fails ? 1 : 0);

@@ -16,6 +16,8 @@ import { arrivalFrames, clamp01, ease, springAt, springLockedAt, SPRINGS } from 
  */
 const S = shot("S5");
 const N_RIB = 16;
+/** 9:16 keeps the master's ~40 px weave pitch over the taller frame (16 ribbons there would sit 64 px apart). */
+const N_RIB_PORTRAIT = 24;
 
 interface Ribbon {
   baseY: number;
@@ -43,10 +45,11 @@ export const S5SilkRibbons: React.FC = () => {
   const fpv = useCameraRig({ preset: "fpv-drone", startFrame: 10, durationInFrames: S.to - S.from - 10, intensity: 0.28 });
   const floorY = L.pick(H * 0.7, H * 0.74);
 
+  const nRib = L.pick(N_RIB, N_RIB_PORTRAIT);
   const ribbons = useMemo<Ribbon[]>(() => {
     const r = mulberry32(5502);
-    return Array.from({ length: N_RIB }, (_, i) => ({
-      baseY: H * (0.14 + 0.5 * (i / (N_RIB - 1))) + (r() - 0.5) * 40 * u,
+    return Array.from({ length: nRib }, (_, i) => ({
+      baseY: H * (0.14 + 0.5 * (i / (nRib - 1))) + (r() - 0.5) * 40 * u,
       a1: (40 + r() * 80) * u,
       f1: 0.6 + r() * 1.1,
       v1: 0.18 + r() * 0.3,
@@ -57,10 +60,11 @@ export const S5SilkRibbons: React.FC = () => {
       w0: (16 + r() * 34) * u,
       tw: 0.8 + r() * 1.8,
       z: r(),
-      enter: S.from - 18 + i * 2,
+      // the cascade spans the same 30 frames in both formats
+      enter: S.from - 18 + (L.portrait ? Math.round((i * 30) / (nRib - 1)) : i * 2),
       warm: r(),
     }));
-  }, [H, u]);
+  }, [H, u, nRib, L.portrait]);
 
   const prismLocks = SCH.astraPrismLocks;
   const prismX = (k: number) => {
@@ -70,12 +74,14 @@ export const S5SilkRibbons: React.FC = () => {
   };
   const crystalFront = prismLocks.reduce((m, lk, k) => (frame >= lk - arrivalFrames(SPRINGS.panel, fps) ? Math.min(m, prismX(k)) : m), W * 2);
 
+  // the drop is ~600-700 px in both formats, so the silk is already pouring into frame on the whip-pan cut
+  const drop = L.pick(H * 0.55, H * 0.36);
   const ribbonPath = useCallback(
     (rb: Ribbon, f: number) => {
       const t = f / FPS;
       const warp = t + 0.9 * Math.max(0, (f - 700) / FPS) ** 2; // the riser accelerates the weave
       const enterP = springAt(f, rb.enter, FPS, SPRINGS.panel);
-      const yOff = -H * 0.55 * (1 - enterP);
+      const yOff = -drop * (1 - enterP);
       const NS = 84;
       const out: Array<{ x: number; y: number; w: number; sheen: number }> = [];
       for (let i = 0; i <= NS; i++) {
@@ -93,7 +99,7 @@ export const S5SilkRibbons: React.FC = () => {
       }
       return out;
     },
-    [W, H, u, noise],
+    [W, H, u, noise, drop],
   );
 
   const drawRibbons = useCallback(

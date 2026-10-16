@@ -77,13 +77,15 @@ export const S4OpusManifest: React.FC = () => {
 
   // the liquid-amber typographic sea owns the frame at the cut, then recedes as the title is born out of it
   const recede = ease.inOut3(clamp01((frame - (S.from + 18)) / 60));
-  const waveTop = L.pick(H * (0.18 + 0.27 * recede), H * (0.3 + 0.26 * recede));
+  // 9:16: the sea rises to 12 % of the (taller) frame at the cut and recedes to the same 0.56·H shoreline, with
+  // the glyph pitch matched to the master (~27 × 42 px instead of 31 × 64 px), so the portrait frame is owned too
+  const waveTop = L.pick(H * (0.18 + 0.27 * recede), H * (0.12 + 0.44 * recede));
   const drawWaves = useCallback(
     (ctx: CanvasRenderingContext2D, f: number) => {
       const fr = f + S.from;
       const t = fr / FPS;
-      const cols = L.pick(64, 38);
-      const rows = L.pick(Math.round(16 + 10 * (1 - recede)), Math.round(19 + 8 * (1 - recede)));
+      const cols = L.pick(64, 44);
+      const rows = L.pick(Math.round(16 + 10 * (1 - recede)), Math.round(26 + 14 * (1 - recede)));
       const x0 = -40 * u;
       const dx = (L.pick(W * 0.66, W * 1.05) - x0) / cols;
       const dy = (H - waveTop) / rows;

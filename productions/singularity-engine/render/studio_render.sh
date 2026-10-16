@@ -10,7 +10,8 @@
 #    render/studio_render.sh all                 # audio + plate + both formats, end to end
 #    render/studio_render.sh audio               # rebuild VO (Batman chain), score, mix
 #    render/studio_render.sh plate               # HyperFrames genesis-code plate
-#    render/studio_render.sh frames master       # render 1800 frames (or: vertical)  [FRAMES=a-b to limit]
+#    render/studio_render.sh frames master       # render 1800 frames (or: vertical)  [FRAMES=a-b to limit,
+#                                                #  BUNDLE=out/<dir> to render from a frozen bundle]
 #    render/studio_render.sh score master        # score every frame, write qa/reports/*
 #    render/studio_render.sh assemble master     # FFmpeg → renders/output_master_30s.mp4
 #    render/studio_render.sh verify master
@@ -28,6 +29,8 @@ export CHROME_PATH="$REM/scripts/chrome-wrapper.sh"
 CHROME="$REM/scripts/chrome-wrapper.sh"
 OUTDIR="$HERE/renders"
 FRAMES_ROOT="$REM/out/frames"
+# BUNDLE=out/bundle-xyz renders from a frozen bundle, so a long render is never touched by a rebuild of out/bundle
+BUNDLE="${BUNDLE:-out/bundle}"
 mkdir -p "$OUTDIR" "$FRAMES_ROOT"
 
 say() { printf "\n\033[1;36m== %s\033[0m\n" "$1"; }
@@ -65,7 +68,7 @@ stage_frames() {
   local range="${FRAMES:-0-1799}"
   say "FRAMES · $comp · frames $range → $FRAMES_ROOT/$fmt"
   mkdir -p "$FRAMES_ROOT/$fmt"
-  (cd "$REM" && npx remotion render out/bundle "$comp" "$FRAMES_ROOT/$fmt" --sequence --frames="$range" \
+  (cd "$REM" && npx remotion render "$BUNDLE" "$comp" "$FRAMES_ROOT/$fmt" --sequence --frames="$range" \
       --image-format=jpeg --jpeg-quality=95 --image-sequence-pattern="frame-[frame].[ext]" \
       --browser-executable="$CHROME" --gl=angle --concurrency=1 --muted --timeout=240000)
   # Remotion pads [frame] to the width of the requested range: normalise to 4 digits so partial re-renders

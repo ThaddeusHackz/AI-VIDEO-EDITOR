@@ -33,11 +33,14 @@ export const S1VoidSlice: React.FC = () => {
   const L = useLayout();
   const { W, H, u } = L;
   const rig = useCameraRig({ preset: "push-to-glass", startFrame: 0, durationInFrames: 108, intensity: 0.16 });
-  // micro-debris of the glass pane, in true 3D: we are pushing THROUGH it (Brief B's extreme macro push-in)
+  // micro-debris of the glass pane, in true 3D: we are pushing THROUGH it (Brief B's extreme macro push-in).
+  // 9:16: the volume is oriented to the frame (1500 x 2600 world units) and denser, and the dive decelerates less
+  // after the snap, because the plucked string spans 1080 px instead of 1920 and carries ~45 % less of the motion.
+  const [debrisW, debrisH, debrisN, diveBrake] = L.pick([2600, 1500, 1150, 0.65], [1500, 2600, 1600, 0.4]);
   const debris = useMemo(() => {
     const r = mulberry32(1104);
-    return Array.from({ length: 1150 }, (_, i) => ({ x: (r() - 0.5) * 2600, y: (r() - 0.5) * 1500, z0: r() * 1400, a: r() * Math.PI, len: 6 + r() * 34, warm: r() < 0.35, glyph: i % 3 === 0 ? "01{}<>/=;#*"[i % 11] : "" }));
-  }, []);
+    return Array.from({ length: debrisN }, (_, i) => ({ x: (r() - 0.5) * debrisW, y: (r() - 0.5) * debrisH, z0: r() * 1400, a: r() * Math.PI, len: 6 + r() * 34, warm: r() < 0.35, glyph: i % 3 === 0 ? "01{}<>/=;#*"[i % 11] : "" }));
+  }, [debrisW, debrisH, debrisN]);
 
   const scratches = useMemo(() => {
     const r = mulberry32(1101);
@@ -100,10 +103,13 @@ export const S1VoidSlice: React.FC = () => {
         ctx.lineTo(W, gy - 40 * u);
         ctx.stroke();
       }
-      // debris streaks rushing past camera (z wraps deterministically)
-      const speed = 900 * (1 - 0.65 * clamp01((f - s0) / 60));
+      // debris streaks rushing past camera (z wraps deterministically). The dive brakes over the second after the
+      // slice: v(t) = 900·(1 − brake·ramp), and the distance flown is its closed-form integral. (Writing t·v(t) made
+      // the debris stall and drift BACKWARDS mid-brake, then snap forward when the ramp ended at f78.)
+      const tr = clamp01(t - s0 / FPS);
+      const flown = 900 * (t - diveBrake * (tr * tr * 0.5 + Math.max(0, t - s0 / FPS - 1)));
       for (const d of debris) {
-        const z = ((((d.z0 - t * speed) % 1400) + 1400) % 1400) + 60;
+        const z = ((((d.z0 - flown) % 1400) + 1400) % 1400) + 60;
         const a0 = project3DPoint({ x: d.x, y: d.y, z: -z }, 0, 0, 0, 900, 0, W / 2, H / 2);
         const a1 = project3DPoint({ x: d.x, y: d.y, z: -(z + 70) }, 0, 0, 0, 900, 0, W / 2, H / 2);
         if (!a0.visible || !a1.visible) continue;
@@ -180,7 +186,7 @@ export const S1VoidSlice: React.FC = () => {
         ctx.fillRect(tipX - 70 * u, cy - 70 * u, 140 * u, 140 * u);
       }
     },
-    [W, H, u, scratches, specks, debris],
+    [W, H, u, scratches, specks, debris, diveBrake],
   );
 
   const flare = frame >= EV.lineSnap ? Math.exp(-(frame - EV.lineSnap) / 9) : 0;

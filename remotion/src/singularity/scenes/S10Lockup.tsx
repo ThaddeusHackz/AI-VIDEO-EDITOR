@@ -91,20 +91,20 @@ export const S10Lockup: React.FC = () => {
         ctx.globalCompositeOperation = "lighter";
         const tt = (fr - SCH.emblemLock) / FPS;
         // electron field orbiting the emblem (two counter-rotating shells)
-        for (let e = 0; e < 140; e++) {
+        for (let e = 0; e < 200; e++) {
           const shell = e % 2;
-          const ang = (e / 140) * Math.PI * 2 * 7 + tt * (shell ? -1.6 : 1.2);
+          const ang = (e / 200) * Math.PI * 2 * 7 + tt * (shell ? -1.6 : 1.2);
           const rx = A * (shell ? 1.55 : 1.32);
           const ry = A * (shell ? 0.62 : 0.5);
-          ctx.fillStyle = rgba(shell ? P.astraCyan : P.opusEmber, 0.55);
-          ctx.fillRect(ecx + Math.cos(ang) * rx - 2 * u, ecy + Math.sin(ang) * ry - 2 * u, 4 * u, 4 * u);
+          ctx.fillStyle = rgba(shell ? P.astraCyan : P.opusEmber, 0.6);
+          ctx.fillRect(ecx + Math.cos(ang) * rx - 2.5 * u, ecy + Math.sin(ang) * ry - 2.5 * u, 5 * u, 5 * u);
         }
         for (const [ph, col] of [[0, P.opusEmber], [Math.PI, P.astraCyan], [2.1, P.opusEmber], [2.1 + Math.PI, P.astraCyan], [4.2, P.opusEmber], [4.2 + Math.PI, P.astraCyan]] as Array<[number, string]>) {
-          for (let k = 0; k < 28; k++) {
-            const [lx, ly] = lemniscate(tt * 3.9 + ph - k * 0.035, A);
-            ctx.fillStyle = rgba(k === 0 ? "#FFFFFF" : col, (1 - k / 28) * (k === 0 ? 1 : 0.7));
+          for (let k = 0; k < 36; k++) {
+            const [lx, ly] = lemniscate(tt * 3.9 + ph - k * 0.032, A);
+            ctx.fillStyle = rgba(k === 0 ? "#FFFFFF" : col, (1 - k / 36) * (k === 0 ? 1 : 0.75));
             ctx.beginPath();
-            ctx.arc(ecx + lx, ecy + ly, (k === 0 ? 13 : 10 * (1 - k / 28) + 2) * u, 0, Math.PI * 2);
+            ctx.arc(ecx + lx, ecy + ly, (k === 0 ? 16 : 13 * (1 - k / 36) + 2.5) * u, 0, Math.PI * 2);
             ctx.fill();
           }
         }
@@ -126,10 +126,11 @@ export const S10Lockup: React.FC = () => {
   const nameIn = springProgress(Math.max(0, frame - SCH.emblemLock + 6) / FPS, SPRINGS.letter);
   const titleIn = springProgress(Math.max(0, frame - SCH.emblemLock - 6) / FPS, SPRINGS.letter);
   const nameSize = L.pick(46, 40) * u;
-  const exitP = ease.in4(clamp01((frame - (S.to - 10)) / 10));
 
   return (
-    <AbsoluteFill style={{ transform: `scale(${(1 + 0.12 * ease.inOut3(clamp01((frame - SCH.emblemLock) / (S.to - SCH.emblemLock)))).toFixed(4)})` }}>
+    // after the lock: a steady dolly-in (x^1.6, never easing out) that is still travelling when the snap-to-black
+    // lands, so the hold is a camera move, not a held frame
+    <AbsoluteFill style={{ transform: `scale(${(1 + 0.13 * clamp01((frame - SCH.emblemLock) / (S.to - SCH.emblemLock)) ** 1.6).toFixed(4)})` }}>
       <Canvas2D draw={draw} />
       {/* the two names flank the emblem (left/right in 16:9, stacked in 9:16) */}
       <div

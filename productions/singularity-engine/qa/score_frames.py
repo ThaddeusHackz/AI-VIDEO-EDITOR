@@ -17,7 +17,7 @@ Shot INTENT is declared up front in review.json (e.g. S11 is a near-black signat
 stillness comma is meant to be calm). Intent changes the target a frame is scored against; it never hides a frame.
 
 Usage:
-  python3 score_frames.py --frames <dir of element-NNNN.jpeg> --comp master|vertical [--out reports/]
+  python3 score_frames.py --frames <dir of frame-NNNN.jpeg> --comp master|vertical [--out reports/]
 Outputs:
   reports/<comp>_scores.json   per-frame components + totals, per-shot stats, failing frames (< 8)
   reports/<comp>_scores.md     human summary
@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 from pathlib import Path
 
@@ -41,8 +42,18 @@ REVIEW = json.loads((HERE / "review.json").read_text())
 W_DENSITY, W_CLARITY, W_MOTION, W_TYPO = 0.25, 0.25, 0.30, 0.20
 
 
-def load(path: Path, size=(480, 270)) -> np.ndarray:
-    im = Image.open(path).convert("RGB").resize(size, Image.BILINEAR)
+def floor2(x: float) -> float:
+    """Floor to 2 decimals (1e-9 absorbs float noise in the weighted sum)."""
+    return math.floor(x * 100 + 1e-9) / 100
+
+
+def load(path: Path) -> np.ndarray:
+    im = Image.open(path).convert("RGB")
+    # Every format is analysed at the same isotropic 4x downscale (1920x1080 -> 480x270, 1080x1920 -> 270x480), so
+    # the per-pixel metrics (edge energy, Laplacian sharpness, motion) mean the same thing in the master and the
+    # vertical. Squashing a portrait frame into 480x270 would blur it 7x vertically and 2.25x horizontally.
+    size = (480, 270) if im.width >= im.height else (270, 480)
+    im = im.resize(size, Image.BILINEAR)
     return np.asarray(im, dtype=np.float32) / 255.0
 
 
@@ -134,7 +145,8 @@ def main() -> None:
             "clip": float((y > 0.985).mean()),
             "meanY": float(y.mean()),
         }
-        small[f] = np.asarray(Image.fromarray((y * 255).astype(np.uint8)).resize((240, 135), Image.BILINEAR), dtype=np.float32) / 255.0
+        y8 = Image.fromarray((y * 255).astype(np.uint8))
+        small[f] = np.asarray(y8.resize((y8.width // 2, y8.height // 2), Image.BILINEAR), dtype=np.float32) / 255.0
 
     motion = {}
     for i, f in enumerate(idx):
@@ -181,7 +193,8 @@ def main() -> None:
         total = W_DENSITY * density + W_CLARITY * clarity + W_MOTION * motion_s + W_TYPO * typo
         results.append({
             "frame": f, "shot": s["id"], "density": round(max(1, min(10, density)), 2), "clarity": round(max(1, min(10, clarity)), 2),
-            "motion": round(max(1, min(10, motion_s)), 2), "typography": typo, "total": round(max(1, min(10, total)), 2),
+            # the total is FLOORED to 2 decimals: a frame reported as 8.00 really is >= 8 (rounding let 7.995 pass)
+            "motion": round(max(1, min(10, motion_s)), 2), "typography": typo, "total": floor2(max(1, min(10, total))),
             "motionEnergy": round(m, 5), "jerk": round(jerk, 3), "flash": bool(flash), "dead": bool(dead),
         })
 

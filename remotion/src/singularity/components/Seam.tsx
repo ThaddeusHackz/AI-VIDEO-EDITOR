@@ -2,7 +2,7 @@ import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { cutAt, P, shot, ShotId } from "../data";
 import { useLayout } from "../layout";
-import { IDLE, SeamPose, seamPose } from "./seamPose";
+import { IDLE, lateralScale, SeamPose, seamPose } from "./seamPose";
 
 export type { SeamPose };
 
@@ -14,14 +14,15 @@ export type { SeamPose };
  */
 export function useSeamPose(id: ShotId): SeamPose {
   const local = useCurrentFrame();
-  const { u } = useLayout();
+  const { u, W } = useLayout();
+  const xs = lateralScale(W, u);
   const s = shot(id);
   const frame = local + s.from;
   const entry = cutAt(s.from);
   const exit = cutAt(s.to);
   let pose = IDLE;
-  if (entry && frame < s.from + 24) pose = seamPose(entry, frame, "incoming", u);
-  if (exit && frame >= s.to - 16) pose = seamPose(exit, frame, "outgoing", u);
+  if (entry && frame < s.from + 24) pose = seamPose(entry, frame, "incoming", u, xs);
+  if (exit && frame >= s.to - 16) pose = seamPose(exit, frame, "outgoing", u, xs);
   return pose;
 }
 

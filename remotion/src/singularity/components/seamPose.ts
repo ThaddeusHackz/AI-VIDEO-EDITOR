@@ -23,12 +23,21 @@ const in4 = (p: number) => Math.min(1, Math.max(0, p)) ** 4;
  */
 const OPACITY_FLOOR = 0.55;
 
-export function seamPose(cut: Cut, frame: number, role: "outgoing" | "incoming", u: number): SeamPose {
-  const p = rawSeamPose(cut, frame, role, u);
+/**
+ * Lateral travel is authored for the 16:9 width. `xScale` = W / (1920·u) maps it onto narrower frames, so a whip or a
+ * cut-the-curve covers the same SHARE of the picture in 9:16 (×0.5625) instead of exposing > 50 % void on the cut
+ * frame. Direction, sign, zero overlap and the speed ratio are scale-invariant (qa/seam_check.ts verifies both).
+ */
+export function lateralScale(W: number, u: number): number {
+  return Math.min(1, W / (1920 * u));
+}
+
+export function seamPose(cut: Cut, frame: number, role: "outgoing" | "incoming", u: number, xScale = 1): SeamPose {
+  const p = rawSeamPose(cut, frame, role, u, xScale);
   return p.visible ? { ...p, opacity: OPACITY_FLOOR + (1 - OPACITY_FLOOR) * p.opacity } : p;
 }
 
-function rawSeamPose(cut: Cut, frame: number, role: "outgoing" | "incoming", u: number): SeamPose {
+function rawSeamPose(cut: Cut, frame: number, role: "outgoing" | "incoming", u: number, xScale: number): SeamPose {
   const base = { rotateY: 0, brightness: 1 };
   switch (cut.seam) {
     case "zoom-through":
@@ -37,7 +46,7 @@ function rawSeamPose(cut: Cut, frame: number, role: "outgoing" | "incoming", u: 
       return { ...zoomThroughSeam(frame, cut.frame, role, { inverse: true, exitFrames: 12, entryFrames: 22, peakBlurPx: 7 }), ...base };
     case "cut-the-curve":
       return {
-        ...cutTheCurveSeam(frame, cut.frame, role, { axis: "x", direction: -1, distancePx: 260 * u, exitFrames: 14, entryFrames: 18, peakBlurPx: 6 }),
+        ...cutTheCurveSeam(frame, cut.frame, role, { axis: "x", direction: -1, distancePx: 260 * u * xScale, exitFrames: 14, entryFrames: 18, peakBlurPx: 6 }),
         ...base,
       };
     case "rise":
@@ -46,9 +55,9 @@ function rawSeamPose(cut: Cut, frame: number, role: "outgoing" | "incoming", u: 
         ...base,
       };
     case "whip-pan": {
-      const s = cutTheCurveSeam(frame, cut.frame, role, { axis: "x", direction: -1, distancePx: 560 * u, exitFrames: 12, entryFrames: 16, peakBlurPx: 14 });
+      const s = cutTheCurveSeam(frame, cut.frame, role, { axis: "x", direction: -1, distancePx: 560 * u * xScale, exitFrames: 12, entryFrames: 16, peakBlurPx: 14 });
       // orbital whip: yaw follows lateral travel so the pan reads as a camera swinging around the subject
-      return { ...s, rotateY: (s.translateX / (560 * u)) * -16, brightness: 1 };
+      return { ...s, rotateY: (s.translateX / (560 * u * xScale)) * -16, brightness: 1 };
     }
     case "scale-burst": {
       if (role === "incoming") {
