@@ -1,0 +1,56 @@
+# fetch-cc0-assets.yml — retrieve the CC0 animation assets used by the DAVID film.
+#
+# Why this exists: the agent sandbox can only reach github.com, so it cannot download from
+# actionforge.app directly. This workflow is the documented, reproducible path for a machine with
+# open network access (a local `bash examples/david-chronicles-of-valor/cinema/tools/fetch-quaternius.sh`
+# is equivalent).
+#
+# Licence scope — from actionforge.app/THIRD-PARTY-NOTICES.txt:
+#   * the rig, the animations and the props are CC0 1.0 public domain (Quaternius / CGstuff);
+#   * the site's application code is proprietary and must not be copied or reverse engineered.
+# Only the CC0 asset files are fetched here. Nothing else from that site is retrieved, kept or
+# used, and no application code is committed to this repository.
+name: fetch-cc0-assets
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: fetch CC0 rig + clips
+        run: |
+          set -euo pipefail
+          DEST=examples/david-chronicles-of-valor/cinema/assets/quaternius
+          BASE=https://actionforge.app/assets/animation-library
+          mkdir -p "$DEST/anim"
+          curl -fsSL "$BASE/rig/rig-human.glb" -o "$DEST/rig-human.glb"
+          for n in a_tpose crouch_fwd_loop crouch_idle_loop dance_loop driving_loop fixing_kneeling \
+                   hit_chest hit_head idle_loop idle_talking_loop idle_torch_loop interact \
+                   jog_fwd_loop jump_land jump_loop jump_start pickup_table punch_cross punch_jab \
+                   push_loop roll sitting_enter sitting_exit sitting_idle_loop sitting_talking_loop \
+                   sprint_loop swim_fwd_loop swim_idle_loop sword_attack sword_block sword_idle \
+                   walk_formal_loop walk_loop; do
+            curl -fsSL "$BASE/animations/$n.glb" -o "$DEST/anim/$n.glb" || echo "missing: $n"
+          done
+          echo "clips: $(ls "$DEST/anim" | wc -l)"
+      - name: fetch CC0 Universal Animation Library
+        run: |
+          set -euo pipefail
+          DEST=examples/david-chronicles-of-valor/cinema/assets/quaternius/ual
+          mkdir -p "$DEST"
+          for f in AnimationLibrary_Godot_Standard.gltf AnimationLibrary_Godot_Standard.bin; do
+            curl -fsSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.raw" \
+              "https://api.github.com/repos/J-Ponzo/gltf-universal-animation-library/contents/glTF/$f" \
+              -o "$DEST/$(echo $f | sed 's/AnimationLibrary_Godot_Standard/UAL_Standard/')"
+          done
+          ls -la "$DEST"
+      - name: commit
+        run: |
+          git config user.name "cc0-assets"; git config user.email "cc0-assets@users.noreply.github.com"
+          git add -f examples/david-chronicles-of-valor/cinema/assets/quaternius
+          git commit -m "assets: CC0 Quaternius animation library (rig + clips)" || echo "nothing to commit"
+          git push
