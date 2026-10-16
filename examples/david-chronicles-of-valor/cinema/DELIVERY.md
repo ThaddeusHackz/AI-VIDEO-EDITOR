@@ -60,11 +60,14 @@ Uploaded to the **AI VIDEO EDITOR** Drive folder (`1CJmH3jkLbxReS9AqnrVV50l2JNbQ
 
 | File | Size | Notes |
 | --- | --- | --- |
-| `DAVID_THE_CHRONICLES_OF_VALOR_3840x2160_60fps.mp4` | 82.3 MB | `1tRU0vmaQgyVOfYGiCTrhOfYCHk_S8pFa` — 3840×2160, 3:00, 60 fps, graded, scored (rescaled master) |
-| `DAVID_THE_CHRONICLES_OF_VALOR_1280x720_60fps.mp4` | 67.0 MB | `1L8dKnmVZUTF60mHOaWEYegVgu9cFFCWn` — the native render, 1280×720, 3:00, 60 fps, graded, scored |
+| `DAVID_THE_CHRONICLES_OF_VALOR_3840x2160_60fps.mp4` | 82.3 MB | `1Bas4WW6535lAXS1QWk_M451-OL73KxXu` — 3840×2160, 3:00, 60 fps, graded, scored (rescaled master, disclosed on the file) |
+| `DAVID_THE_CHRONICLES_OF_VALOR_1280x720_60fps.mp4` | 65.9 MB | `1Bcrem2TEKcYzlnbIlCGLhlyo9SUvxOoT` — the native render, 1280×720, 3:00, 60 fps, graded, scored |
+| `DAVID_contact_sheet_final.jpg` | 130 KB | `1aNVzKa6jgf5m0cbzGnxjINVKRdZstXYX` — 16 frames sampled across the finished master |
 
-Local copies: `cinema/out/`. Checksums, stream specs and the measured QA report are in
-`cinema/out/delivery.json`, `out/delivery-report.json` and `out/qa-master.json`.
+Earlier uploads (v1 and v2 masters, both earlier contact sheets) were moved to the Drive trash
+rather than left to be confused with the current cut. Checksums, stream specs, the measured QA
+report and the verification table are in `cinema/out/delivery.json`, `out/delivery-report.json`
+and `out/qa-master.json`; the `out/` directory itself is not committed (it is generated).
 
 ## Resolution
 
