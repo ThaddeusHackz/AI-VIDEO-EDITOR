@@ -11,7 +11,10 @@ Every rendered frame gets four component scores and a weighted total:
   typography   per-shot visual review score (typographic hierarchy + composition) from qa/review.json —
                assigned by a human-style look at contact sheets, NOT computed
 
-  total = 0.25·density + 0.25·clarity + 0.30·motion + 0.20·typography
+  total = 0.25·density + 0.25·clarity + 0.30·motion + 0.20·typography   (floored to 2 decimals: 7.995 fails)
+
+Both formats are analysed at the same isotropic 4x downscale (480x270 / 270x480), so a 9:16 score means what a 16:9
+score means.
 
 Shot INTENT is declared up front in review.json (e.g. S11 is a near-black signature by design, the 1554–1583
 stillness comma is meant to be calm). Intent changes the target a frame is scored against; it never hides a frame.

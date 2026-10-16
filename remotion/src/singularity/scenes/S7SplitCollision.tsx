@@ -80,7 +80,9 @@ export const S7SplitCollision: React.FC = () => {
       ctx.globalCompositeOperation = "lighter";
       const r = mulberry32(7701);
       for (let i = 0; i < 160; i++) {
-        const a = Math.PI + (r() - 0.5) * 2.4 + (portrait ? -Math.PI / 2 : 0);
+        // rays fan out from the source INTO the frame: leftwards in 16:9 (source right of frame), upwards in 9:16
+        // (source below frame). The 9:16 fan used to point down, away from the picture, leaving Astra's half bare
+        const a = Math.PI + (r() - 0.5) * 2.4 + (portrait ? Math.PI / 2 : 0);
         const len = (500 + r() * 1300) * u * (0.75 + 0.25 * Math.sin(t * 5 + i));
         const r0 = (120 + r() * 300) * u;
         ctx.strokeStyle = rgba(i % 4 ? P.astraCyan : P.astraIce, 0.12 + 0.3 * r());

@@ -5,8 +5,8 @@
 
 | Deliverable | Path |
 |---|---|
-| 16:9 master | `renders/output_master_30s.mp4` |
-| 9:16 companion | `renders/output_vertical_30s.mp4` |
+| 16:9 master: 1920×1080 · 60 fps · 1800 frames · H.264 + AAC · −16.0 LUFS | `renders/output_master_30s.mp4` |
+| 9:16 companion: 1080×1920 · 60 fps · 1800 frames · H.264 + AAC · −16.0 LUFS | `renders/output_vertical_30s.mp4` |
 | Director's treatment (the build contract) | [`FILM.md`](FILM.md) |
 | Single source of truth (beats, cuts, schedules, VO onsets) | [`remotion/src/singularity/timeline.json`](../../remotion/src/singularity/timeline.json) |
 | Measured VO word timings + word-driven events | [`remotion/src/singularity/vo-words.json`](../../remotion/src/singularity/vo-words.json) |
@@ -14,6 +14,15 @@
 | QA reports (per-frame scores, contact sheets, spectrogram) | `qa/reports/` |
 
 `renders/` is git-ignored, following the repo convention. Re-create everything with the studio loop below.
+
+**QA result:** every one of the 1800 frames in each format scores at least 8 out of 10, so **0 frames are below 8** in either format.
+
+| Format | Mean | Min |
+|---|---|---|
+| 16:9 | 9.25 | 8.00 |
+| 9:16 | 9.25 | 8.02 |
+
+The Remotion seam gate passes with 0 fail and 0 warn across 10 cuts in both formats. Both files decode with 0 errors and measure −16.0 LUFS on the encoded output. Per-shot tables, the re-render history and the declared intents are in [FILM.md §10](FILM.md#10-results-final-renders).
 
 ## The studio render loop
 
@@ -27,8 +36,8 @@ productions/singularity-engine/render/studio_render.sh all
 | audio | `studio_render.sh audio` | `audio/build_vo.py` (voice-00 → Praat PSOLA formant/pitch shift → gravel, fry, chest double, proximity, dark room; syllable-nucleus word alignment) · `audio/synth_score.py` (all stems synthesized from timeline data) · `audio/mix.py` (VO-forward ducking, −16 LUFS, ≤ −1 dBTP) |
 | plate | `studio_render.sh plate` | HyperFrames `hyperframes/genesis-code`: `seam-stamp.mjs` → `hyperframes lint` (0/0) → `seam-gate.mjs verify` → `hyperframes render -f 60` |
 | gates | `studio_render.sh gates` | `tsc --noEmit` · `remotion bundle` · `remotion compositions` |
-| frames | `studio_render.sh frames master` | 1800 JPEG frames (q95) from `Singularity-Master` (or `vertical`). `FRAMES=a-b` re-renders a range in place |
-| score | `studio_render.sh score master` | `qa/score_frames.py`: every frame scored 1–10 (density · clarity · motion · typography) and frames < 8 listed |
+| frames | `studio_render.sh frames master` | 1800 JPEG frames (q95) from `Singularity-Master` (or `vertical`). `FRAMES=a-b` re-renders a range in place, and `BUNDLE=out/<dir>` renders from a frozen bundle |
+| score | `studio_render.sh score master` | `qa/score_frames.py`: every frame scored 1–10 (density · clarity · motion · typography). Both formats use the same isotropic analysis, totals are floored, and frames < 8 are listed |
 | assemble | `studio_render.sh assemble master` | FFmpeg: H.264 High, CRF 17 (14 Mb/s cap), yuv420p, BT.709 tags, AAC 320k |
 | verify | `studio_render.sh verify master` | ffprobe frame count/fps/colour tags, full decode, EBU R128 loudness of the encoded file |
 
@@ -48,7 +57,7 @@ The Remotion seam gate is separate: `qa/seam_check.sh` numerically verifies ever
 | Closed-form spring physics (no stepping) | `remotion/src/singularity/physics/springs.ts`: analytic DHO, closed-form arrival time, velocity, plucked string, impulse response, spring easing (the same equation drives the HyperFrames plate) |
 | Every lock/fold/strike on its sound | `timeline.json → schedules`, read by the shots and by `synth_score.py`. Springs are launched with `springLockedAt()` so they **arrive** on the click frame |
 | 100 BPM grid | 1 beat = 36 frames; every cut, phrase onset and schedule sits on a beat, half-beat or 16th |
-| Seams (motion-doctrine) | `components/seamPose.ts` (engine `seamTransitions.ts`), verified by `qa/seam_check.sh` |
+| Seams (motion-doctrine) | `components/seamPose.ts` (engine `seamTransitions.ts`; lateral travel scaled to the frame width), verified for both formats by `qa/seam_check.sh` |
 | Cinematic-embed captions | `components/Words.tsx` + per-shot designs. Each word enters on its measured frame |
 | 16:9 + 9:16 from one tree | `layout.ts` (`isPortrait` branches in every shot) |
 | HyperFrames + Remotion hybrid | `hyperframes/genesis-code/` → `remotion/public/singularity/hf/genesis-code.mp4`, composited in `scenes/S3MacroDive.tsx` |

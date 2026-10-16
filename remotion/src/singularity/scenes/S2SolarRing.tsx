@@ -25,6 +25,25 @@ export function ringRadius(frame: number): number {
   return RING_R * springAt(frame, EV.ringIgnite, FPS, SPRINGS.ring);
 }
 
+/**
+ * The coin's spin about the line (x axis). In 9:16 it spins the other way, so the ring opens TOWARDS the lens across
+ * the shot instead of flipping edge-on mid-shot. Edge-on, the ring is a ~10 px line across a 1920 px tall frame.
+ */
+export function ringSpin(frame: number, portrait: boolean): number {
+  return 1.08 + (portrait ? -0.62 : 0.62) * Math.max(0, (frame - EV.ringIgnite) / FPS);
+}
+
+/**
+ * Ignition feed: two amber pulses race along Opus's line into the corona's crossing points and reach ±R as the ring
+ * opens, so the match-cut's first frames already carry the ignition's energy. Returns |x| and intensity.
+ */
+export function ignitionFeed(frame: number): { x: number; a: number } {
+  const p = clamp01((frame - (EV.ringIgnite - 8)) / 14);
+  const x = ringRadius(frame) + (6 - ringRadius(frame)) * (1 - p) ** 1.5;
+  const a = clamp01((frame - EV.ringIgnite + 1) / 3) * (1 - clamp01((frame - (EV.ringIgnite + 6)) / 8));
+  return { x, a };
+}
+
 export function ringCamera(frame: number, portrait: boolean) {
   const t = clamp01((frame - S.from) / (S.to - S.from));
   const orbit = ease.inOut3(clamp01(t / 0.82));
@@ -34,7 +53,10 @@ export function ringCamera(frame: number, portrait: boolean) {
   const open = ease.out4(clamp01((frame - S.from) / 30));
   const az = -0.42 * open * (1 - orbit) + 0.16 * orbit;
   const el = 0.16 * open * (1 - orbit) + 0.06 * orbit;
-  const baseDist = (portrait ? 9.4 : 6.4) - 1.5 * orbit;
+  // 9:16 opens at the 16:9 distance and RECOILS (closed-form spring) to its wider framing as the ring springs open:
+  // the camera flinches back from the ignition instead of sitting on a thin line in a tall, empty frame
+  const recoil = portrait ? springAt(frame, S.from, FPS, SPRINGS.panel) : 1;
+  const baseDist = (portrait ? 6.4 + 3.0 * recoil : 6.4) - 1.5 * orbit;
   const R = ringRadius(frame);
   const target = new THREE.Vector3(R * dive, 0, 0);
   const dist = baseDist * (1 - 0.86 * dive);
@@ -96,6 +118,9 @@ const RingWorld: React.FC<{ portrait: boolean }> = ({ portrait }) => {
     const glint = glowTexture("rgba(255,255,255,1)", "rgba(255,190,140,0.5)");
     const gL = new THREE.Sprite(new THREE.SpriteMaterial({ map: glint, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
     const gR = gL.clone();
+    const feed = glowTexture("rgba(255,244,230,1)", "rgba(217,119,87,0.6)");
+    const fL = new THREE.Sprite(new THREE.SpriteMaterial({ map: feed, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+    const fR = fL.clone();
     const r = mulberry32(2202);
     const DUST = 1400;
     const dpos = new Float32Array(DUST * 3);
@@ -107,8 +132,8 @@ const RingWorld: React.FC<{ portrait: boolean }> = ({ portrait }) => {
     const dgeo = new THREE.BufferGeometry();
     dgeo.setAttribute("position", new THREE.BufferAttribute(dpos, 3));
     const dust = new THREE.Points(dgeo, new THREE.PointsMaterial({ color: hdr(P.astraIce, 0.9), size: 0.028, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending }));
-    group.add(line, lineHalo, ring, gL, gR, dust);
-    return { group, ring, rays, RAYS, disc, gL, gR, dust };
+    group.add(line, lineHalo, ring, gL, gR, fL, fR, dust);
+    return { group, ring, rays, RAYS, disc, gL, gR, fL, fR, dust };
   }, []);
 
   const post = useMemo(() => {
@@ -138,7 +163,7 @@ const RingWorld: React.FC<{ portrait: boolean }> = ({ portrait }) => {
     objs.ring.visible = vis;
     objs.ring.scale.setScalar(Math.max(R, 0.001));
     // spin around the line (x axis): the ring plane always contains the x axis → it always crosses the line
-    objs.ring.rotation.set(1.08 + 0.62 * Math.max(0, t), 0, 0);
+    objs.ring.rotation.set(ringSpin(frame, portrait), 0, 0);
     const pos = objs.rays.geometry.getAttribute("position") as THREE.BufferAttribute;
     for (let i = 0; i < objs.RAYS; i++) {
       const a = (i / objs.RAYS) * Math.PI * 2;
@@ -156,6 +181,12 @@ const RingWorld: React.FC<{ portrait: boolean }> = ({ portrait }) => {
     objs.gL.scale.setScalar(gs);
     objs.gR.scale.setScalar(gs * 1.15);
     objs.gL.visible = objs.gR.visible = vis;
+    const fd = ignitionFeed(frame);
+    objs.fL.position.set(-fd.x, 0, 0);
+    objs.fR.position.set(fd.x, 0, 0);
+    objs.fL.scale.setScalar(Math.max(0.001, 0.62 * fd.a));
+    objs.fR.scale.setScalar(Math.max(0.001, 0.62 * fd.a));
+    objs.fL.visible = objs.fR.visible = fd.a > 0.001;
     objs.dust.rotation.y = frame * 0.0012;
     const cam = ringCamera(frame, portrait);
     const c = camera as THREE.PerspectiveCamera;
@@ -200,7 +231,8 @@ export const S2SolarRing: React.FC = () => {
   const { u } = L;
 
   const R = ringRadius(frame);
-  const top = projectFor(frame, L.portrait, width, height, new THREE.Vector3(R * 0.02, R * Math.sin(1.08 + 0.62 * Math.max(0, (frame - EV.ringIgnite) / FPS)) * 1.0, R * Math.cos(1.08 + 0.62 * Math.max(0, (frame - EV.ringIgnite) / FPS))));
+  const spin = ringSpin(frame, L.portrait);
+  const top = projectFor(frame, L.portrait, width, height, new THREE.Vector3(R * 0.02, R * Math.sin(spin) * 1.0, R * Math.cos(spin)));
   const leftEnd = projectFor(frame, L.portrait, width, height, new THREE.Vector3(-R - 1.4, 0, 0));
   const labelIn = ease.out4(clamp01((frame - (EV.ringIgnite + 10)) / 18));
   const labelOut = 1 - ease.in4(clamp01((frame - (S.to - 30)) / 18));

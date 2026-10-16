@@ -123,7 +123,8 @@ Deliberately unused: `characterRig2D` (no characters in this brief) and REA (the
    - clarity: RMS contrast, highlight clipping, shadow crush;
    - motion fluidity: inter-frame flow magnitude, variance, dead-frame and flash-frame detection.
 
-   The machine score is combined with the shot's visual review score.
+   The machine score is combined with the shot's visual review score. Both formats are analysed at the same isotropic
+   downscale, and totals are floored to 2 decimals, so a frame reported as 8.00 really is ≥ 8.
 4. Any frame scoring < 8 is fixed at the design level, and its range is re-rendered and re-scored, until every frame is ≥ 8.
 5. FFmpeg assembles the image sequence and the −16 LUFS mix into `output_master_30s.mp4` and `output_vertical_30s.mp4`. Settings: H.264 High, CRF 17 capped, yuv420p, BT.709 tags, AAC 320 k. A full-decode check and an ffprobe frame count follow.
 
@@ -155,3 +156,63 @@ Deliberately unused: `characterRig2D` (no characters in this brief) and REA (the
 | 16 | S6's settled terrain (f945–971) had the act's lowest motion in both formats, and the exit seam dimmed it towards the 55 % floor. | A **flyover**: the height field scrolls towards the lens at 0.45 noise units/s while it flows. A **pre-impact charge**: the field gathers light (×1.8) over the last 14 frames into S7's collision. Both formats. |
 | 17 | S1's debris used `z0 − t·v(t)` with a braking v(t), which is not the distance travelled. The debris stalled, drifted **backwards** from f55, then snapped forward at f78. In 9:16, where the string is shorter, the stall left f74 almost motionless. | The distance flown is now the closed-form integral of the braking speed profile (both formats). In 9:16 the debris is also denser (1600 streaks in a 1500 × 2600 volume) and brakes more softly (to 60 % instead of 35 %), because the plucked string spans 1080 px instead of 1920. |
 | 18 | S10's post-lock hold eased its push to a stop before the snap-to-black. In both formats f1638–1691 was the film's lowest-motion stretch (motion 4–5.6 out of 10). | A steady dolly-in (`x^1.6`, never easing out) that is still travelling when the cut lands. Brighter comets with longer tails, and a denser electron shell (200). Both formats. |
+| 19 | In 9:16, S2's coin spin flipped the ring edge-on mid-shot (f139–147). Edge-on, the ring is a ~10 px line across a 1920 px tall frame. The match-cut's first frames (f110–111) were also just a thin line in a tall, empty frame. | In 9:16 the coin spins the other way, so the ring opens towards the lens across the shot (openness 0.42 → 0.99). The camera starts at the 16:9 distance and recoils (closed-form spring) to its wider framing. Both formats gain an **ignition feed**: two amber pulses race along Opus's line into the corona's crossing points as it ignites, which also lifted master f110 from 8.00 to 8.42. |
+| 20 | In 9:16, S7's Astra half (below the seam) was nearly bare late in the shot (f1064–1077: motion 6.5, density 8.6). Its ray fan pointed **down**, out of the frame, because of a sign error in the portrait angle. | The fan now opens upwards into the picture from its source below the frame. |
+
+## 10. Results: final renders
+
+Both deliverables come from the same commit. Every frame was scored, the films were assembled with FFmpeg, and each file was verified from the encoded output (`studio_render.sh verify`).
+
+### 10.1 Deliverables (ffprobe / ebur128 on the encoded files)
+
+| | 16:9 master | 9:16 companion |
+|---|---|---|
+| File | `renders/output_master_30s.mp4` | `renders/output_vertical_30s.mp4` |
+| Picture | 1920×1080 | 1080×1920 |
+| Frames · fps · duration | 1800 · 60/1 · 30.000 s | 1800 · 60/1 · 30.000 s |
+| Video | H.264 High, yuv420p, BT.709 primaries/transfer/matrix | same |
+| Audio | AAC 48 kHz stereo, the −16 LUFS trailer mix | same |
+| Size · bitrate | 48.9 MB · 13.0 Mb/s | 49.7 MB · 13.3 Mb/s |
+| Loudness (encoded) | −16.0 LUFS integrated · peak −3.3 dBFS | −16.0 LUFS integrated · peak −3.3 dBFS |
+| Full decode | 0 errors | 0 errors |
+
+### 10.2 Every frame scored (`qa/score_frames.py`, totals floored to 2 decimals)
+
+| Shot | Frames | 16:9 mean | 16:9 min | 9:16 mean | 9:16 min |
+|---|---|---|---|---|---|
+| S1 void slice | 0–107 | 9.23 | 8.58 | 9.23 | 8.81 |
+| S2 solar ring | 108–215 | 9.54 | 8.42 | 9.42 | 8.06 |
+| S3 macro dive | 216–359 | 9.41 | 8.85 | 9.31 | 8.69 |
+| S4 Opus manifest | 360–539 | 8.70 | 8.07 | 8.80 | 8.22 |
+| S5 silk ribbons | 540–791 | 9.45 | 8.34 | 9.36 | 8.29 |
+| S6 solar surge | 792–971 | 9.13 | 8.11 | 8.97 | 8.02 |
+| S7 split collision | 972–1079 | 9.56 | 8.41 | 9.40 | 8.07 |
+| S8 glyph dive | 1080–1223 | 9.37 | 8.70 | 9.30 | 8.89 |
+| S9 monolith | 1224–1583 | 9.12 | 8.00 | 9.40 | 8.63 |
+| S10 lockup | 1584–1691 | 9.19 | 8.28 | 9.11 | 8.32 |
+| S11 signature | 1692–1799 | 9.45 | 8.50 | 9.43 | 8.46 |
+| **All 1800 frames** | | **9.25** | **8.00** | **9.25** | **8.02** |
+
+**Frames below 8: 0 in either format.** 1361 master frames and 1363 companion frames score 9 or more. The reports, the 12 lowest frames of each format and contact sheets are in `qa/reports/` (`<format>_scores.json/.md`, `<format>_lowest.jpg`, `<format>_contact.jpg`).
+
+### 10.3 The re-render loop
+
+- **16:9.** Seven design-fix passes took the frames below 8 from 617 → 446 → 274 → 149 → 122 → 66 → 14 → 0. After the sandbox rebuild (§9 #14), a from-scratch render of that code re-scored to the same totals: mean 9.24, min 8.0, 0 below 8. Four fixes from the companion's QA also improve the master: §9 #16 (S6), #17 (S1), #18 (S10) and #19 (S2). Their ranges were re-rendered in place (f0–121, 918–971, 1620–1691), giving mean 9.25, min 8.00, 0 below 8.
+- **9:16.** Pre-scoring 144 sampled frames found 8 below 8 (§9 #15). Spot-checking S1 and S10 found more (#17, #18). The first full render had 7 below 8 (S2 ×6, S7 ×1). The S2 spin and ignition feed brought it to 3, and the S2 recoil plus the S7 ray-fan fix (#19, #20) brought it to **0**.
+- Every fix was a design change, re-rendered and re-scored. No threshold or intent was loosened. The four fixes that touch both formats were re-checked against the master.
+
+### 10.4 Declared intent (`qa/review.json`)
+
+An intent changes the target a frame is scored against. It never removes a frame from scoring. All 1800 frames are scored and must reach 8.
+
+- **Shot intents:**
+  - S1 void slice: density 0.45, motion 0.004.
+  - S9: motion 0.006, because 3D camera moves produce smaller pixel deltas.
+  - S11 black signature: density 0.15, motion 0.0012.
+- **Stillness comma f1554–1583:** motion target 0.0015.
+- **Seam peaks:** the five frames [c−2, c+3) around each motion-blurred cut (216, 360, 540, 792, 972, 1080, 1224, 1584) have a density target of 0.5. Their motion continuity is verified numerically by the seam gate, for both formats. The match cut at 108 and the snap-to-black at 1692 have no window.
+
+### 10.5 Gates and audio
+
+- `tsc --noEmit` passes with 0 errors. HyperFrames reports lint 0/0 and the plate seam gate passes. The Remotion seam gate passes with 0 fail and 0 warn across 10 cuts × 2 formats.
+- The mix rebuilt **bit-identical** after the reset (md5 `f21d8231…`). Stems are VO-forward, the score ducks 9.5 dB under the voice, and the master is −16.0 LUFS at ≈ −3.3 dBTP. All of this is **verified numerically**. As §8 says, nobody has listened to the mix in this sandbox.
