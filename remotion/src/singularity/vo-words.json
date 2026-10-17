@@ -1,0 +1,839 @@
+{
+  "fps": 60,
+  "sampleRate": 48000,
+  "derivedEvents": {
+    "handDrawn": 189,
+    "glassShatter": 297,
+    "timeAccent": 351,
+    "opusWord": 432,
+    "geometryWord": 549,
+    "astraWord": 711,
+    "solarWord": 864,
+    "titansWord": 990,
+    "destroyWord": 1062,
+    "neverWord": 1233,
+    "closerWord": 1341,
+    "canvasWord": 1458,
+    "deadWord": 1485,
+    "codeWord": 1656
+  },
+  "phrases": [
+    {
+      "id": "L1a",
+      "line": 1,
+      "text": "They said motion was hand-drawn...",
+      "fx": "rasp",
+      "start": 1.8,
+      "end": 3.805,
+      "startFrame": 108,
+      "endFrame": 228,
+      "sourceMedianHz": 102.1,
+      "targetMedianHz": 85.8,
+      "semitones": -3.0,
+      "durationFactor": 1.08,
+      "nucleiDetected": 7,
+      "syllablesExpected": 7,
+      "words": [
+        {
+          "text": "They",
+          "syl": [
+            1.8916
+          ],
+          "syllables": 1,
+          "start": 1.8,
+          "end": 2.1156,
+          "startFrame": 108,
+          "endFrame": 127
+        },
+        {
+          "text": "said",
+          "syl": [
+            2.3396
+          ],
+          "syllables": 1,
+          "start": 2.1156,
+          "end": 2.4896,
+          "startFrame": 127,
+          "endFrame": 149
+        },
+        {
+          "text": "motion",
+          "syl": [
+            2.6396,
+            2.8276
+          ],
+          "syllables": 2,
+          "start": 2.4896,
+          "end": 2.9256,
+          "startFrame": 149,
+          "endFrame": 176
+        },
+        {
+          "text": "was",
+          "syl": [
+            3.0236
+          ],
+          "syllables": 1,
+          "start": 2.9256,
+          "end": 3.2016,
+          "startFrame": 176,
+          "endFrame": 192
+        },
+        {
+          "text": "hand-drawn",
+          "syl": [
+            3.3796,
+            3.5556
+          ],
+          "syllables": 2,
+          "start": 3.2016,
+          "end": 3.805,
+          "startFrame": 192,
+          "endFrame": 228
+        }
+      ]
+    },
+    {
+      "id": "L1b",
+      "line": 1,
+      "text": "locked behind glass and time.",
+      "fx": "rasp",
+      "start": 4.2,
+      "end": 6.255,
+      "startFrame": 252,
+      "endFrame": 375,
+      "sourceMedianHz": 122.7,
+      "targetMedianHz": 92.0,
+      "semitones": -4.99,
+      "durationFactor": 1.08,
+      "nucleiDetected": 6,
+      "syllablesExpected": 6,
+      "words": [
+        {
+          "text": "locked",
+          "syl": [
+            4.299
+          ],
+          "syllables": 1,
+          "start": 4.2,
+          "end": 4.489,
+          "startFrame": 252,
+          "endFrame": 269
+        },
+        {
+          "text": "behind",
+          "syl": [
+            4.679,
+            4.819
+          ],
+          "syllables": 2,
+          "start": 4.489,
+          "end": 4.973,
+          "startFrame": 269,
+          "endFrame": 298
+        },
+        {
+          "text": "glass",
+          "syl": [
+            5.127
+          ],
+          "syllables": 1,
+          "start": 4.973,
+          "end": 5.387,
+          "startFrame": 298,
+          "endFrame": 323
+        },
+        {
+          "text": "and",
+          "syl": [
+            5.647
+          ],
+          "syllables": 1,
+          "start": 5.387,
+          "end": 5.855,
+          "startFrame": 323,
+          "endFrame": 351
+        },
+        {
+          "text": "time.",
+          "syl": [
+            6.063
+          ],
+          "syllables": 1,
+          "start": 5.855,
+          "end": 6.255,
+          "startFrame": 351,
+          "endFrame": 375
+        }
+      ]
+    },
+    {
+      "id": "L2a",
+      "line": 2,
+      "text": "Then came Opus...",
+      "fx": "metallic",
+      "start": 6.6,
+      "end": 7.965,
+      "startFrame": 396,
+      "endFrame": 478,
+      "sourceMedianHz": 148.2,
+      "targetMedianHz": 98.9,
+      "semitones": -7.0,
+      "durationFactor": 1.08,
+      "nucleiDetected": 3,
+      "syllablesExpected": 4,
+      "words": [
+        {
+          "text": "Then",
+          "syl": [
+            6.7088
+          ],
+          "syllables": 1,
+          "start": 6.6,
+          "end": 6.8488,
+          "startFrame": 396,
+          "endFrame": 411
+        },
+        {
+          "text": "came",
+          "syl": [
+            6.9888
+          ],
+          "syllables": 1,
+          "start": 6.8488,
+          "end": 7.1288,
+          "startFrame": 411,
+          "endFrame": 428
+        },
+        {
+          "text": "Opus",
+          "syl": [
+            7.2688,
+            7.4688
+          ],
+          "syllables": 2,
+          "start": 7.1288,
+          "end": 7.965,
+          "startFrame": 428,
+          "endFrame": 478
+        }
+      ]
+    },
+    {
+      "id": "L2b",
+      "line": 2,
+      "text": "coding the geometry of thought in real time.",
+      "fx": "metallic",
+      "start": 8.4,
+      "end": 11.105,
+      "startFrame": 504,
+      "endFrame": 666,
+      "sourceMedianHz": 111.2,
+      "targetMedianHz": 92.0,
+      "semitones": -3.28,
+      "durationFactor": 1.08,
+      "nucleiDetected": 7,
+      "syllablesExpected": 12,
+      "words": [
+        {
+          "text": "coding",
+          "syl": [
+            8.5316,
+            8.7196
+          ],
+          "syllables": 2,
+          "start": 8.4,
+          "end": 8.8496,
+          "startFrame": 504,
+          "endFrame": 531
+        },
+        {
+          "text": "the",
+          "syl": [
+            8.9796
+          ],
+          "syllables": 1,
+          "start": 8.8496,
+          "end": 9.1096,
+          "startFrame": 531,
+          "endFrame": 547
+        },
+        {
+          "text": "geometry",
+          "syl": [
+            9.2396,
+            9.5436,
+            9.7206,
+            9.8976
+          ],
+          "syllables": 4,
+          "start": 9.1096,
+          "end": 9.9861,
+          "startFrame": 547,
+          "endFrame": 599
+        },
+        {
+          "text": "of",
+          "syl": [
+            10.0746
+          ],
+          "syllables": 1,
+          "start": 9.9861,
+          "end": 10.1631,
+          "startFrame": 599,
+          "endFrame": 610
+        },
+        {
+          "text": "thought",
+          "syl": [
+            10.2516
+          ],
+          "syllables": 1,
+          "start": 10.1631,
+          "end": 10.3436,
+          "startFrame": 610,
+          "endFrame": 621
+        },
+        {
+          "text": "in",
+          "syl": [
+            10.4356
+          ],
+          "syllables": 1,
+          "start": 10.3436,
+          "end": 10.5216,
+          "startFrame": 621,
+          "endFrame": 631
+        },
+        {
+          "text": "real",
+          "syl": [
+            10.6076
+          ],
+          "syllables": 1,
+          "start": 10.5216,
+          "end": 10.6936,
+          "startFrame": 631,
+          "endFrame": 642
+        },
+        {
+          "text": "time.",
+          "syl": [
+            10.7796
+          ],
+          "syllables": 1,
+          "start": 10.6936,
+          "end": 11.105,
+          "startFrame": 642,
+          "endFrame": 666
+        }
+      ]
+    },
+    {
+      "id": "L3a",
+      "line": 3,
+      "text": "And Astra...",
+      "fx": "growl",
+      "start": 11.4,
+      "end": 12.82,
+      "startFrame": 684,
+      "endFrame": 769,
+      "sourceMedianHz": 105.3,
+      "targetMedianHz": 88.6,
+      "semitones": -3.0,
+      "durationFactor": 1.08,
+      "nucleiDetected": 3,
+      "syllablesExpected": 3,
+      "words": [
+        {
+          "text": "And",
+          "syl": [
+            11.4977
+          ],
+          "syllables": 1,
+          "start": 11.4,
+          "end": 11.9177,
+          "startFrame": 684,
+          "endFrame": 715
+        },
+        {
+          "text": "Astra",
+          "syl": [
+            12.3377,
+            12.6617
+          ],
+          "syllables": 2,
+          "start": 11.9177,
+          "end": 12.82,
+          "startFrame": 715,
+          "endFrame": 769
+        }
+      ]
+    },
+    {
+      "id": "L3b",
+      "line": 3,
+      "text": "burning through the void with solar logic.",
+      "fx": "growl",
+      "start": 13.2,
+      "end": 15.715,
+      "startFrame": 792,
+      "endFrame": 943,
+      "sourceMedianHz": 146.9,
+      "targetMedianHz": 98.1,
+      "semitones": -7.0,
+      "durationFactor": 1.08,
+      "nucleiDetected": 9,
+      "syllablesExpected": 10,
+      "words": [
+        {
+          "text": "burning",
+          "syl": [
+            13.2325,
+            13.3765
+          ],
+          "syllables": 2,
+          "start": 13.2,
+          "end": 13.5285,
+          "startFrame": 792,
+          "endFrame": 812
+        },
+        {
+          "text": "through",
+          "syl": [
+            13.6805
+          ],
+          "syllables": 1,
+          "start": 13.5285,
+          "end": 13.8265,
+          "startFrame": 812,
+          "endFrame": 830
+        },
+        {
+          "text": "the",
+          "syl": [
+            13.9725
+          ],
+          "syllables": 1,
+          "start": 13.8265,
+          "end": 14.0245,
+          "startFrame": 830,
+          "endFrame": 841
+        },
+        {
+          "text": "void",
+          "syl": [
+            14.0765
+          ],
+          "syllables": 1,
+          "start": 14.0245,
+          "end": 14.1725,
+          "startFrame": 841,
+          "endFrame": 850
+        },
+        {
+          "text": "with",
+          "syl": [
+            14.2685
+          ],
+          "syllables": 1,
+          "start": 14.1725,
+          "end": 14.3795,
+          "startFrame": 850,
+          "endFrame": 863
+        },
+        {
+          "text": "solar",
+          "syl": [
+            14.4905,
+            14.7125
+          ],
+          "syllables": 2,
+          "start": 14.3795,
+          "end": 14.9085,
+          "startFrame": 863,
+          "endFrame": 895
+        },
+        {
+          "text": "logic.",
+          "syl": [
+            15.1045,
+            15.3965
+          ],
+          "syllables": 2,
+          "start": 14.9085,
+          "end": 15.715,
+          "startFrame": 895,
+          "endFrame": 943
+        }
+      ]
+    },
+    {
+      "id": "L4a",
+      "line": 4,
+      "text": "Two titans.",
+      "fx": "proximity",
+      "start": 16.2,
+      "end": 17.165,
+      "startFrame": 972,
+      "endFrame": 1030,
+      "sourceMedianHz": 120.0,
+      "targetMedianHz": 92.0,
+      "semitones": -4.6,
+      "durationFactor": 1.08,
+      "nucleiDetected": 3,
+      "syllablesExpected": 3,
+      "words": [
+        {
+          "text": "Two",
+          "syl": [
+            16.3467
+          ],
+          "syllables": 1,
+          "start": 16.2,
+          "end": 16.4927,
+          "startFrame": 972,
+          "endFrame": 990
+        },
+        {
+          "text": "titans.",
+          "syl": [
+            16.6387,
+            16.8547
+          ],
+          "syllables": 2,
+          "start": 16.4927,
+          "end": 17.165,
+          "startFrame": 990,
+          "endFrame": 1030
+        }
+      ]
+    },
+    {
+      "id": "L4b",
+      "line": 4,
+      "text": "Not to destroy...",
+      "fx": "proximity",
+      "start": 17.4,
+      "end": 18.425,
+      "startFrame": 1044,
+      "endFrame": 1106,
+      "sourceMedianHz": 91.0,
+      "targetMedianHz": 76.6,
+      "semitones": -3.0,
+      "durationFactor": 1.08,
+      "nucleiDetected": 4,
+      "syllablesExpected": 4,
+      "words": [
+        {
+          "text": "Not",
+          "syl": [
+            17.4926
+          ],
+          "syllables": 1,
+          "start": 17.4,
+          "end": 17.5986,
+          "startFrame": 1044,
+          "endFrame": 1056
+        },
+        {
+          "text": "to",
+          "syl": [
+            17.7046
+          ],
+          "syllables": 1,
+          "start": 17.5986,
+          "end": 17.7646,
+          "startFrame": 1056,
+          "endFrame": 1066
+        },
+        {
+          "text": "destroy",
+          "syl": [
+            17.8246,
+            18.1046
+          ],
+          "syllables": 2,
+          "start": 17.7646,
+          "end": 18.425,
+          "startFrame": 1066,
+          "endFrame": 1106
+        }
+      ]
+    },
+    {
+      "id": "L4c",
+      "line": 4,
+      "text": "but to build what eyes have never witnessed.",
+      "fx": "proximity",
+      "start": 18.9,
+      "end": 21.46,
+      "startFrame": 1134,
+      "endFrame": 1288,
+      "sourceMedianHz": 128.5,
+      "targetMedianHz": 92.0,
+      "semitones": -5.78,
+      "durationFactor": 1.08,
+      "nucleiDetected": 10,
+      "syllablesExpected": 10,
+      "words": [
+        {
+          "text": "but",
+          "syl": [
+            18.9323
+          ],
+          "syllables": 1,
+          "start": 18.9,
+          "end": 19.0143,
+          "startFrame": 1134,
+          "endFrame": 1141
+        },
+        {
+          "text": "to",
+          "syl": [
+            19.0963
+          ],
+          "syllables": 1,
+          "start": 19.0143,
+          "end": 19.2183,
+          "startFrame": 1141,
+          "endFrame": 1153
+        },
+        {
+          "text": "build",
+          "syl": [
+            19.3403
+          ],
+          "syllables": 1,
+          "start": 19.2183,
+          "end": 19.5723,
+          "startFrame": 1153,
+          "endFrame": 1174
+        },
+        {
+          "text": "what",
+          "syl": [
+            19.8043
+          ],
+          "syllables": 1,
+          "start": 19.5723,
+          "end": 20.0243,
+          "startFrame": 1174,
+          "endFrame": 1201
+        },
+        {
+          "text": "eyes",
+          "syl": [
+            20.2443
+          ],
+          "syllables": 1,
+          "start": 20.0243,
+          "end": 20.3683,
+          "startFrame": 1201,
+          "endFrame": 1222
+        },
+        {
+          "text": "have",
+          "syl": [
+            20.4923
+          ],
+          "syllables": 1,
+          "start": 20.3683,
+          "end": 20.5643,
+          "startFrame": 1222,
+          "endFrame": 1234
+        },
+        {
+          "text": "never",
+          "syl": [
+            20.6363,
+            20.8363
+          ],
+          "syllables": 2,
+          "start": 20.5643,
+          "end": 20.9043,
+          "startFrame": 1234,
+          "endFrame": 1254
+        },
+        {
+          "text": "witnessed.",
+          "syl": [
+            20.9723,
+            21.1523
+          ],
+          "syllables": 2,
+          "start": 20.9043,
+          "end": 21.46,
+          "startFrame": 1254,
+          "endFrame": 1288
+        }
+      ]
+    },
+    {
+      "id": "L5a",
+      "line": 5,
+      "text": "Look closer.",
+      "fx": "linger",
+      "start": 22.2,
+      "end": 22.86,
+      "startFrame": 1332,
+      "endFrame": 1372,
+      "sourceMedianHz": 154.4,
+      "targetMedianHz": 103.0,
+      "semitones": -7.0,
+      "durationFactor": 1.12,
+      "nucleiDetected": 2,
+      "syllablesExpected": 3,
+      "words": [
+        {
+          "text": "Look",
+          "syl": [
+            22.2878
+          ],
+          "syllables": 1,
+          "start": 22.2,
+          "end": 22.4018,
+          "startFrame": 1332,
+          "endFrame": 1344
+        },
+        {
+          "text": "closer.",
+          "syl": [
+            22.5158,
+            22.6879
+          ],
+          "syllables": 2,
+          "start": 22.4018,
+          "end": 22.86,
+          "startFrame": 1344,
+          "endFrame": 1372
+        }
+      ]
+    },
+    {
+      "id": "L5b",
+      "line": 5,
+      "text": "The canvas is dead.",
+      "fx": "linger",
+      "start": 24.0,
+      "end": 24.915,
+      "startFrame": 1440,
+      "endFrame": 1495,
+      "sourceMedianHz": 134.2,
+      "targetMedianHz": 92.0,
+      "semitones": -6.54,
+      "durationFactor": 1.15,
+      "nucleiDetected": 4,
+      "syllablesExpected": 5,
+      "words": [
+        {
+          "text": "The",
+          "syl": [
+            24.2042
+          ],
+          "syllables": 1,
+          "start": 24.0,
+          "end": 24.2862,
+          "startFrame": 1440,
+          "endFrame": 1457
+        },
+        {
+          "text": "canvas",
+          "syl": [
+            24.3682,
+            24.5042
+          ],
+          "syllables": 2,
+          "start": 24.2862,
+          "end": 24.5842,
+          "startFrame": 1457,
+          "endFrame": 1475
+        },
+        {
+          "text": "is",
+          "syl": [
+            24.6642
+          ],
+          "syllables": 1,
+          "start": 24.5842,
+          "end": 24.7269,
+          "startFrame": 1475,
+          "endFrame": 1484
+        },
+        {
+          "text": "dead.",
+          "syl": [
+            24.7896
+          ],
+          "syllables": 1,
+          "start": 24.7269,
+          "end": 24.915,
+          "startFrame": 1484,
+          "endFrame": 1495
+        }
+      ]
+    },
+    {
+      "id": "L5c",
+      "line": 5,
+      "text": "Long live the code.",
+      "fx": "linger",
+      "start": 26.7,
+      "end": 27.97,
+      "startFrame": 1602,
+      "endFrame": 1678,
+      "sourceMedianHz": 101.5,
+      "targetMedianHz": 85.3,
+      "semitones": -3.0,
+      "durationFactor": 1.25,
+      "nucleiDetected": 3,
+      "syllablesExpected": 4,
+      "words": [
+        {
+          "text": "Long",
+          "syl": [
+            27.0094
+          ],
+          "syllables": 1,
+          "start": 26.7,
+          "end": 27.1214,
+          "startFrame": 1602,
+          "endFrame": 1627
+        },
+        {
+          "text": "live",
+          "syl": [
+            27.2334
+          ],
+          "syllables": 1,
+          "start": 27.1214,
+          "end": 27.3454,
+          "startFrame": 1627,
+          "endFrame": 1641
+        },
+        {
+          "text": "the",
+          "syl": [
+            27.4574
+          ],
+          "syllables": 1,
+          "start": 27.3454,
+          "end": 27.5694,
+          "startFrame": 1641,
+          "endFrame": 1654
+        },
+        {
+          "text": "code.",
+          "syl": [
+            27.6814
+          ],
+          "syllables": 1,
+          "start": 27.5694,
+          "end": 27.97,
+          "startFrame": 1654,
+          "endFrame": 1678
+        }
+      ]
+    }
+  ]
+}

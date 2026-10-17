@@ -1,0 +1,13 @@
+{
+  "fps": 60,
+  "seams": [
+    {
+      "id": "compile->mandala",
+      "cut": 1.35,
+      "technique": "zoom-through",
+      "exit": { "selector": "#scene-a", "axis": "z", "dir": 1, "dur": 0.21 },
+      "entry": { "selector": "#scene-b", "axis": "z", "dir": 1, "scanRoot": "#scene-b", "dur": 0.5 },
+      "blur": 6
+    }
+  ]
+}

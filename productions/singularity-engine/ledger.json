@@ -1,0 +1,16 @@
+{
+  "$comment": "Vector Ledger for the Remotion master (motion-doctrine). The film's current is Z-forward; reserved vectors are spent on meaning (FILM.md §5). The cut rows mirror timeline.json → cuts, which is what remotion/src/singularity/components/seamPose.ts renders and what qa/seam_check.sh verifies numerically. The HyperFrames plate has its own ledger: hyperframes/genesis-code/ledger.json (verified by scripts/seam-gate.mjs).",
+  "fps": 60,
+  "current": "z+ (pushing deeper into one thought)",
+  "seams": [
+    { "id": "S2->S3", "cut": 3.6, "frame": 216, "technique": "zoom-through (dive through the line x ring intersection)", "exit": { "selector": "S2", "axis": "z", "dir": 1 }, "entry": { "selector": "S3", "axis": "z", "dir": 1 }, "carrier": "white-hot intersection glint" },
+    { "id": "S3->S4", "cut": 6.0, "frame": 360, "technique": "cut-the-curve LEFT (next beat)", "exit": { "selector": "S3", "axis": "x", "dir": -1 }, "entry": { "selector": "S4", "axis": "x", "dir": -1 } },
+    { "id": "S4->S5", "cut": 9.0, "frame": 540, "technique": "orbital whip-pan LEFT", "exit": { "selector": "S4", "axis": "x", "dir": -1 }, "entry": { "selector": "S5", "axis": "x", "dir": -1 } },
+    { "id": "S5->S6", "cut": 13.2, "frame": 792, "technique": "scale-burst (leaving a world: Astra shatters the sequence)", "exit": { "selector": "S5", "axis": "z", "dir": 1 }, "entry": { "selector": "S6", "axis": "z", "dir": 1 } },
+    { "id": "S6->S7", "cut": 16.2, "frame": 972, "technique": "cut-the-curve LEFT", "exit": { "selector": "S6", "axis": "x", "dir": -1 }, "entry": { "selector": "S7", "axis": "x", "dir": -1 } },
+    { "id": "S7->S8", "cut": 18.0, "frame": 1080, "technique": "zoom-through into the '&' glyph", "exit": { "selector": "S7", "axis": "z", "dir": 1 }, "entry": { "selector": "S8", "axis": "z", "dir": 1 } },
+    { "id": "S8->S9", "cut": 20.4, "frame": 1224, "technique": "rise (elevation: the monolith ascends)", "exit": { "selector": "S8", "axis": "y", "dir": -1 }, "entry": { "selector": "S9", "axis": "y", "dir": -1 } },
+    { "id": "S9->S10", "cut": 26.4, "frame": 1584, "technique": "inverse zoom-through (arrival: the lockup lands)", "exit": { "selector": "S9", "axis": "z", "dir": -1 }, "entry": { "selector": "S10", "axis": "z", "dir": -1 } },
+    { "id": "S10->S11", "cut": 28.2, "frame": 1692, "type": "stillness-cut", "technique": "snap-cut to black (reserved)", "note": "the one deliberate stillness cut; only zero-overlap is gated" }
+  ]
+}

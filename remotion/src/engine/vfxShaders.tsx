@@ -83,12 +83,18 @@ export const VolumetricGodrays: React.FC<{
   color?: string;
   rayCount?: number;
   opacity?: number;
+  /**
+   * Fake the per-ray blur with layered gradients instead of a CSS `blur()` filter on every ray.
+   * Visually close, ~10x cheaper under software rasterisation (headless/SwiftShader renders). Default off.
+   */
+  softEdges?: boolean;
 }> = ({
   originXPercent = 50,
   originYPercent = 24,
   color = "#35D9F2",
   rayCount = 16,
   opacity = 0.28,
+  softEdges = false,
 }) => {
   const frame = useCurrentFrame();
   const rays = useMemo(() => {
@@ -117,9 +123,11 @@ export const VolumetricGodrays: React.FC<{
               height: "160%",
               transformOrigin: "50% 0%",
               transform: `translateX(-50%) rotate(${rot.toFixed(2)}deg)`,
-              background: `linear-gradient(180deg, ${color}88 0%, ${color}22 45%, transparent 90%)`,
+              background: softEdges
+                ? `radial-gradient(ellipse 50% 100% at 50% 0%, ${color}88 0%, ${color}22 45%, transparent 90%)`
+                : `linear-gradient(180deg, ${color}88 0%, ${color}22 45%, transparent 90%)`,
               opacity: wave,
-              filter: "blur(8px)",
+              filter: softEdges ? undefined : "blur(8px)",
             }}
           />
         );

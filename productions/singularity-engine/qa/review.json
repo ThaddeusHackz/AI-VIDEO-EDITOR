@@ -1,0 +1,165 @@
+{
+  "$comment": "Per-shot visual review (typographic hierarchy + composition, scored 1-10 from contact sheets) and declared INTENT targets used by score_frames.py. density = fraction of the high-octane density target this shot is designed to hit; motion = motion energy (mean |dY| per frame at 240x135) that earns full motion marks. Intent changes the target a frame is scored against; it never hides a frame.",
+  "defaults": {
+    "density": 1.0,
+    "motion": 0.01
+  },
+  "shots": {
+    "S1": {
+      "typography": 8.0,
+      "intent": {
+        "density": 0.45,
+        "motion": 0.004
+      },
+      "notes": "Brief: pitch-black screen + a single razor line. Code slate legible at 25u; act slate deliberately faint."
+    },
+    "S2": {
+      "typography": 8.0,
+      "intent": {
+        "density": 0.8,
+        "motion": 0.008
+      },
+      "notes": "Phrase in the clean upper third, 'hand-drawn' pen-stroked by the 7cqw cursor; 3D-tracked labels clamped to safe area."
+    },
+    "S3": {
+      "typography": 8.5,
+      "intent": {
+        "density": 0.85
+      },
+      "notes": "'glass' hero stands where the pane shattered; 'and time.' lower-right lands on the clock accent."
+    },
+    "S4": {
+      "typography": 8.0,
+      "intent": {
+        "density": 0.9
+      },
+      "notes": "Strong title hierarchy (Claude / Opus / 5.5); origami panels secondary; code line tertiary."
+    },
+    "S5": {
+      "typography": 8.5,
+      "intent": {
+        "density": 1.0
+      },
+      "notes": "'geometry of thought' woven between ribbon depth layers; Astra title crystallizes with dark halo for legibility."
+    },
+    "S6": {
+      "typography": 8.0,
+      "intent": {
+        "density": 0.75
+      },
+      "notes": "Particles on black are sparse by nature; 'solar logic.' hero burns in on the machine phase."
+    },
+    "S7": {
+      "typography": 9.0,
+      "intent": {
+        "density": 1.0
+      },
+      "notes": "'Two' / 'titans.' collide at the seam \u2014 the clearest type beat in the film."
+    },
+    "S8": {
+      "typography": 7.5,
+      "intent": {
+        "density": 0.8
+      },
+      "notes": "Phrase at lower centre is readable; code tokens are texture, not copy."
+    },
+    "S9": {
+      "typography": 8.5,
+      "intent": {
+        "density": 0.9,
+        "motion": 0.006
+      },
+      "notes": "3D camera moves produce smaller pixel deltas than 2D motion graphics; 'never witnessed.' / 'Look closer.' / 'The canvas is dead.'"
+    },
+    "S10": {
+      "typography": 9.0,
+      "intent": {
+        "density": 0.7,
+        "motion": 0.008
+      },
+      "notes": "Clean centred isometric lockup; names flank the emblem; 'Long live the code.' serif + mono."
+    },
+    "S11": {
+      "typography": 8.0,
+      "intent": {
+        "density": 0.15,
+        "motion": 0.0012
+      },
+      "notes": "Snap-cut to black: only the dual-core signature remains (brief). Scored against that intent."
+    }
+  },
+  "windows": [
+    {
+      "from": 1554,
+      "to": 1584,
+      "intent": {
+        "motion": 0.0015
+      },
+      "why": "stillness-before-climax comma (motion-doctrine): bullet-time dust at 8 %, camera near-still"
+    },
+    {
+      "from": 214,
+      "to": 219,
+      "intent": {
+        "density": 0.5
+      },
+      "why": "seam peak of the zoom-through cut @f216: deliberately motion-blurred transition frames (travel + blur + flare); their motion continuity is verified numerically by qa/seam_check.sh"
+    },
+    {
+      "from": 358,
+      "to": 363,
+      "intent": {
+        "density": 0.5
+      },
+      "why": "seam peak of the cut-the-curve cut @f360: deliberately motion-blurred transition frames (travel + blur + flare); their motion continuity is verified numerically by qa/seam_check.sh"
+    },
+    {
+      "from": 538,
+      "to": 543,
+      "intent": {
+        "density": 0.5
+      },
+      "why": "seam peak of the whip-pan cut @f540: deliberately motion-blurred transition frames (travel + blur + flare); their motion continuity is verified numerically by qa/seam_check.sh"
+    },
+    {
+      "from": 790,
+      "to": 795,
+      "intent": {
+        "density": 0.5
+      },
+      "why": "seam peak of the scale-burst cut @f792: deliberately motion-blurred transition frames (travel + blur + flare); their motion continuity is verified numerically by qa/seam_check.sh"
+    },
+    {
+      "from": 970,
+      "to": 975,
+      "intent": {
+        "density": 0.5
+      },
+      "why": "seam peak of the cut-the-curve cut @f972: deliberately motion-blurred transition frames (travel + blur + flare); their motion continuity is verified numerically by qa/seam_check.sh"
+    },
+    {
+      "from": 1078,
+      "to": 1083,
+      "intent": {
+        "density": 0.5
+      },
+      "why": "seam peak of the zoom-through cut @f1080: deliberately motion-blurred transition frames (travel + blur + flare); their motion continuity is verified numerically by qa/seam_check.sh"
+    },
+    {
+      "from": 1222,
+      "to": 1227,
+      "intent": {
+        "density": 0.5
+      },
+      "why": "seam peak of the rise cut @f1224: deliberately motion-blurred transition frames (travel + blur + flare); their motion continuity is verified numerically by qa/seam_check.sh"
+    },
+    {
+      "from": 1582,
+      "to": 1587,
+      "intent": {
+        "density": 0.5
+      },
+      "why": "seam peak of the inverse-zoom-through cut @f1584: deliberately motion-blurred transition frames (travel + blur + flare); their motion continuity is verified numerically by qa/seam_check.sh"
+    }
+  ]
+}

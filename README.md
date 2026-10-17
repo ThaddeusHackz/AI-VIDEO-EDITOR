@@ -66,6 +66,25 @@ AI-VIDEO-EDITOR/
 
 ---
 
+## ★ Featured Production — *Claude Opus 5.5 vs. GPT Astra 6.1 Sol: The Singularity Engine*
+
+A 30 s, 60 fps (1800-frame) hybrid **HyperFrames + Remotion** motion-graphics film built with every engine in this repo:
+the Remotion engine modules (camera rig, seams, VFX, Cinema Studio 4.0, Higgsfield mixes, 3D studio), `@remotion/three`,
+a lint-clean, seam-gated HyperFrames plate adapted from `registry/blocks/code-particle-assemble`, closed-form spring
+physics, a synthesized Batman-style voiceover (voice-00 → Praat PSOLA formant/pitch shift → gravel/fry/proximity chain),
+a procedural score mixed to −16 LUFS, and a per-frame 1–10 self-critique scoring loop.
+
+```bash
+./bin/ai-video singularity all            # audio → plate → gates → frames → score → assemble → verify (both formats)
+./bin/ai-video singularity frames master  # or: score | assemble | verify, master | vertical
+```
+
+Treatment, beat map and decisions: [`productions/singularity-engine/FILM.md`](productions/singularity-engine/FILM.md) ·
+pipeline: [`productions/singularity-engine/README.md`](productions/singularity-engine/README.md) ·
+compositions: `Singularity-Master` (1920×1080) and `Singularity-Vertical` (1080×1920).
+
+---
+
 ## 2. Quickstart & Unified CLI (`./bin/ai-video`)
 
 ```bash

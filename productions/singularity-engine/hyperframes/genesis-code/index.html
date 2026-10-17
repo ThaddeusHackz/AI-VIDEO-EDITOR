@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440, height=1440" />
+    <title>The Singularity Engine — Genesis Code Plate (S3)</title>
+    <!--
+      HyperFrames plate for shot S3 "macro-dive" of THE SINGULARITY ENGINE (film frames 216–359 @ 60 fps).
+      Microscopic TypeScript/GLSL assembles from glyph-pixel particles (adapted from registry/blocks/
+      code-particle-assemble: same glyph-sampling bridge, re-driven on Canvas2D with CLOSED-FORM springs instead of a
+      GPU smoothstep), each line COMPILES into an SVG shape on the film's codeCompiles frames (234/252/270/288 →
+      plate 0.30/0.60/0.90/1.20 s), then a zoom-through seam (ledger.json, seam-stamp.mjs) dives into a vector
+      mandala. Rendered on black and composited in Remotion with additive "screen" blending.
+      Determinism: one paused GSAP timeline (window.__timelines["main"]); every pixel is a pure function of tl.time().
+    -->
+    <script src="vendor/gsap.min.js"></script>
+    <script src="vendor/camera-dop.js"></script>
+    <script src="vendor/vfx-cgi-suite.js"></script>
+    <style>
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("fonts/mono-700.woff2") format("woff2");
+        font-weight: 700;
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("fonts/mono-400.woff2") format("woff2");
+        font-weight: 400;
+      }
+      @font-face {
+        font-family: "Space Grotesk";
+        src: url("fonts/sg-700.woff2") format("woff2");
+        font-weight: 700;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      /* SEAM-CRAFT WHITE-FLASH GUARD: opaque stage ground */
+      html,
+      body,
+      #root {
+        width: 1440px;
+        height: 1440px;
+        overflow: hidden;
+        background: #000000;
+        position: relative;
+      }
+      .scene-layer {
+        position: absolute;
+        inset: 0;
+        width: 1440px;
+        height: 1440px;
+        will-change: transform, opacity, filter;
+      }
+      .full {
+        position: absolute;
+        inset: 0;
+        width: 1440px;
+        height: 1440px;
+      }
+      .ok-badge {
+        position: absolute;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 400;
+        font-size: 18px;
+        letter-spacing: 0.06em;
+        color: #00f0ff;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-454q"
+      id="root"
+      data-composition-id="main"
+      data-width="1440"
+      data-height="1440"
+      data-fps="60"
+      data-duration="2.4"
+    >
+      <!-- preload: the canvas draws JetBrains Mono 700, which no other DOM text uses -->
+      <span data-hf-id="hf-c1zq" style="position: absolute; left: -9999px; font-family: 'JetBrains Mono'; font-weight: 700">opus</span>
+      <!-- SCENE A (0.00–1.35 s): particles → code → compiled SVG shapes -->
+      <div data-hf-id="hf-oub8" id="scene-a" class="scene-layer">
+        <canvas data-hf-id="hf-zro8" id="cv-a" class="full" width="1440" height="1440"></canvas>
+        <svg data-hf-id="hf-9mqh" id="shapes" class="full" viewBox="0 0 1440 1440" fill="none">
+          <path data-hf-id="hf-pckm" id="conn-0" d="M 905 586 L 1010 586" stroke="#D97757" stroke-width="2" stroke-dasharray="6 8" opacity="0" />
+          <path data-hf-id="hf-qz8m" id="conn-1" d="M 905 726 L 1010 726" stroke="#00F0FF" stroke-width="2" stroke-dasharray="6 8" opacity="0" />
+          <path data-hf-id="hf-of63" id="conn-2" d="M 905 866 L 1010 866" stroke="#F5F2EB" stroke-width="2" stroke-dasharray="6 8" opacity="0" />
+          <path data-hf-id="hf-eesu" id="conn-3" d="M 905 1006 L 1010 1006" stroke="#FF9A5C" stroke-width="2" stroke-dasharray="6 8" opacity="0" />
+          <path data-hf-id="hf-eshv" id="shape-0" d="" stroke="#D97757" stroke-width="4" stroke-linecap="round" />
+          <path data-hf-id="hf-384m" id="shape-1" d="" stroke="#00F0FF" stroke-width="3" stroke-linecap="round" />
+          <path data-hf-id="hf-ppr4" id="shape-2a" d="M 1030 866 L 1340 866" stroke="#FF9A5C" stroke-width="4" stroke-linecap="round" />
+          <circle data-hf-id="hf-po66" id="shape-2b" cx="1185" cy="866" r="88" stroke="#00F0FF" stroke-width="4" />
+          <path data-hf-id="hf-ja6c" id="shape-3" d="" stroke="#F5F2EB" stroke-width="2.5" stroke-linejoin="round" />
+        </svg>
+        <div data-hf-id="hf-73ap" id="ok-0" class="ok-badge" style="left: 1030px; top: 520px">ok · compiled 0.3 ms</div>
+        <div data-hf-id="hf-xvel" id="ok-1" class="ok-badge" style="left: 1030px; top: 660px">ok · compiled 0.2 ms</div>
+        <div data-hf-id="hf-g0bo" id="ok-2" class="ok-badge" style="left: 1030px; top: 800px">ok · ring x line</div>
+        <div data-hf-id="hf-lq85" id="ok-3" class="ok-badge" style="left: 1030px; top: 940px">ok · emit svg</div>
+      </div>
+
+      <!-- SCENE B (1.35–2.40 s): the compiled shapes replicate into a vector mandala -->
+      <div data-hf-id="hf-xi73" id="scene-b" class="scene-layer">
+        <div data-hf-id="hf-zu7r" id="cam-b" class="full">
+          <canvas data-hf-id="hf-18c9" id="cv-b" class="full" width="1440" height="1440"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script src="genesis-engine.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var GP = window.GenesisPlate;
+        var state = GP.state;
+        var COMPILE = GP.COMPILE;
+        var springEase = GP.springEase;
+        var render = function () {
+          GP.render(state.t);
+        };
+
+        var tl = gsap.timeline({ paused: true, onUpdate: render });
+        tl.to(state, { t: 2.4, duration: 2.4, ease: "none" }, 0);
+
+        // compile beats: connector + shape stroke draws with closed-form spring eases, ✓ badges
+        var SHAPES = [["#shape-0"], ["#shape-1"], ["#shape-2a", "#shape-2b"], ["#shape-3"]];
+        for (var i = 0; i < 4; i++) {
+          tl.fromTo("#conn-" + i, { opacity: 0 }, { opacity: 0.9, duration: 0.08, ease: "none", immediateRender: false }, COMPILE[i]);
+          for (var s = 0; s < SHAPES[i].length; s++) {
+            tl.fromTo(
+              SHAPES[i][s],
+              { strokeDasharray: 1400, strokeDashoffset: 1400 },
+              { strokeDashoffset: 0, duration: 0.42, ease: springEase(0.42, 0.7, 140, 14), immediateRender: false },
+              COMPILE[i] + 0.02 + s * 0.05
+            );
+          }
+          tl.fromTo("#ok-" + i, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.3, ease: springEase(0.3, 0.6, 210, 13), immediateRender: false }, COMPILE[i] + 0.05);
+        }
+        gsap.set(["#shape-0", "#shape-1", "#shape-2a", "#shape-2b", "#shape-3"], { strokeDasharray: 1400, strokeDashoffset: 1400 });
+
+        // Higgsfield DoP camera inside the mandala (same Z sign as the seam: growing)
+        if (window.HFCameraDoP) {
+          window.HFCameraDoP.apply(tl, "#cam-b", { preset: "through-object-in", start: 1.35, duration: 1.05, intensity: 0.5 });
+        }
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+
+      // <seams:auto> — generated by seam-stamp.mjs from ledger.json; do not hand-edit.
+      // Regenerate: node <motion-doctrine>/scripts/seam-stamp.mjs --ledger ledger.json --write index.html
+      gsap.set("#scene-a", { autoAlpha: 1, xPercent: 0, yPercent: 0, scale: 1, filter: "blur(0px)", transformOrigin: "50% 50%" });
+      gsap.set("#scene-b", { autoAlpha: 0, scale: 0.78, filter: "blur(6px)", xPercent: 0, yPercent: 0, transformOrigin: "50% 50%" });
+      
+      // SEAM — compile->mandala : zoom-through (cut @1.35)
+      tl.to("#scene-a", { scale: 1.18, filter: "blur(6px)", duration: 0.21, ease: "power3.in" }, 1.14);
+      tl.to("#scene-a", { autoAlpha: 0, duration: 0.21, ease: "none" }, 1.14);
+      tl.set("#scene-a", { autoAlpha: 0 }, 1.35);
+      tl.fromTo("#scene-b", { autoAlpha: 0.15, scale: 0.78, filter: "blur(6px)" }, { autoAlpha: 1, scale: 1.0, filter: "blur(0px)", duration: 0.5, ease: "expo.out", immediateRender: false }, 1.35);
+      
+      // </seams:auto>
+        tl.seek(0);
+        render();
+      })();
+    </script>
+  </body>
+</html>
